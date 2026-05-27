@@ -1,1 +1,4 @@
+feedparser
+requests
 streamlit
+trafilatura
