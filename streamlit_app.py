@@ -15,17 +15,14 @@ def display_articles(articles):
     for i, article in enumerate(articles, start=1):
         st.subheader(f"{i}. {article.get('title', '(no title)')}")
         st.write(f"url:\t{article.get('url', '--no url found--')}")
-        for text in ["clean_text", "raw_text"]:
-            if text in article and article[text]:
-                h = "Clean Text" if text=="clean_text" else "Raw Text"
-                st.write(f"{h}:")
-                st.write(article[text][:400])
-                st.write("...")
-                st.write(article[text][-100:])
-            elif "error" in article:
-                st.error(f"Fetch failed: {article['error']}")
-            else:
-                st.info("No text extracted.")
+        if "text" in article and article["text"]:
+            st.write("Text:")
+            st.write(article["text"][:300])
+            st.write("...")
+            st.write(article["text"][-300:])
+        else:
+            st.info("No text extracted.")
+
 
 st.title("Morning Report")
 
