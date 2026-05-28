@@ -40,13 +40,13 @@ def display_articles(articles):
         st.write(f"Link:\t{url}")
         st.write(f"{text_preview}")
 
+if __name__ == "__main__":
+    st.title("Morning Report")
 
-st.title("Morning Report")
+    query = st.text_input("Search query:")
 
-query = st.text_input("Search query:")
-
-if st.button("Search!"):
-    logger.info(f"User searched: {query}")
-    with st.spinner("Searching for news articles..."):
-        articles = search.get_news(query, 5)
-    display_articles(articles)
+    if st.button("Search!"):
+        logger.info(f"User searched: {query}")
+        with st.spinner("Searching for news articles..."):
+            articles = search.get_news(query, 5)
+        display_articles(articles)

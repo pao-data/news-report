@@ -1,3 +1,4 @@
+docxtpl
 feedparser
 requests
 streamlit
