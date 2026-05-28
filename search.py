@@ -32,11 +32,12 @@ def get_news(query, num_articles):
         google_url = entry.link
         decoded_url = decode_google_url(google_url)
         if decoded_url == "":
-            articles.append({
-                "title": entry.title,
-                "url": "GOOGLE URL COULD NOT BE DECODED",
-                "text": None,
-            })
+            # For now, we just won't include these articles since we can't access the text anyway.
+            # articles.append({
+            #     "title": entry.title,
+            #     "url": None,
+            #     "text": None,
+            # })
             continue
 
         logger.info(f"Fetching news article:\n\t{entry.title}\n\tat url: {decoded_url}")
@@ -44,6 +45,7 @@ def get_news(query, num_articles):
         clean_text = trafilatura.extract(downloaded)
         articles.append({
             "title": entry.title,
+            "date": entry.pubDate,
             "url": decoded_url,
             "text": clean_text
         })
