@@ -45,7 +45,7 @@ def get_news(query, num_articles):
         clean_text = trafilatura.extract(downloaded)
         articles.append({
             "title": entry.title,
-            "date": entry.get("pubDate", ""),
+            "published_datetime": entry.published_parsed,
             "url": decoded_url,
             "text": clean_text
         })

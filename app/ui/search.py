@@ -1,5 +1,6 @@
 import streamlit as st
 import logging
+import time
 
 import core.search
 
@@ -27,7 +28,7 @@ def display_search_results(articles):
     articles_with_checkbox_keys = []
     for i, article in enumerate(articles, start=1):
         title = article["title"]
-        date = article["date"]
+        published = time.strftime("%B %d, %Y", article["published_datetime"])
         url = article["url"]
         text = article["text"]
         if text is None:
@@ -44,7 +45,7 @@ def display_search_results(articles):
         )
         article["checkbox_key"] = checkbox_key
         articles_with_checkbox_keys.append(article)
-        st.write(f"Date:\t{date}")
+        st.write(f"Published:\t{published}")
         st.write(f"Link:\t{url}")
         st.write(f"{text_preview}")
     return articles_with_checkbox_keys

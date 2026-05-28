@@ -30,8 +30,7 @@ def get_selected_articles():
 def generate_report_for_download():
     articles = get_selected_articles()
     template = get_template()
-    context = core.report.generate_doc_context(articles)
-    buffer = core.report.generate_document(template, context)
+    buffer = core.report.generate_document(articles, template)
 
     st.download_button(
         label="Download DOCX",

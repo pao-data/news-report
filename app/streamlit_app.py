@@ -8,13 +8,11 @@ from ui.search import show_search_section
 from ui.report import show_report_section
 
 # TODO have the search terms Taylor gave me already in there
-# TODO alert user if no search results
 # TODO handle paywall issue
-# TODO implement article selection
-# TODO display articles on webpage (related to article selection)
 # TODO allow number of articles to be set (currently defaulting to 5)
-# TODO get date of story
-# TODO generate downloadable report (if downloadable is possible, otherwise they may just have to copy/paste)
+# TODO (nice to have) see how Taylor feels about the section headers having their formatting stripped
+# TODO (nice to have) add filter by date? 
+# TODO (nice to have) recommended top stories
 
 
 logging.basicConfig(
