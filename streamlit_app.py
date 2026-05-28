@@ -40,23 +40,6 @@ def display_articles(articles):
         st.write(f"Link:\t{url}")
         st.write(f"{text_preview}")
 
-# def display_articles(articles):
-#     for i, article in enumerate(articles, start=1):
-#         st.checkbox(
-#             f'{article["title"]} ({article["url"]})',
-#             key=f"article_{i}",
-#         )
-        
-#         st.subheader(f"{i}. {article.get('title', '(no title)')}")
-#         st.write(f"url:\t{article.get('url', '--no url found--')}")
-#         if "text" in article and article["text"]:
-#             st.write("Text:")
-#             st.write(article["text"][:300])
-#             st.write("...")
-#             st.write(article["text"][-300:])
-#         else:
-#             st.info("No text extracted.")
-
 
 st.title("Morning Report")
 
