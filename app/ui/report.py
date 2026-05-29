@@ -21,7 +21,7 @@ def get_selected_articles():
     articles = st.session_state["articles"]
     selected_articles = []
     for article in articles:
-        key = article["checkbox_key"]
+        key = article.id
         is_checked = st.session_state[key]
         if is_checked:
             selected_articles.append(article)

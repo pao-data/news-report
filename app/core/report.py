@@ -1,8 +1,9 @@
 import logging
-import time
 
 from docxtpl import DocxTemplate, RichText
 from io import BytesIO
+
+from models.article import Article
 
 logger = logging.getLogger(__name__)
 
@@ -20,46 +21,33 @@ def summarize_article(text, min_characters=500):
         summary += "\n"
     return summary
 
-def separate_title_and_source(title_source_string):
-    parts = title_source_string.split(" - ")
-
-    if len(parts) != 2:
-        logger.warning(
-            "Expected 2 parts when splitting the title element from the rss feed into title and source,"
-            f"got {len(parts)}: {title_source_string}",
-        )
-
-    if len(parts) == 1:
-        title = parts[0]
-        source = ""
-    elif len(parts) == 2:
-        title, source = parts
-    else:
-        # Making the assumption that the extra " - " would be in the title rather than the source.
-        source = parts[-1]
-        title = " - ".join(parts[:-1])
-
-    return title, source
-
-def get_article_context(article, doc):
+def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     article_context = {}
 
-    title, source = separate_title_and_source(article["title"])
-    title_with_link = RichText()
-    title_with_link.add(
-        title,
-        url_id=doc.build_url_id(article["url"]),
-        bold=True,
-        underline=True,
-        color="#0000EE",
-    )
-    article_context["title_with_link"] = title_with_link
-    article_context["source"] = source
+    if article.url:
+        title_with_link = RichText()
+        title_with_link.add(
+            article.title,
+            url_id=doc.build_url_id(article.url),
+            bold=True,
+            underline=True,
+            color="#0000EE",
+        )
+    else:
+        title_with_link=article.title
+    
+    source = article.source or "no source identified"
 
-    article_context["full_text"] = prettify_text(article["text"])
-    article_context["summary"] = summarize_article(article["text"])
+    date = article.date_published_string() or "unknown publication date"
 
-    article_context["date"] = time.strftime("%B %d, %Y", article["published_datetime"])
+    article_context = {
+        "title_with_link": title_with_link,
+        "source": source,
+        "full_text": prettify_text(article.full_text),
+        "summary": summarize_article(article.full_text),
+        "date": date,
+    }
+
     return article_context
 
 def generate_doc_context(articles, doc):
