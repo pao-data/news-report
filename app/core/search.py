@@ -14,6 +14,6 @@ def get_articles_from_rss(query: str, limit: int) -> Article:
     logger.debug(f"Feed: {feed}")
     logger.info(f"Found {len(feed.entries)} articles")
 
-    articles = [Article.from_rss_entry(entry) for entry in feed]
+    articles = [Article.from_rss_entry(entry) for entry in feed.entries]
 
     return articles[:limit]

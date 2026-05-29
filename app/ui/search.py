@@ -32,7 +32,7 @@ def display_search_results(articles: list[Article]):
         st.write("No articles found for your search query.")
     for article in articles:
         title = article.title
-        published = article.date_published_string()
+        published = article.date_published_string
         url = article.url
         text = article.full_text
         preview_text = get_preview_text(
@@ -60,4 +60,5 @@ def get_preview_text(text: str | None, missing_text_message: str, max_chars=600)
     elif len(text) <= max_chars:
         return text
     else:
-        return text[:max_chars/2] + "\n...\n" + text[-max_chars/2:]
+        n = int(max_chars/2)
+        return text[:n] + "\n...\n" + text[-n:]

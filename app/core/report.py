@@ -38,7 +38,7 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     
     source = article.source or "no source identified"
 
-    date = article.date_published_string() or "unknown publication date"
+    date = article.date_published_string or "unknown publication date"
 
     article_context = {
         "title_with_link": title_with_link,

@@ -17,7 +17,8 @@ class Article:
     full_text: str | None
 
     @property
-    def date_published_string(self, format="%B %d, %Y"):
+    def date_published_string(self):
+        format="%B %d, %Y"
         if not self.published:
             return ""
         return self.published.strftime(format)
