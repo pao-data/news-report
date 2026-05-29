@@ -37,15 +37,19 @@ def display_search_results(articles):
             text_preview = text
         else:
             text_preview = text[:300] + "\n...\n" + text[-300:]
+        col1, col2 = st.columns([0.05, 0.95])
         checkbox_key = f"article_checkbox_{i}"
-        st.checkbox(
-            f"***{title}***",
-            key=checkbox_key,
-            value=True,
-        )
         article["checkbox_key"] = checkbox_key
         articles_with_checkbox_keys.append(article)
-        st.write(f"Published:\t{published}")
-        st.write(f"Link:\t{url}")
-        st.write(f"{text_preview}")
+        with col1:
+            st.checkbox(
+                "",
+                key=checkbox_key,
+                value=True,
+            )
+        with col2:
+            with st.expander(f"***{title}***"):
+                st.write(f"Published:\t{published}")
+                st.write(f"Link:\t{url}")
+                st.write(f"{text_preview}")
     return articles_with_checkbox_keys
