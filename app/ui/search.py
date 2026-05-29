@@ -32,7 +32,7 @@ def display_search_results(articles):
         url = article["url"]
         text = article["text"]
         if text is None:
-            text_preview = "Text for this article could not be found. This article is possibly behind a paywall."
+            text_preview = "Text for this article could not be found. It is possible access was refused because of bot-detection measures."
         elif len(text) <= 600:
             text_preview = text
         else:

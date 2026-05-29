@@ -32,12 +32,10 @@ def get_news(query, num_articles):
         google_url = entry.link
         decoded_url = decode_google_url(google_url)
         if decoded_url == "":
-            # For now, we just won't include these articles since we can't access the text anyway.
-            # articles.append({
-            #     "title": entry.title,
-            #     "url": None,
-            #     "text": None,
-            # })
+            logger.warning(
+                f"Unable to decode Google RSS url for {entry.title}.\n"
+                f"\tGoogle RSS url: {google_url}"
+            )
             continue
 
         logger.info(f"Fetching news article:\n\t{entry.title}\n\tat url: {decoded_url}")
