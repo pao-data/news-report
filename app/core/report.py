@@ -41,11 +41,14 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
 
     date = article.date_published_string or "unknown publication date"
 
+    full_text = prettify_text(article.full_text) if article.full_text else "no text found (perhaps due to bot blocking by the website)"
+    summary = summarize_article(article.full_text) if article.full_text else "no text found to summarize (perhaps due to bot blocking by the website)"
+
     article_context = {
         "title_with_link": title_with_link,
         "source": source,
-        "full_text": prettify_text(article.full_text),
-        "summary": summarize_article(article.full_text),
+        "full_text": full_text,
+        "summary": summary,
         "date": date,
     }
 
