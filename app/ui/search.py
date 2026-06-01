@@ -62,4 +62,4 @@ def get_preview_text(text: str | None, missing_text_message: str, max_chars=600)
         return text
     else:
         n = int(max_chars/2)
-        return text[:n] + "\n...\n" + text[-n:]
+        return text[:n] + "\n\n...\n\n" + text[-n:] # Use double newline since it's needed for html rendering used by st.write()
