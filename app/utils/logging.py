@@ -16,7 +16,7 @@ def log_execution_time(func):
         end_time = time.perf_counter()
         
         execution_time = end_time - start_time
-        logger.info(f"Function '{func.__name__}' executed in {execution_time:.4f} seconds")
+        logger.debug(f"Function '{func.__name__}' executed in {execution_time:.4f} seconds")
         return result
     return wrapper
 
@@ -26,4 +26,4 @@ def log_block_time(block_name: str):
         yield
     finally:
         elapsed_time = time.perf_counter() - start_time
-        logging.info(f"\t[{block_name}] Execution time: {elapsed_time:.4f} seconds")
+        logging.debug(f"\t[{block_name}] Execution time: {elapsed_time:.4f} seconds")
