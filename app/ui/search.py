@@ -13,7 +13,6 @@ def show_search_section():
     query = st.text_input("Search query:")
 
     if st.button("Search!"):
-        limit = 5
         logger.info(f"User searched: {query}")
         st.session_state["show_search_results"] = False
         with st.spinner("Searching for news articles..."):
