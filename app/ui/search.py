@@ -54,11 +54,15 @@ def display_search_results(articles: list[Article]):
                 st.write(f"Link:\t{url}")
                 st.write(f"{preview_text}")
 
-def get_preview_text(text: str | None, missing_text_message: str, max_chars=600) -> str:
+def get_preview_text(text: str | None, missing_text_message: str, max_words=100) -> str:
     if not text:
         return missing_text_message
-    elif len(text) <= max_chars:
-        return text
     else:
-        n = int(max_chars/2)
-        return text[:n] + "\n\n...\n\n" + text[-n:] # Use double newline since it's needed for html rendering used by st.write()
+        words_list = text.split()
+        if len(words_list) <= max_words:
+            return " ".join(words_list)
+        else:
+            n = int(max_words/2)
+            # Use double space before newline since it's needed for html rendering used by st.write()
+            shorted_preview = " ".join(words_list[:n]) + "  \n...  \n" + " ".join(words_list[-n:])
+            return shorted_preview
