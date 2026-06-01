@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 
 from docxtpl import DocxTemplate, RichText
 from io import BytesIO
@@ -51,11 +52,12 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     return article_context
 
 def generate_doc_context(articles, doc):
+    today = date.today()
     context = {
         "report_date": {
-            "day": 20,
-            "month": "October",
-            "year": 2026,
+            "day": today.day,
+            "month": today.strftime("%B"),
+            "year": today.year,
         },
         "sections": [
             {

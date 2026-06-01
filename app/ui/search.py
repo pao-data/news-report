@@ -17,7 +17,7 @@ def show_search_section():
         logger.info(f"User searched: {query}")
         st.session_state["show_search_results"] = False
         with st.spinner("Searching for news articles..."):
-            articles = core.search.get_articles_from_rss(query, limit)
+            articles = core.search.get_articles_from_rss(query)
             articles = [core.enrichment.enrich_url(article) for article in articles]
             articles = [core.enrichment.enrich_full_text(article) for article in articles]
 
@@ -32,7 +32,8 @@ def display_search_results(articles: list[Article]):
         st.write("No articles found for your search query.")
     for article in articles:
         title = article.title
-        published = article.date_published_string
+        source = article.source
+        published = f"{article.date_published_string} {article.time_published_string}"
         url = article.url
         text = article.full_text
         preview_text = get_preview_text(
@@ -49,7 +50,7 @@ def display_search_results(articles: list[Article]):
                 value=True,
             )
         with col2:
-            with st.expander(f"***{title}***"):
+            with st.expander(f"***{title}*** ({source})"):
                 st.write(f"Published:\t{published}")
                 st.write(f"Link:\t{url}")
                 st.write(f"{preview_text}")

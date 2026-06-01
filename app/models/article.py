@@ -1,7 +1,8 @@
-from dataclasses import dataclass
-from datetime import datetime
 import hashlib
 import logging
+from dataclasses import dataclass
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,18 @@ class Article:
 
     @property
     def date_published_string(self):
-        format="%B %d, %Y"
+        return self.format_published("%B %d, %Y")
+    
+    # TODO make sure today on report is by hawaii time (maybe display on the UI)
+    @property
+    def time_published_string(self):
+        gmt_str = f"{self.format_published('%H:%M')} GMT"
+        hst_datetime = self.published.astimezone(ZoneInfo("Pacific/Honolulu"))
+        hst_str = f"{hst_datetime.strftime('%H:%M')} HST"
+        full_str = f"{gmt_str} ({hst_str})"
+        return full_str
+
+    def format_published(self, format):
         if not self.published:
             return ""
         return self.published.strftime(format)
