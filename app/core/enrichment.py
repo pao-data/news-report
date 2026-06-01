@@ -1,13 +1,15 @@
+import time
 import logging
 
 import trafilatura
 from googlenewsdecoder import new_decoderv1
 
+import utils.logging
 from models.article import Article
 
 logger = logging.getLogger(__name__)
 
-
+@utils.logging.log_execution_time
 def enrich_url(article: Article) -> Article:
     url = decode_google_url(article.google_url)
 
@@ -15,18 +17,31 @@ def enrich_url(article: Article) -> Article:
         **{**article.__dict__, "url": url}
     )
 
+@utils.logging.log_execution_time
 def enrich_full_text(article: Article) -> Article:
     url = article.url
     if not url:
         logging.warning("Cannot fetch full article text because no url for article.")
         return Article(**{**article.__dict__, "full_text": None})
+    
+    start_time = time.perf_counter()
+    config = trafilatura.settings.use_config()
+    config.set('DEFAULT', 'DOWNLOAD_TIMEOUT', '3')
+    downloaded = trafilatura.fetch_url(url, config=config)
+    elapsed_time = time.perf_counter() - start_time
+    if elapsed_time > 1.0:
+        logging.info(f"\t[fetch_url (trafilura)] Execution time: {elapsed_time:.4f} seconds")
 
-    downloaded = trafilatura.fetch_url(url)
     if not downloaded:
         logging.warning(f"Could not fetch any data from url: {url}")
         return Article(**{**article.__dict__, "full_text": None})
-    
-    full_text = trafilatura.extract(downloaded)
+
+    start_time = time.perf_counter()
+    full_text = trafilatura.extract(downloaded, favor_recall=True)
+    elapsed_time = time.perf_counter() - start_time
+    if elapsed_time > 1.0:
+        logging.info(f"\t[extract (trafilura)] Execution time: {elapsed_time:.4f} seconds")
+
     if not full_text:
         logger.warning(f"Downloaded data could not be parsed by trafilatura for article at url {url}")
     
@@ -36,7 +51,7 @@ def enrich_full_text(article: Article) -> Article:
 
 def decode_google_url(google_url: str, decoder=new_decoderv1) -> str | None:
     """Decode the encrypted redirect URL used by Google News into its original source URL"""
-    logger.info(f"Attempting to decode Google redirect url: {google_url}")
+    logger.debug(f"Attempting to decode Google redirect url: {google_url}")
     result = decoder(google_url)
     if result.get('status') and result.get('decoded_url'):
         return result['decoded_url']
