@@ -2,7 +2,7 @@ import streamlit as st
 import logging
 
 import core.search
-import core.enrichment
+import core.extraction
 
 from models.article import Article
 
@@ -17,8 +17,8 @@ def show_search_section():
         st.session_state["show_search_results"] = False
         with st.spinner("Searching for news articles..."):
             articles = core.search.get_articles_from_rss(query)
-            articles = [core.enrichment.enrich_url(article) for article in articles]
-            articles = [core.enrichment.enrich_full_text(article) for article in articles]
+            articles = [core.extraction.enrich_url(article) for article in articles]
+            articles = [core.extraction.enrich_full_text(article) for article in articles]
 
             st.session_state["articles"] = articles
             st.session_state["show_search_results"] = True
