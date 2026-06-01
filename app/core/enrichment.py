@@ -24,24 +24,14 @@ def enrich_full_text(article: Article) -> Article:
         logging.warning("Cannot fetch full article text because no url for article.")
         return Article(**{**article.__dict__, "full_text": None})
     
-    start_time = time.perf_counter()
     config = trafilatura.settings.use_config()
     config.set('DEFAULT', 'DOWNLOAD_TIMEOUT', '3')
     downloaded = trafilatura.fetch_url(url, config=config)
-    elapsed_time = time.perf_counter() - start_time
-    if elapsed_time > 1.0:
-        logging.info(f"\t[fetch_url (trafilura)] Execution time: {elapsed_time:.4f} seconds")
-
     if not downloaded:
         logging.warning(f"Could not fetch any data from url: {url}")
         return Article(**{**article.__dict__, "full_text": None})
 
-    start_time = time.perf_counter()
     full_text = trafilatura.extract(downloaded, favor_recall=True)
-    elapsed_time = time.perf_counter() - start_time
-    if elapsed_time > 1.0:
-        logging.info(f"\t[extract (trafilura)] Execution time: {elapsed_time:.4f} seconds")
-
     if not full_text:
         logger.warning(f"Downloaded data could not be parsed by trafilatura for article at url {url}")
     
