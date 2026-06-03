@@ -1,0 +1,5 @@
+(
+    ("South Korean military" OR "Republic of Korea Armed Forces" or "ROK military" OR "ROK Army" OR "ROK Navy" OR "ROK Air Force" or "Korean military" OR "Korean defense" OR "Korean armed forces" OR "Ministry of National Defense" OR "Korean war games" OR "Korean military exercises" OR "Korean defense industry")
+    OR
+    ("North Korean military" OR "Korean People's Army" OR "KPA" OR "North Korean armed forces" OR "North Korean defense" OR "Pyongyang military" OR "DPRK military" OR "DPRK Army" OR "DPRK Navy" OR "DPRK Air Force" OR "North Korean missile" OR "North Korean nuclear" OR "North Korean war games" OR "North Korean military exercises")
+)
