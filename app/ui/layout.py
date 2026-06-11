@@ -5,32 +5,17 @@ from models.article import Article
 from models.section import Section
 from models.layout import Layout
 
+def initalize_layout():
+    section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
+    st.session_state.layout = Layout(section_names=section_names)
+    st.rerun()
+    
 def show_layout_section():
-    initalize_layout()
     show_manage_sections()
     show_section_tabs()
 
-def initalize_layout():
-    section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
-    if not st.session_state["layout"]:
-        st.session_state["layout"] = Layout(section_names=section_names)
-        st.rerun()
-    
-    # if st.session_state["articles"] and not st.session_state["sections"]:
-    #     sections = []
-    #     for section_name in section_names:
-    #         sections.append(
-    #             Section(name=section_name, articles=[])
-    #         )
-    # # temporary hack; overwrite first section
-    #     sections[0] = Section(
-    #         name=section_names[0],
-    #         articles=st.session_state["articles"][:3]
-    #     )
-    #     st.session_state["sections"] = sections
-
 def show_manage_sections():
-    layout = st.session_state["layout"]
+    layout = st.session_state.layout
     # Show each section in order. When a user moves a section, update the Layout and the UI.
     sections = get_numbered_list(layout.get_ordered_section_names())
     reordered_sections = sort_items(sections, direction="vertical")
@@ -40,15 +25,14 @@ def show_manage_sections():
         st.rerun()
 
 def show_section_tabs():
-    if not st.session_state["sections"]:
-        return
-    section_names = [s.name for s in st.session_state["sections"]]
+    layout = st.session_state.layout
+    section_names = layout.get_ordered_section_names()
     with st.container(border=True):
         tabs = st.tabs(section_names)
 
-    with tabs[0]:
-        if st.session_state["articles"]:
-            show_articles(st.session_state["sections"][0])
+    # with tabs[0]:
+    #     if st.session_state["articles"]:
+    #         show_articles(st.session_state["sections"][0])
 
 
 # TODO show_articles will need to be passed the layout

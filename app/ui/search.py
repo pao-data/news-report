@@ -14,17 +14,18 @@ def show_search_section():
 
     if st.button("Search!"):
         logger.info(f"User searched: {query}")
-        st.session_state["show_search_results"] = False
+        st.session_state.show_search_results = False
         with st.spinner("Searching for news articles..."):
             articles = core.search.get_articles_from_rss(query)
             articles = [core.extraction.enrich_url(article) for article in articles]
             articles = [core.extraction.enrich_full_text(article) for article in articles]
 
-            st.session_state["articles"] = articles
-            st.session_state["show_search_results"] = True
+            st.session_state.layout.add_new_articles(articles)
+            st.session_state.show_search_results = True
+        st.rerun()
 
-    if st.session_state["show_search_results"]:
-        display_search_results(st.session_state["articles"])
+    if st.session_state.show_search_results:
+        display_search_results(st.session_state.articles)
 
 def display_search_results(articles: list[Article]):
     if not articles:
