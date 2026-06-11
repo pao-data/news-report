@@ -18,10 +18,10 @@ class Layout:
     # - add a section
     # - change section orders
 
-    sections: dict[str, Section]
-    section_order: list[str]
-    articles: dict[str, Article]
-    unassigned_articles: list[str]
+    sections: dict[str, Section] # sections by id
+    section_order: list[str] # order of sections by id
+    articles: dict[str, Article] # articles by id
+    unassigned_articles: list[str] # list of unassigned articles, in display order, by id
 
     def __init__(self, section_names: list[str]):
         self.sections = {}
@@ -44,8 +44,26 @@ class Layout:
         """
         ...
 
-    def reorder_sections():
-        ...
+    def reorder_section(self, from_position, to_position):
+        section_order = self.section_order
+        if not(0 <= from_position < len(section_order)):
+            ValueError("Invalid index for from_position.")
+        if not(0 <= to_position < len(section_order)):
+            ValueError("Invalid index for to_position.")
+        section_to_move = section_order.pop(from_position)
+        section_order.insert(to_position, section_to_move)
+        self.section_order = section_order
+
+    def _(self, positions_to_swap):
+        if len(positions_to_swap) != 2:
+            ValueError("positions_to_swap must be a tuple of length 2.")
+        i, j = positions_to_swap
+        section_order = self.section_order
+        section_order[i], section_order[j] = section_order[j], section_order[i]
+        self.section_order = section_order
+
+    def get_ordered_section_names(self):
+        return [self.sections[section_id].name for section_id in self.section_order]
 
     def add_articles_to_layout(self, articles: list[Article]):
         """Add new articles to the layout. All new articles start as unassigned to a section."""

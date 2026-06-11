@@ -22,7 +22,7 @@ if __name__ == "__main__":
     if "sections" not in st.session_state:
         st.session_state["sections"] = []
     if "layout" not in st.session_state:
-        ...
+        st.session_state["layout"] = None
     if "user_provided_template" not in st.session_state:
         st.session_state["user_provided_template"] = None
     if "show_search_results" not in st.session_state:

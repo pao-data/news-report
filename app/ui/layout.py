@@ -6,28 +6,38 @@ from models.section import Section
 from models.layout import Layout
 
 def show_layout_section():
-    initalize_sections()
+    initalize_layout()
     show_manage_sections()
     show_section_tabs()
 
-def initalize_sections():
+def initalize_layout():
     section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
-    if st.session_state["articles"] and not st.session_state["sections"]:
-        sections = []
-        for section_name in section_names:
-            sections.append(
-                Section(name=section_name, articles=[])
-            )
-    # temporary hack; overwrite first section
-        sections[0] = Section(
-            name=section_names[0],
-            articles=st.session_state["articles"][:3]
-        )
-        st.session_state["sections"] = sections
+    if not st.session_state["layout"]:
+        st.session_state["layout"] = Layout(section_names=section_names)
+        st.rerun()
+    
+    # if st.session_state["articles"] and not st.session_state["sections"]:
+    #     sections = []
+    #     for section_name in section_names:
+    #         sections.append(
+    #             Section(name=section_name, articles=[])
+    #         )
+    # # temporary hack; overwrite first section
+    #     sections[0] = Section(
+    #         name=section_names[0],
+    #         articles=st.session_state["articles"][:3]
+    #     )
+    #     st.session_state["sections"] = sections
 
 def show_manage_sections():
-    section_names = [s.name for s in st.session_state["sections"]]
-    sort_items(section_names, direction="vertical")
+    layout = st.session_state["layout"]
+    # Show each section in order. When a user moves a section, update the Layout and the UI.
+    sections = get_numbered_list(layout.get_ordered_section_names())
+    reordered_sections = sort_items(sections, direction="vertical")
+    if sections != reordered_sections:
+        old_position, new_position = find_move(sections, reordered_sections)
+        layout.reorder_section(old_position, new_position)
+        st.rerun()
 
 def show_section_tabs():
     if not st.session_state["sections"]:
@@ -89,3 +99,44 @@ def show_article_expander(article):
         st.write(f"Published:\t{published}")
         st.write(f"Link:\t{url}")
         st.write(f"{preview_text}")
+
+
+
+def get_numbered_list(raw_list, start_with_one=True):
+    offset = 1 if start_with_one else 0
+    return [
+        f"({idx+offset})\t{itm}"
+        for idx, itm
+        in enumerate(raw_list)
+    ]
+    
+def find_move(original, modified):
+    """
+    For a list with one element moved to a new position, returns the indexes of the old and new positions.
+    Returns:
+        (old_position, new_position).
+    """
+    start = next(
+        (i for i, (a, b) in enumerate(zip(original, modified)) if a != b),
+        None
+    )
+
+    if start is None:
+        ValueError("Lists are identical.")  # no move
+
+    end = len(original) - 1 - next(
+        i for i, (a, b) in enumerate(zip(reversed(original), reversed(modified)))
+        if a != b
+    )
+
+    # Moved right
+    if original[start] == modified[end]:
+        return start, end
+
+    # Moved left
+    if original[end] == modified[start]:
+        return end, start
+
+    raise ValueError("Lists are not related by a single move")
+
+    
