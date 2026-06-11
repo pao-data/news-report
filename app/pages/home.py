@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 
 
 if __name__ == "__main__":
-    if "articles" not in st.session_state:
-        st.session_state.articles = []
     if "sections" not in st.session_state:
         st.session_state.sections = []
     if "layout" not in st.session_state:

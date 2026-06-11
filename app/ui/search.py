@@ -25,7 +25,7 @@ def show_search_section():
         st.rerun()
 
     if st.session_state.show_search_results:
-        display_search_results(st.session_state.articles)
+        display_search_results(st.session_state.layout.get_unassigned_articles())
 
 def display_search_results(articles: list[Article]):
     if not articles:

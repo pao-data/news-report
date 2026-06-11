@@ -65,6 +65,9 @@ class Layout:
     def get_ordered_section_names(self):
         return [self.sections[section_id].name for section_id in self.section_order]
 
+    def get_unassigned_articles(self):
+        return [self.articles[id] for id in self.unassigned_articles]
+
     def add_new_articles(self, articles: list[Article]):
         """Add new articles to the layout. All new articles start as unassigned to a section."""
         for article in articles:
