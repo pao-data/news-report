@@ -3,36 +3,49 @@ from streamlit_sortables import sort_items
 
 from models.article import Article
 from models.section import Section
+from models.layout import Layout
 
-def show_sections():
+def show_layout_section():
+    initalize_sections()
+    show_manage_sections()
+    show_section_tabs()
+
+def initalize_sections():
     section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
-    with st.container(border=True):
-        tabs = st.tabs(section_names)
-
-    if not st.session_state["sections"]:
+    if st.session_state["articles"] and not st.session_state["sections"]:
         sections = []
         for section_name in section_names:
             sections.append(
                 Section(name=section_name, articles=[])
             )
-        # temporary hack; overwrite first section
-        if st.session_state["articles"]:
-            sections[0] = Section(
-                name=section_names[0],
-                articles=st.session_state["articles"][:3]
-            )
+    # temporary hack; overwrite first section
+        sections[0] = Section(
+            name=section_names[0],
+            articles=st.session_state["articles"][:3]
+        )
         st.session_state["sections"] = sections
+
+def show_manage_sections():
+    section_names = [s.name for s in st.session_state["sections"]]
+    sort_items(section_names, direction="vertical")
+
+def show_section_tabs():
+    if not st.session_state["sections"]:
+        return
+    section_names = [s.name for s in st.session_state["sections"]]
+    with st.container(border=True):
+        tabs = st.tabs(section_names)
 
     with tabs[0]:
         if st.session_state["articles"]:
             show_articles(st.session_state["sections"][0])
 
 
-
+# TODO show_articles will need to be passed the layout
 def show_articles(section: Section):
     _, c_move, _, c_del = st.columns([0.01, 0.08, 0.87, 0.04], vertical_alignment="bottom")
-    c_move.write("*Reorder*")
-    c_del.write("*Delete*")
+    c_move.write("*Reorder within section*")
+    c_del.write("*Remove from report*")
     for i, article in enumerate(section.articles):
         c1, c2, c3, c4 = st.columns([0.03, 0.03, 0.92, 0.03])
         if i > 0:
@@ -47,35 +60,17 @@ def show_articles(section: Section):
             )
         with c3:
             show_article_expander(article)
-        c4.button(" ", key=f"delete_{i}", icon=":material/delete:", type="tertiary")
+        c4.button(
+            " ", key=f"delete_{i}", icon=":material/delete:", type="tertiary"
+        ) # TODO on click layout.unassign_article(article_id, from_id)
         
         # with c4.popover("change section", key=f"move_{i}", type="secondary"):
         #     st.write("hi")
-
-
-    # if "sections" not in st.session_state:
-    #     st.session_state.sections = [
-    #         "Introduction",
-    #         "Methods",
-    #         "Results",
-    #     ]
 
     # for i, section in enumerate(st.session_state.sections):
     #     c1, c2, c3, c4 = st.columns([4, 1, 1, 1])
 
     #     c1.write(section)
-
-    #     # Move up
-    #     if c2.button("↑", key=f"up_{i}") and i > 0:
-    #         sections = st.session_state.sections
-    #         sections[i - 1], sections[i] = sections[i], sections[i - 1]
-    #         st.rerun()
-
-    #     # Move down
-    #     if c3.button("↓", key=f"down_{i}") and i < len(st.session_state.sections) - 1:
-    #         sections = st.session_state.sections
-    #         sections[i + 1], sections[i] = sections[i], sections[i + 1]
-    #         st.rerun()
 
     #     # Delete
     #     if c4.button("❌", key=f"delete_{i}"):

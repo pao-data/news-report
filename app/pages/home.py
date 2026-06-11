@@ -6,7 +6,7 @@ import streamlit as st
 from utils.paths import BASE_DIR
 from ui.search import show_search_section
 from ui.report import show_report_section
-from ui.sections import show_sections
+from ui.layout import show_layout_section
 
 
 logging.basicConfig(
@@ -19,6 +19,10 @@ logger = logging.getLogger(__name__)
 if __name__ == "__main__":
     if "articles" not in st.session_state:
         st.session_state["articles"] = []
+    if "sections" not in st.session_state:
+        st.session_state["sections"] = []
+    if "layout" not in st.session_state:
+        ...
     if "user_provided_template" not in st.session_state:
         st.session_state["user_provided_template"] = None
     if "show_search_results" not in st.session_state:
@@ -28,7 +32,7 @@ if __name__ == "__main__":
     
     st.title("Morning Report")
 
-    show_sections()
+    show_layout_section()
     show_search_section()
     show_report_section()
     

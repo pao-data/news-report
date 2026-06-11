@@ -1,11 +1,9 @@
 from dataclasses import dataclass
 
-from models.article import Article
-
 @dataclass
 class Section:
     name: str
-    articles: list[Article] # or ids actually
+    articles: list[str] # of article ids
 
     def move_article_up(self, article_position):
         if article_position != 0:
@@ -25,11 +23,12 @@ class Section:
             )
             self.articles = articles
 
-    def add_article():
-        ...
+    def add_article(self, article_id):
+        self.articles.append(article_id)
 
     def remove_article():
         ...
+
 
 # sections should have articles
 # and also order of articles
