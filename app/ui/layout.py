@@ -48,13 +48,13 @@ def show_articles(section: Section):
         c1, c2, c3, c4 = st.columns([0.03, 0.03, 0.92, 0.03])
         if i > 0:
             c1.button(
-                "⬆", key=f"up_{i}", use_container_width=True, type="tertiary",
+                "⬆", key=f"up_{article_id}", use_container_width=True, type="tertiary",
                 help="Move up within section.",
                 on_click=section.move_article_up, kwargs={"article_position": i}
             )
         if i < len(section.articles)-1:
             c2.button(
-                "⬇", key=f"down_{i}", use_container_width=True, type="tertiary",
+                "⬇", key=f"down_{article_id}", use_container_width=True, type="tertiary",
                 help="Move down within section.",
                 on_click=section.move_article_down, kwargs={"article_position": i}
             )
