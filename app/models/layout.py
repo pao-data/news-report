@@ -34,7 +34,7 @@ class Layout:
 
     def add_section(self, section_name: str):
         section_id = str(uuid.uuid4())
-        self.sections[section_id] = Section(name=section_name, articles=[])
+        self.sections[section_id] = Section(name=section_name, articles=[], id=section_id)
         self.section_order.append(section_id)
 
     def delete_section():

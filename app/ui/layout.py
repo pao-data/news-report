@@ -61,7 +61,10 @@ def show_articles(section: Section):
         with c3:
             show_article_expander(article)
         c4.button(
-            " ", key=f"delete_{i}", icon=":material/delete:", type="tertiary"
+            " ",
+            key=f"delete_article_{article_id}_section_{section.id}",
+            icon=":material/delete:",
+            type="tertiary"
         ) # TODO on click layout.unassign_article(article_id, from_id)
 
 def show_article_expander(article):

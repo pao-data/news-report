@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Section:
+    id: str
     name: str
     articles: list[str] # of article ids
 
