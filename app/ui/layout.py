@@ -42,20 +42,19 @@ def show_section_tabs():
 
 
 def show_articles(section: Section):
-    _, c_move, _, c_del = st.columns([0.01, 0.08, 0.87, 0.04], vertical_alignment="bottom")
-    c_move.write("*Reorder within section*")
-    c_del.write("*Remove from report*")
     for i, article_id in enumerate(section.articles):
         article = st.session_state.layout.articles[article_id]
         c1, c2, c3, c4 = st.columns([0.03, 0.03, 0.92, 0.03])
         if i > 0:
             c1.button(
                 "⬆", key=f"up_{i}", use_container_width=True, type="tertiary",
+                help="Move up within section.",
                 on_click=section.move_article_up, kwargs={"article_position": i}
             )
         if i < len(section.articles)-1:
             c2.button(
                 "⬇", key=f"down_{i}", use_container_width=True, type="tertiary",
+                help="Move down within section.",
                 on_click=section.move_article_down, kwargs={"article_position": i}
             )
         with c3:
@@ -64,7 +63,8 @@ def show_articles(section: Section):
             " ",
             key=f"delete_article_{article_id}_section_{section.id}",
             icon=":material/delete:",
-            type="tertiary"
+            type="tertiary",
+            help="Remove from report. (Article will return to the bottom of the search results list.)",
         ) # TODO on click layout.unassign_article(article_id, from_id)
 
 def show_article_expander(article):
