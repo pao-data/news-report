@@ -41,7 +41,7 @@ def enrich_full_text(article: Article) -> Article:
         **{**article.__dict__, "full_text": full_text}
     )
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def decode_google_url(google_url: str, decoder=new_decoderv1) -> str | None:
     """Decode the encrypted redirect URL used by Google News into its original source URL"""
     logger.debug(f"Attempting to decode Google redirect url: {google_url}")
@@ -51,12 +51,12 @@ def decode_google_url(google_url: str, decoder=new_decoderv1) -> str | None:
     else:
         return None
     
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def fetch_raw_html(url: str, download_timeout: int):
     config = trafilatura.settings.use_config()
     config.set('DEFAULT', 'DOWNLOAD_TIMEOUT', str(download_timeout))
     return trafilatura.fetch_url(url, config=config)
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def extract_main_text(raw_html, **kwargs):
     return trafilatura.extract(raw_html, **kwargs)
