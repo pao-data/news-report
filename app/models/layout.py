@@ -54,16 +54,8 @@ class Layout:
         section_order.insert(to_position, section_to_move)
         self.section_order = section_order
 
-    def _(self, positions_to_swap):
-        if len(positions_to_swap) != 2:
-            ValueError("positions_to_swap must be a tuple of length 2.")
-        i, j = positions_to_swap
-        section_order = self.section_order
-        section_order[i], section_order[j] = section_order[j], section_order[i]
-        self.section_order = section_order
-
-    def get_ordered_section_names(self):
-        return [self.sections[section_id].name for section_id in self.section_order]
+    def get_ordered_sections(self):
+        return [self.sections[section_id] for section_id in self.section_order]
 
     def get_unassigned_articles(self):
         return [self.articles[id] for id in self.unassigned_articles]

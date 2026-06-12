@@ -25,9 +25,11 @@ def show_search_section():
         st.rerun()
 
     if st.session_state.show_search_results:
-        display_search_results(st.session_state.layout.get_unassigned_articles())
+        display_search_results()
 
-def display_search_results(articles: list[Article]):
+def display_search_results():
+    layout = st.session_state.layout
+    articles = layout.get_unassigned_articles()
     if not articles:
         st.write("No articles found for your search query.")
     for article in articles:
@@ -40,20 +42,33 @@ def display_search_results(articles: list[Article]):
             text,
             missing_text_message="Text for this article could not be found. It is possible access was refused because of bot-detection measures."
         )
-        checkbox_key = article.id
-
-        col1, col2 = st.columns([0.05, 0.95])
-        with col1:
-            st.checkbox(
-                "",
-                key=checkbox_key,
-                value=True,
+        with st.expander(f"***{title}*** ({source})"):
+            st.write(f"Published:\t{published}")
+            st.write(f"Link:\t{url}")
+            st.write(f"{preview_text}")
+            selectbox_key = f"selectbox_add_unassigned_article_to_section_{article.id}"
+            r = st.selectbox(
+                "Add article to report:",
+                index=None,
+                placeholder="Choose a section to add the article to.",
+                options=layout.section_order,
+                format_func=lambda section_id: layout.sections[section_id].name,
+                key=selectbox_key,
+                on_change=assign_article_on_selection,
+                kwargs={
+                    "article_id": article.id,
+                    "selectbox_key": selectbox_key
+                },
             )
-        with col2:
-            with st.expander(f"***{title}*** ({source})"):
-                st.write(f"Published:\t{published}")
-                st.write(f"Link:\t{url}")
-                st.write(f"{preview_text}")
+            st.write(r)
+
+def assign_article_on_selection(article_id, selectbox_key):
+    st.session_state.layout.assign_article(
+        article_id=article_id,
+        to_id=st.session_state[selectbox_key]
+    )
+    st.rerun()
+
 
 def get_preview_text(text: str | None, missing_text_message: str, max_words=100) -> str:
     if not text:

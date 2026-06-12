@@ -17,7 +17,9 @@ def show_layout_section():
 def show_manage_sections():
     layout = st.session_state.layout
     # Show each section in order. When a user moves a section, update the Layout and the UI.
-    sections = get_numbered_list(layout.get_ordered_section_names())
+    sections = get_numbered_list(
+        [s.name for s in layout.get_ordered_sections()]
+    )
     reordered_sections = sort_items(sections, direction="vertical")
     if sections != reordered_sections:
         old_position, new_position = find_move(sections, reordered_sections)
@@ -26,21 +28,25 @@ def show_manage_sections():
 
 def show_section_tabs():
     layout = st.session_state.layout
-    section_names = layout.get_ordered_section_names()
+    sections = layout.get_ordered_sections()
     with st.container(border=True):
-        tabs = st.tabs(section_names)
+        tabs = st.tabs([s.name for s in sections], on_change="rerun")
+        for tab, section in zip(tabs, sections):
+            with tab:
+                if section.has_articles():
+                    show_articles(section)
 
     # with tabs[0]:
     #     if st.session_state["articles"]:
     #         show_articles(st.session_state["sections"][0])
 
 
-# TODO show_articles will need to be passed the layout
 def show_articles(section: Section):
     _, c_move, _, c_del = st.columns([0.01, 0.08, 0.87, 0.04], vertical_alignment="bottom")
     c_move.write("*Reorder within section*")
     c_del.write("*Remove from report*")
-    for i, article in enumerate(section.articles):
+    for i, article_id in enumerate(section.articles):
+        article = st.session_state.layout.articles[article_id]
         c1, c2, c3, c4 = st.columns([0.03, 0.03, 0.92, 0.03])
         if i > 0:
             c1.button(
@@ -57,19 +63,6 @@ def show_articles(section: Section):
         c4.button(
             " ", key=f"delete_{i}", icon=":material/delete:", type="tertiary"
         ) # TODO on click layout.unassign_article(article_id, from_id)
-        
-        # with c4.popover("change section", key=f"move_{i}", type="secondary"):
-        #     st.write("hi")
-
-    # for i, section in enumerate(st.session_state.sections):
-    #     c1, c2, c3, c4 = st.columns([4, 1, 1, 1])
-
-    #     c1.write(section)
-
-    #     # Delete
-    #     if c4.button("❌", key=f"delete_{i}"):
-    #         st.session_state.sections.pop(i)
-    #         st.rerun()
 
 def show_article_expander(article):
     title = article.title

@@ -29,6 +29,8 @@ class Section:
     def remove_article():
         ...
 
+    def has_articles(self):
+        return True if len(self.articles) > 0 else False
 
 # sections should have articles
 # and also order of articles
