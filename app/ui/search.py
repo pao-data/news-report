@@ -27,7 +27,7 @@ def show_search_section():
             progess_value = (article_index+1)/len(articles)
             progress_bar.progress(progess_value, text=progress_text)
         progress_bar.empty()
-        
+
         st.session_state.layout.add_new_articles(articles)
         st.session_state.show_search_results = True
         st.rerun()
@@ -68,7 +68,6 @@ def display_search_results():
                     "selectbox_key": selectbox_key
                 },
             )
-            st.write(r)
 
 def assign_article_on_selection(article_id, selectbox_key):
     st.session_state.layout.assign_article(
