@@ -27,8 +27,8 @@ class Section:
     def add_article(self, article_id):
         self.articles.append(article_id)
 
-    def remove_article():
-        ...
+    def remove_article(self, article_id):
+        self.articles.remove(article_id)
 
     def has_articles(self):
         return True if len(self.articles) > 0 else False

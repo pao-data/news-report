@@ -77,9 +77,11 @@ class Layout:
         self.unassigned_articles.remove(article_id)
         to_section.add_article(article_id)
 
-    def unassign_article(article_id, from_id):
+    def unassign_article(self, article_id, from_id):
         """Move an article from its section to unassigned. """
-        ...
+        from_section = self.sections[from_id]
+        from_section.remove_article(article_id)
+        self.unassigned_articles.append(article_id)
 
     
 

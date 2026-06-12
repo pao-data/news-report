@@ -74,7 +74,6 @@ def assign_article_on_selection(article_id, selectbox_key):
         article_id=article_id,
         to_id=st.session_state[selectbox_key]
     )
-    st.rerun()
 
 
 def get_preview_text(text: str | None, missing_text_message: str, max_words=100) -> str:
