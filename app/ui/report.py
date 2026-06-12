@@ -17,20 +17,11 @@ def get_template():
         default_template_path = BASE_DIR / config["paths"]["default_template_file"]
         return default_template_path
     
-def get_selected_articles():
-    articles = st.session_state.articles
-    selected_articles = []
-    for article in articles:
-        key = article.id
-        is_checked = st.session_state[key]
-        if is_checked:
-            selected_articles.append(article)
-    return selected_articles
 
 def generate_report_for_download():
-    articles = get_selected_articles()
+    layout = st.session_state.layout
     template = get_template()
-    buffer = core.report.generate_document(articles, template)
+    buffer = core.report.generate_document(layout, template)
 
     st.download_button(
         label="Download DOCX",

@@ -54,35 +54,38 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
 
     return article_context
 
-def generate_doc_context(articles, doc):
+def generate_doc_context(layout, doc):
     today = date.today()
+    section_objects = layout.get_ordered_sections()
+    sections_doccontext = []
+    for section_obj in section_objects:
+        section_cxt = {}
+        section_cxt["name"] = section_obj.name
+        articles_doccontext = []
+        for article_id in section_obj.articles:
+            article_obj = layout.articles[article_id]
+            article_cxt = get_article_context(article_obj, doc)
+            articles_doccontext.append(article_cxt)
+        section_cxt["articles"] = articles_doccontext
+        sections_doccontext.append(section_cxt)
+
     context = {
         "report_date": {
             "day": today.day,
             "month": today.strftime("%B"),
             "year": today.year,
         },
-        "sections": [
-            {
-                "name": "first section",
-                "articles": [get_article_context(a, doc) for a in articles],
-            },
-            {
-                "name": "second section",
-                "text": "the first text for the second section!",
-                "full_text": "the second text for the second section. This is longer than the first text was!\nThere was a new line character!",
-            },
-        ]
+        "sections": sections_doccontext
     }
     return context
 
-def generate_document(articles, template):
+def generate_document(layout, template):
     """
     template:    Path or file-like. Template word doc to use for report document generation.
-    context:     Dict. The data used to fill in the template.
+    layout:      Layout object. The data used to fill in the template.
     """
     doc = DocxTemplate(template)
-    context = generate_doc_context(articles, doc)
+    context = generate_doc_context(layout, doc)
     doc.render(context)
 
     buffer = BytesIO()
