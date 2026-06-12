@@ -15,13 +15,21 @@ def show_search_section():
     if st.button("Search!"):
         logger.info(f"User searched: {query}")
         st.session_state.show_search_results = False
-        with st.spinner("Searching for news articles..."):
-            articles = core.search.get_articles_from_rss(query)
-            articles = [core.extraction.enrich_url(article) for article in articles]
-            articles = [core.extraction.enrich_full_text(article) for article in articles]
 
-            st.session_state.layout.add_new_articles(articles)
-            st.session_state.show_search_results = True
+        progress_text = "Searching for news articles..."
+        progress_bar = st.progress(0.0, text=progress_text)
+        articles = core.search.get_articles_from_rss(query)
+        enriched_articles = []
+        for article_index, article in enumerate(articles):
+            article = core.extraction.enrich_url(article)
+            article = core.extraction.enrich_full_text(article)
+            enriched_articles.append(article)
+            progess_value = (article_index+1)/len(articles)
+            progress_bar.progress(progess_value, text=progress_text)
+        progress_bar.empty()
+        
+        st.session_state.layout.add_new_articles(articles)
+        st.session_state.show_search_results = True
         st.rerun()
 
     if st.session_state.show_search_results:
