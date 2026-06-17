@@ -28,7 +28,7 @@ def show_search_section():
             progress_bar.progress(progess_value, text=progress_text)
         progress_bar.empty()
 
-        st.session_state.layout.add_new_articles(articles)
+        st.session_state.layout.add_new_articles(enriched_articles)
         st.session_state.show_search_results = True
         st.rerun()
 
