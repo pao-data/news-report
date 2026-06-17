@@ -10,27 +10,28 @@ logger = logging.getLogger(__name__)
 
 def show_search_section():
     st.markdown("### Search Google News")
-    query = st.text_area("Search query:", height="content")
+    with st.form("search_query"):
+        query = st.text_area("Search query:", height="content")
+        submitted = st.form_submit_button("Search!")
+        if submitted:
+            logger.info(f"User searched: {query}")
+            st.session_state.show_search_results = False
 
-    if st.button("Search!"):
-        logger.info(f"User searched: {query}")
-        st.session_state.show_search_results = False
+            progress_text = "Searching for news articles..."
+            progress_bar = st.progress(0.0, text=progress_text)
+            articles = core.search.get_articles_from_rss(query)
+            enriched_articles = []
+            for article_index, article in enumerate(articles):
+                article = core.extraction.enrich_url(article)
+                article = core.extraction.enrich_full_text(article)
+                enriched_articles.append(article)
+                progess_value = (article_index+1)/len(articles)
+                progress_bar.progress(progess_value, text=progress_text)
+            progress_bar.empty()
 
-        progress_text = "Searching for news articles..."
-        progress_bar = st.progress(0.0, text=progress_text)
-        articles = core.search.get_articles_from_rss(query)
-        enriched_articles = []
-        for article_index, article in enumerate(articles):
-            article = core.extraction.enrich_url(article)
-            article = core.extraction.enrich_full_text(article)
-            enriched_articles.append(article)
-            progess_value = (article_index+1)/len(articles)
-            progress_bar.progress(progess_value, text=progress_text)
-        progress_bar.empty()
-
-        st.session_state.layout.add_new_articles(enriched_articles)
-        st.session_state.show_search_results = True
-        st.rerun()
+            st.session_state.layout.add_new_articles(enriched_articles)
+            st.session_state.show_search_results = True
+            st.rerun()
 
     if st.session_state.show_search_results:
         display_search_results()
