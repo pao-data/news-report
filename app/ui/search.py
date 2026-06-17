@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def show_search_section():
     st.markdown("### Search Google News")
-    query = st.text_input("Search query:")
+    query = st.text_area("Search query:", height="content")
 
     if st.button("Search!"):
         logger.info(f"User searched: {query}")
