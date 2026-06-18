@@ -1,11 +1,8 @@
 import streamlit as st
 import logging
-from uuid import uuid4
 
 import core.search
 import core.extraction
-
-from models.article import Article
 
 logger = logging.getLogger(__name__)
 
