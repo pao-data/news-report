@@ -5,11 +5,8 @@
   OR
   "U.S. Army" AND ("Japan" OR "South Korea" OR "Guam" OR "Philippines" OR "Hawaii" OR "Okinawa" OR "Australia" OR "Singapore" OR "Thailand" OR "Vietnam")
 "U.S. Army Alaska": |
-  (
-      (
-          ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND "Alaska"
-          OR "USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER"
-      )
-      OR
-      ("U.S. Army" AND ("Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations"))
-  )
+    "USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER"
+    OR
+    ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND "Alaska"
+    OR
+    "U.S. Army" AND ("Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations")
