@@ -55,9 +55,15 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     return article_context
 
 def make_internal_link(text, anchor):
-    rt = RichText()
-    rt.add(text, hyperlink=f"#{anchor}")
-    return rt
+    return (
+        f'<w:hyperlink w:anchor="{anchor}" '
+        f'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        f'<w:r>'
+        f'<w:rPr><w:rStyle w:val="Hyperlink"/></w:rPr>'
+        f'<w:t>{text}</w:t>'
+        f'</w:r>'
+        f'</w:hyperlink>'
+    )
 
 def generate_doc_context(layout, doc):
     today = date.today()
