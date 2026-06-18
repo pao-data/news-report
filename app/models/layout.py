@@ -1,8 +1,10 @@
+import logging
 import uuid
 
 from models.section import Section
 from models.article import Article
 
+logger = logging.getLogger(__name__)
 
 class Layout:
     # sections: list of all the section names NOTE sections have inherent order
@@ -83,7 +85,15 @@ class Layout:
         from_section.remove_article(article_id)
         self.unassigned_articles.append(article_id)
 
-    
+    def delete_unassigned_article(self, article_id):
+        """Fully delete an unassigned article."""
+        if not article_id in self.unassigned_articles:
+            ValueError(
+                f"Attempt to delete article that is not in unassigned articles.\n\tArticle id: {article_id}"
+            )
+            return
+        self.unassigned_articles.remove(article_id)
+        del self.articles[article_id]
 
 
     

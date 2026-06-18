@@ -14,7 +14,6 @@ def show_search_section():
 
     submitted = st.button("Search All", type="primary")
 
-    st.header("Results")
     if submitted:
         results = {}
 
@@ -48,6 +47,7 @@ def show_search_section():
         st.rerun()
 
     if st.session_state.show_search_results:
+        st.header("Results")
         st.write("_Scroll to see more results._")
         with st.container(height=500):
             display_search_results()
@@ -141,6 +141,13 @@ def display_search_results():
                     "article_id": article.id,
                     "selectbox_key": selectbox_key
                 },
+            )
+            st.button(
+                f"Delete article entirely (cannot be undone)",
+                icon=":material/delete:",
+                key=f"fully_delete_unassigned_article_{article.id}",
+                on_click=layout.delete_unassigned_article,
+                kwargs={"article_id": article.id},
             )
 
 def assign_article_on_selection(article_id, selectbox_key):
