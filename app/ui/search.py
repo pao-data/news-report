@@ -35,6 +35,7 @@ def show_search_section():
 
         enriched_articles = []
         for article_index, article in enumerate(articles):
+            logging.debug(article.google_url)
             article = core.extraction.enrich_url(article)
             article = core.extraction.enrich_full_text(article)
             enriched_articles.append(article)
@@ -118,11 +119,18 @@ def display_search_results():
         title = article.title
         source = article.source
         published = f"{article.date_published_string} {article.time_published_string}"
-        url = article.url
+        url = article.url if article.url else article.google_url
+        if not article.url:
+            missing_text_message = """Text for this article could not be obtained because we could not decode the Google RSS link.
+            Sometimes this can happen if we've recently tried to decode too many Google RSS links in a short period of time.
+            Please try following the link in your browser and pasting the page's source HTML into the HTML Conversion Tool."""
+        else:
+            missing_text_message = """Text for this article could not be found.
+            It is possible access was refused because of bot-detection measures, but other reasons are also possible."""
         text = article.full_text
         preview_text = get_preview_text(
             text,
-            missing_text_message="Text for this article could not be found. It is possible access was refused because of bot-detection measures."
+            missing_text_message=missing_text_message
         )
         with st.expander(f"***{title}*** ({source})"):
             st.write(f"Published:\t{published}")
