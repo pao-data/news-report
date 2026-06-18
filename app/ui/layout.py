@@ -11,7 +11,10 @@ def initalize_layout():
     st.rerun()
     
 def show_layout_section():
+    st.header("Organize Report")
+    st.subheader("Manage Report Sections")
     show_manage_sections()
+    st.subheader("Manage Articles")
     show_section_tabs()
 
 def show_manage_sections():

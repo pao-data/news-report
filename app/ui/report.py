@@ -31,7 +31,7 @@ def generate_report_for_download():
     )
 
 def show_report_section():
-    st.markdown("### Report Generation")
+    st.subheader("Report Generation")
     with st.expander("Advanced: Upload custom template .docx file for report generation."):
         st.write(
             "Warning! Uploading a template report in the wrong format can cause the report to generate incorrectly. "

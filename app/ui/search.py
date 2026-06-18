@@ -8,11 +8,13 @@ logger = logging.getLogger(__name__)
 
 
 def show_search_section():
+    st.header("Search")
+
     show_query_fields()
 
     submitted = st.button("Search All", type="primary")
 
-    st.markdown("### Search Results")
+    st.header("Results")
     if submitted:
         results = {}
 
@@ -46,11 +48,11 @@ def show_search_section():
         st.rerun()
 
     if st.session_state.show_search_results:
-        display_search_results()
+        st.write("_Scroll to see more results._")
+        with st.container(height=500):
+            display_search_results()
 
 def show_query_fields():
-    st.subheader("Search Google News")
-
     for label in list(st.session_state.queries.keys()):
         col1, col2 = st.columns([20, 1])
 

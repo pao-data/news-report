@@ -38,7 +38,7 @@ if __name__ == "__main__":
     
     st.title("Morning Report")
 
-    show_layout_section()
     show_search_section()
+    show_layout_section()
     show_report_section()
     
