@@ -5,8 +5,131 @@
   OR
   "U.S. Army" AND ("Japan" OR "South Korea" OR "Guam" OR "Philippines" OR "Hawaii" OR "Okinawa" OR "Australia" OR "Singapore" OR "Thailand" OR "Vietnam")
 "U.S. Army Alaska": |
-    "USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER"
-    OR
-    ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND "Alaska"
-    OR
-    "U.S. Army" AND ("Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations")
+  "USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER"
+  OR
+  ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND "Alaska"
+  OR
+  "U.S. Army" AND ("Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations")
+"U.S. Army Japan": |
+  "U.S. Army Japan" OR "USARJ" OR "USAR-J"
+  OR
+  ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND ("Japan" OR "USARJ" OR "United States Army Japan" OR "Camp Zama" OR "Yokota Air Base" OR "Torii Station" OR "Kure" OR "Okinawa")
+  OR
+  "U.S. Army" AND ("Japan" OR "Japanese" OR "Pacific Command" OR "Indo-Pacific" OR "East Asia")
+"U.S. Army Korea": |
+  "U.S. Army Korea" OR "USARK" OR "USAR-K"
+  OR
+  ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND ("Korea" OR "USFK" OR "United States Forces Korea" OR "Eighth Army" OR "Camp Humphreys" OR "Yongsan Garrison" OR "Osan Air Base" OR "Dongducheon" OR "Seoul" OR "Pyeongtaek")
+  OR
+  "U.S. Army" AND ("Korea" OR "South Korea" OR "Republic of Korea" OR "ROK" OR "Peninsula" OR "DMZ" OR "Korean operations")
+"Joint base Lewis McChord": |
+  "Joint Base Lewis-McChord" OR "JBLM" OR "Lewis-McChord" OR "Fort Lewis" OR "McChord Field" OR "I Corps" OR "7th Infantry Division" OR "2nd Battalion" OR "Stryker Brigade" OR "Washington Army base"
+  OR
+  "U.S. Army" AND ("Lewis-McChord" OR "JBLM" OR "Washington" OR "Fort Lewis" OR "McChord Field")
+"Korea military news": |
+  "South Korean military" OR "Republic of Korea Armed Forces" OR "ROK military" OR "ROK Army" OR "ROK Navy" OR "ROK Air Force" OR "Korean military" OR "Korean defense" OR "Korean armed forces" OR "Ministry of National Defense" OR "Korean war games" OR "Korean military exercises" OR "Korean defense industry"
+  OR
+  "North Korean military" OR "Korean People's Army" OR "KPA" OR "North Korean armed forces" OR "North Korean defense" OR "Pyongyang military" OR "DPRK military" OR "DPRK Army" OR "DPRK Navy" OR "DPRK Air Force" OR "North Korean missile" OR "North Korean nuclear" OR "North Korean war games" OR "North Korean military exercises" 
+"Japan military news": |
+  "Japanese military" OR "Japan Self-Defense Forces" OR "JSDF" OR "Japan Ground Self-Defense Force" OR "JGSDF" OR "Japan Maritime Self-Defense Force" OR "JMSDF" OR "Japan Air Self-Defense Force" OR "JASDF" OR "Japanese armed forces" OR "Japanese defense" OR "Ministry of Defense Japan" OR "Japanese war games" OR "Japanese military exercises" OR "Japanese defense industry" OR "Japanese missile" OR "Japanese security policy"
+"Hawaii military news": |
+  "Hawaii military" OR "military in Hawaii" OR "Hawaiian military" OR "Hawaii defense" OR "Hawaii armed forces" OR "U.S. Army Hawaii" OR "US Army Hawaii" OR "United States Army Hawaii" OR "Schofield Barracks" OR "Fort Shafter" OR "Tripler Army Medical Center" OR "Joint Base Pearl Harbor-Hickam" OR "Pearl Harbor" OR "Marine Corps Base Hawaii" OR "Naval Station Pearl Harbor" OR "Hickam Air Force Base" OR "Pacific Command" OR "Indo-Pacific Command" OR "USINDOPACOM"
+  OR
+  "U.S. Army" AND ("Hawaii" OR "Schofield Barracks" OR "Fort Shafter" OR "Tripler" OR "Pacific Command" OR "Indo-Pacific")
+  OR
+  "U.S. Navy" AND ("Hawaii" OR "Pearl Harbor" OR "Naval Station")
+  OR
+  "U.S. Air Force" AND ("Hawaii" OR "Hickam")
+  OR
+  "U.S. Marine Corps" AND ("Hawaii" OR "Marine Corps Base")
+"Guam military news": |
+  (Guam OR "Guam's") AND (military OR Army)
+  OR
+  "Guam" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Pentagon" OR "US Indo-Pacific Command" OR "USINDOPACOM")
+  OR
+  "Andersen Air Force Base" OR "Naval Base Guam" OR "US Navy Guam" OR "US Air Force Guam" OR "US Marines Guam" OR "US Army Guam"
+"Australia military news": |
+  (Australia OR "Australia's") AND (military OR Army)
+  OR
+  "Australia" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Pentagon" OR "ADF" OR "Australian Defence Force" OR "RAAF" OR "Royal Australian Navy" OR "Royal Australian Army" OR "Indo-Pacific Command")
+  OR
+  "RAAF Base" OR "HMAS Stirling" OR "Lavarack Barracks" OR "Australian Defence Force Academy" OR "Royal Australian Navy" OR "Royal Australian Air Force" OR "Royal Australian Army"
+"New Zealand military news": |
+  ("New Zealand" OR "New Zealand's") AND (military OR Army)
+  OR
+  "New Zealand" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "NZDF" OR "New Zealand Defence Force" OR "Royal New Zealand Navy" OR "Royal New Zealand Air Force" OR "Royal New Zealand Army")
+  OR
+  "Devonport Naval Base" OR "RNZAF Base Auckland" OR "RNZAF Base Ohakea" OR "RNZAF Base Woodbourne" OR "Papakura Military Camp" OR "Waiouru Military Camp" OR "Linton Military Camp" OR "Burnham Military Camp" OR "New Zealand Defence Force" OR "Royal New Zealand Navy" OR "Royal New Zealand Air Force" OR "Royal New Zealand Army"
+"Bangladesh military news": |
+  (Bangladesh OR "Bangladesh's") AND (military OR Army)
+  OR
+  "Bangladesh" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Bangladesh Armed Forces" OR "Bangladesh Army" OR "Bangladesh Navy" OR "Bangladesh Air Force" OR "BD Army" OR "BD Navy" OR "BD Air Force")
+  OR
+  "Bangladesh Army" OR "Bangladesh Navy" OR "Bangladesh Air Force" OR "Bangladesh Armed Forces" OR "Bangladesh Military Academy" OR "Bangladesh Army Headquarters" OR "Bangladesh Navy Headquarters" OR "Bangladesh Air Force Base" OR "Chittagong Cantonment" OR "Dhaka Cantonment" OR "Bangladesh Institute of Peace Support Operation Training"
+"Thailand military news": |
+  (Thailand OR "Thailand's") AND (military OR Army)
+  OR
+  "Thailand" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Royal Thai Armed Forces" OR "Royal Thai Army" OR "Royal Thai Navy" OR "Royal Thai Air Force" OR "Thai military" OR "Thai Army" OR "Thai Navy" OR "Thai Air Force")
+  OR
+  "Royal Thai Army" OR "Royal Thai Navy" OR "Royal Thai Air Force" OR "Royal Thai Armed Forces" OR "Thai military" OR "Thai Army" OR "Thai Navy" OR "Thai Air Force" OR "Chulachomklao Royal Military Academy" OR "Naval Base Sattahip" OR "Wing 1 Air Force Base" OR "Fort Surasi" OR "Fort Chakkraphong" OR "Fort Phra Phutthayotfa Chulalok"
+"Vietnam military news": |
+  (Vietnam OR "Vietnam's") AND (military OR Army)
+  OR
+  "Vietnam" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Vietnam People's Army" OR "Vietnam People's Navy" OR "Vietnam People's Air Force" OR "Vietnamese military" OR "Vietnamese Army" OR "Vietnamese Navy" OR "Vietnamese Air Force")
+  OR
+  "Vietnam People's Army" OR "Vietnam People's Navy" OR "Vietnam People's Air Force" OR "Vietnamese military" OR "Vietnamese Army" OR "Vietnamese Navy" OR "Vietnamese Air Force" OR "General Staff of the Vietnam People's Army" OR "Military Region 1" OR "Military Region 2" OR "Military Region 3" OR "Military Region 4" OR "Military Region 5" OR "Military Region 7" OR "Military Region 9" OR "Vietnam Military Academy" OR "Naval Base Cam Ranh" OR "Air Force Base Da Nang"
+"Indonesia military news": |
+  (Indonesia OR "Indonesia's") AND (military OR Army)
+  OR
+  "Indonesia" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Tentara Nasional Indonesia" OR "TNI" OR "Indonesian Army" OR "Indonesian Navy" OR "Indonesian Air Force" OR "Kopassus" OR "Kostrad" OR "Indonesian military" OR "Indonesian Armed Forces")
+  OR
+  "Tentara Nasional Indonesia" OR "TNI" OR "Indonesian Army" OR "Indonesian Navy" OR "Indonesian Air Force" OR "Kopassus" OR "Kostrad" OR "Indonesian military" OR "Indonesian Armed Forces" OR "Military Academy Magelang" OR "Naval Base Surabaya" OR "Air Force Base Halim Perdanakusuma" OR "Military Region Command" OR "Kodam" OR "Korem" OR "Battalion Raider"
+"Malaysia military news": |
+  (Malaysia OR "Malaysia's") AND (military OR Army)
+  OR
+  "Malaysia" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Malaysian Armed Forces" OR "Malaysian Army" OR "Malaysian Navy" OR "Malaysian Air Force" OR "Tentera Darat Malaysia" OR "Tentera Laut Diraja Malaysia" OR "Tentera Udara Diraja Malaysia" OR "Malaysian military" OR "Malaysian Defence Force")
+  OR
+  "Malaysian Army" OR "Malaysian Navy" OR "Malaysian Air Force" OR "Malaysian Armed Forces" OR "Malaysian Defence Force" OR "Tentera Darat Malaysia" OR "Tentera Laut Diraja Malaysia" OR "Tentera Udara Diraja Malaysia" OR "Royal Malaysian Navy" OR "Royal Malaysian Air Force" OR "Royal Malaysian Army" OR "Pangkalan Tentera Laut Lumut" OR "Pangkalan Udara Butterworth" OR "Kem Sungai Besi" OR "Kem Perdana"
+"Cambodia military news": |
+  (Cambodia OR "Cambodia's") AND (military OR Army)
+  OR
+  "Cambodia" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Royal Cambodian Armed Forces" OR "RCAF" OR "Cambodian Army" OR "Cambodian Navy" OR "Cambodian Air Force" OR "Cambodian military" OR "Cambodian Defence Force")
+  OR
+  "Royal Cambodian Armed Forces" OR "RCAF" OR "Cambodian Army" OR "Cambodian Navy" OR "Cambodian Air Force" OR "Cambodian Defence Force" OR "Military Region Command" OR "Military Police Cambodia" OR "Cambodian Military Academy" OR "Ream Naval Base" OR "Phnom Penh Military Base" OR "Battambang Military Base"
+"Philippine military news": |
+  (Philippines OR "Philippines's" OR "Philippine") AND (military OR Army)
+  OR
+  "Philippines" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Armed Forces of the Philippines" OR "AFP" OR "Philippine Army" OR "Philippine Navy" OR "Philippine Air Force" OR "Philippine Marine Corps" OR "Philippine military" OR "Philippine Defence Force")
+  OR
+  "Armed Forces of the Philippines" OR "Philippine Army" OR "Philippine Navy" OR "Philippine Air Force" OR "Philippine Marine Corps" OR "Philippine Defence Force" OR "Camp Aguinaldo" OR "Fort Bonifacio" OR "Naval Base Cavite" OR "Villamor Air Base" OR "Camp Crame" OR "Camp Bautista" OR "Camp Evangelista"
+"Arctic military news": |
+   ("Arctic" OR "Arctic region" OR "North Pole" OR "polar region" OR "High North" OR "Circumpolar" OR "Arctic Circle") AND (military OR Army OR Navy OR "Air Force" OR "defense" OR "security")
+   OR
+   "Arctic" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "Northern Fleet" OR "Canadian Rangers" OR "Norwegian Armed Forces" OR "US Army Alaska" OR "Russian military" OR "Arctic Command" OR "Arctic Brigade")
+   OR
+   "Northern Fleet" OR "Canadian Rangers" OR "Norwegian Armed Forces" OR "US Army Alaska" OR "Russian military" OR "Arctic Command" OR "Arctic Brigade" OR "Thule Air Base" OR "Alert Base" OR "Barents Sea" OR "Murmansk" OR "Longyearbyen"
+"US Indo Pacific Cmd": |
+   ("USINDOPACOM" OR "United States Indo-Pacific Command" OR "Indo-Pacific Command" OR "Pacific Command" OR "USPACOM" OR "INDOPACOM" OR "Pacific region" OR "Indo-Pacific" OR "Asia-Pacific") AND (military OR Army OR Navy OR "Air Force" OR "defense" OR "security")
+   OR
+   "USINDOPACOM" AND ("military" OR "defense" OR "security" OR "base" OR "bases" OR "operations" OR "deployment" OR "exercise" OR "training" OR "presence" OR "expansion" OR "strategy" OR "strategic" OR "United States Army Pacific" OR "US Army Pacific" OR "Pacific Fleet" OR "Pacific Air Forces" OR "Marine Forces Pacific" OR "US military" OR "US defense")
+   OR
+   "United States Indo-Pacific Command" OR "USINDOPACOM" OR "USPACOM" OR "Indo-Pacific Command" OR "Pacific Command" OR "United States Army Pacific" OR "US Army Pacific" OR "Pacific Fleet" OR "Pacific Air Forces" OR "Marine Forces Pacific" OR "Camp Humphreys" OR "Andersen Air Force Base" OR "Joint Base Pearl Harbor-Hickam" OR "Guam Naval Base" OR "Yokota Air Base" OR "Okinawa"
+"Multi Domain Operations US Army": |
+  ("U.S. Army" OR "US Army" OR "United States Army" OR "Army" OR "Army Futures Command" OR "Army Training and Doctrine Command" OR "TRADOC" OR "FORSCOM") AND ("Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations")
+  OR
+  "U.S. Army" AND ("Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" OR "convergence" OR "integration" OR "cyber" OR "space" OR "air" OR "land" OR "sea" OR "information warfare" OR "electronic warfare" OR "sensor fusion" OR "Futures Command" OR "TRADOC" OR "FORSCOM")
+  OR
+  "Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" OR "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Project Convergence" OR "information warfare" OR "electronic warfare" OR "sensor fusion"
+"U.S. Army": |
+  "U.S. Army" OR "US Army" OR "United States Army" OR "Army Futures Command" OR "Army Training and Doctrine Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve"
+  OR
+  "U.S. Army" AND ("operations" OR "training" OR "exercise" OR "deployment" OR "strategy" OR "base" OR "bases" OR "readiness" OR "modernization" OR "recruitment" OR "personnel" OR "leadership" OR "command" OR "technology" OR "innovation" OR "combat" OR "logistics" OR "support" OR "missions" OR "partnerships" OR "alliances" OR "expansion" OR "presence" OR "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve")
+  OR
+  "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve" OR "Fort Bragg" OR "Fort Hood" OR "Fort Benning" OR "Fort Bliss" OR "Fort Campbell" OR "Fort Carson" OR "Fort Knox" OR "Fort Sill" OR "Fort Stewart" OR "Fort Drum" OR "Fort Polk" OR "Fort Riley" OR "Fort Lee" OR "Fort Leonard Wood"
+"Red Hill": |
+  ("Red Hill" OR "Red Hill fuel spill" OR "Red Hill Bulk Fuel Storage Facility" OR "Red Hill fuel leak" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster") AND ("U.S. Army" OR "US Army" OR "United States Army" OR "Army" OR "military" OR "Department of Defense" OR "DoD" OR "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "Pacific Command" OR "USINDOPACOM")
+  OR
+  "Red Hill" AND ("fuel spill" OR "fuel leak" OR "contamination" OR "water crisis" OR "environmental disaster" OR "cleanup" OR "remediation" OR "health impact" OR "military" OR "Army" OR "Department of Defense" OR "DoD" OR "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "USINDOPACOM")
+  OR
+  "Red Hill Bulk Fuel Storage Facility" OR "Red Hill fuel spill" OR "Red Hill fuel leak" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster" OR "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "Department of Defense" OR "DoD" OR "USINDOPACOM"
+  
