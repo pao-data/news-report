@@ -1,7 +1,7 @@
 import hashlib
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ class Article:
         published_parsed = entry.get("published_parsed")
 
         if published_parsed:
-            published = datetime(*published_parsed[:6])
+            published = datetime(*published_parsed[:6], tzinfo=timezone.utc)
         
         google_url = entry.link
 
