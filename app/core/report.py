@@ -54,17 +54,6 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
 
     return article_context
 
-def make_internal_link(text, anchor):
-    return (
-        f'<w:hyperlink w:anchor="{anchor}" '
-        f'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
-        f'<w:r>'
-        f'<w:rPr><w:rStyle w:val="Hyperlink"/></w:rPr>'
-        f'<w:t>{text}</w:t>'
-        f'</w:r>'
-        f'</w:hyperlink>'
-    )
-
 def generate_doc_context(layout, doc):
     today = date.today()
     section_objects = layout.get_ordered_sections()
@@ -86,8 +75,7 @@ def generate_doc_context(layout, doc):
             "month": today.strftime("%B"),
             "year": today.year,
         },
-        "sections": sections_doccontext,
-        "make_link": make_internal_link
+        "sections": sections_doccontext
     }
     return context
 
