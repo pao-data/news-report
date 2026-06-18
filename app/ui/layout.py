@@ -28,6 +28,22 @@ def show_manage_sections():
         old_position, new_position = find_move(sections, reordered_sections)
         layout.reorder_section(old_position, new_position)
         st.rerun()
+    
+    col, _ = st.columns([4, 10])
+    col.text_input(
+        "",
+        key="new_section_text_input",
+        placeholder="➕ Add new section (Enter section name and press Enter)",
+        label_visibility="collapsed",
+        on_change=add_section_from_text_input,
+        kwargs={"widget_key": "new_section_text_input"}
+    )
+
+def add_section_from_text_input(widget_key):
+    layout = st.session_state.layout
+    layout.add_section(
+        section_name=st.session_state[widget_key]
+    )
 
 def show_section_tabs():
     layout = st.session_state.layout
