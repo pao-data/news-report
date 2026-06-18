@@ -1,5 +1,6 @@
 docxtpl
 feedparser
+pyyaml
 requests
 streamlit
 streamlit-sortables
