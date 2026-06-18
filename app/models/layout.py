@@ -7,19 +7,6 @@ from models.article import Article
 logger = logging.getLogger(__name__)
 
 class Layout:
-    # sections: list of all the section names NOTE sections have inherent order
-    # dict of articles by ID? or list of tuples??
-    # articles
-
-    # membership: 
-    # unassigned
-    # TODO articles should have order also
-
-    # methods:
-    # - move an article to a new section
-    # - add a section
-    # - change section orders
-
     sections: dict[str, Section] # sections by id
     section_order: list[str] # order of sections by id
     articles: dict[str, Article] # articles by id
