@@ -147,7 +147,7 @@ def display_search_results():
                 index=None,
                 placeholder="Choose a section to add the article to.",
                 options=layout.section_order,
-                format_func=lambda section_id: layout.sections[section_id]["name"],
+                format_func=lambda section_id: layout.sections[section_id].name,
                 key=selectbox_key,
                 on_change=assign_article_on_selection,
                 kwargs={
