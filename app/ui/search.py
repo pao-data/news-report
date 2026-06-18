@@ -10,21 +10,48 @@ from models.article import Article
 logger = logging.getLogger(__name__)
 
 
-def add_query():
-    label = st.session_state.new_query_label.strip()
+def show_search_section():
+    show_query_fields()
 
-    if not label:
-        return
+    submitted = st.button("Search All", type="primary")
 
-    if label in st.session_state.queries:
-        return
+    st.markdown("### Search Results")
+    if submitted:
+        results = {}
 
-    st.session_state.queries[label] = ""
+        for label in st.session_state.queries:
+            results[label] = st.session_state[f"query_{label}"]
 
-    # clear input safely
-    st.session_state["new_query_label"] = ""
+        # Keep latest values as the source of truth
+        st.session_state.queries = results
 
-def show_query_form():
+        logger.info(f"User searched: {results}")
+        st.session_state.show_search_results = False
+
+        progress_text = "Searching for news articles..."
+        progress_bar = st.progress(0.0, text=progress_text)
+        articles = []
+        for query in results.values():
+            a = core.search.get_articles_from_rss(query)
+            articles.extend(a)
+
+        enriched_articles = []
+        for article_index, article in enumerate(articles):
+            article = core.extraction.enrich_url(article)
+            article = core.extraction.enrich_full_text(article)
+            enriched_articles.append(article)
+            progess_value = (article_index+1)/len(articles)
+            progress_bar.progress(progess_value, text=progress_text)
+        progress_bar.empty()
+
+        st.session_state.layout.add_new_articles(enriched_articles)
+        st.session_state.show_search_results = True
+        st.rerun()
+
+    if st.session_state.show_search_results:
+        display_search_results()
+
+def show_query_fields():
     st.subheader("Search Google News")
 
     for label in list(st.session_state.queries.keys()):
@@ -59,10 +86,7 @@ def show_query_form():
 
         # st.markdown("---")
 
-    # -------------------------
     # Add new query
-    # -------------------------
-
     col, _ = st.columns([4, 10])
     col.text_input(
         "",
@@ -72,55 +96,19 @@ def show_query_form():
         on_change=add_query,
     )
 
-    # -------------------------
-    # Submit all
-    # -------------------------
+def add_query():
+    label = st.session_state.new_query_label.strip()
 
-    if st.button("Submit All", type="primary"):
+    if not label:
+        return
 
-        results = {}
+    if label in st.session_state.queries:
+        return
 
-        for label in st.session_state.queries:
-            results[label] = st.session_state[f"query_{label}"]
+    st.session_state.queries[label] = ""
 
-        # Keep latest values as the source of truth
-        st.session_state.queries = results
-
-        st.success("Submitted!")
-
-        st.subheader("Submitted Data")
-        st.json(results)
-
-def show_search_section():
-    show_query_form()
-
-
-    st.markdown("### Search Results")
-    with st.form("search_queries"):
-        query = st.text_area("Search query:", height="content")
-        submitted = st.form_submit_button("Search!")
-        if submitted:
-            logger.info(f"User searched: {query}")
-            st.session_state.show_search_results = False
-
-            progress_text = "Searching for news articles..."
-            progress_bar = st.progress(0.0, text=progress_text)
-            articles = core.search.get_articles_from_rss(query)
-            enriched_articles = []
-            for article_index, article in enumerate(articles):
-                article = core.extraction.enrich_url(article)
-                article = core.extraction.enrich_full_text(article)
-                enriched_articles.append(article)
-                progess_value = (article_index+1)/len(articles)
-                progress_bar.progress(progess_value, text=progress_text)
-            progress_bar.empty()
-
-            st.session_state.layout.add_new_articles(enriched_articles)
-            st.session_state.show_search_results = True
-            st.rerun()
-
-    if st.session_state.show_search_results:
-        display_search_results()
+    # clear input safely
+    st.session_state["new_query_label"] = ""
 
 def display_search_results():
     layout = st.session_state.layout
@@ -161,7 +149,6 @@ def assign_article_on_selection(article_id, selectbox_key):
         article_id=article_id,
         to_id=st.session_state[selectbox_key]
     )
-
 
 def get_preview_text(text: str | None, missing_text_message: str, max_words=100) -> str:
     if not text:
