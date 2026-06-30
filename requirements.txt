@@ -1,4 +1,3 @@
-docx
 docxtpl
 feedparser
 pyyaml
