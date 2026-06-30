@@ -31,7 +31,7 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
             article.title,
             url_id=doc.build_url_id(article.url),
             font="Arial",
-            size=10,
+            size=2*10, # font size is represented in half-points, so this is font size 10
             bold=True,
             underline=True,
             color="#0000EE",
