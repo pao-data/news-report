@@ -1,6 +1,7 @@
 import logging
 from datetime import date
 
+from docx.shared import Pt
 from docxtpl import DocxTemplate, RichText
 from io import BytesIO
 
@@ -30,6 +31,8 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
         title_with_link.add(
             article.title,
             url_id=doc.build_url_id(article.url),
+            font="Arial",
+            size=Pt(10),
             bold=True,
             underline=True,
             color="#0000EE",
