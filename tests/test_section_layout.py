@@ -83,12 +83,10 @@ class TestLayout(unittest.TestCase):
         names = [s.name for s in layout.get_ordered_sections()]
         self.assertEqual(names, ["Two", "Three", "One"])
 
-    def test_unfinished_methods_currently_raise_type_error_on_instance_call(self):
+    def test_unfinished_methods_currently_return_none(self):
         layout = Layout(["One"])
-        with self.assertRaises(TypeError):
-            layout.delete_section()
-        with self.assertRaises(TypeError):
-            layout.move_article("a1", "from", "to")
+        self.assertIsNone(layout.delete_section())
+        self.assertIsNone(layout.move_article("a1", "from", "to"))
 
 
 if __name__ == "__main__":
