@@ -1,6 +1,7 @@
 import feedparser
 import logging
 import re
+import requests
 from datetime import datetime, timezone, timedelta
 from urllib.parse import quote
 
@@ -18,7 +19,9 @@ def create_search_url(user_query: str):
 def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]:
     """Get articles from Google RSS for the given search query within the past 24 hours."""
     rss_url = create_search_url(query)
-    feed = feedparser.parse(rss_url)
+    response = requests.get(rss_url, timeout=10)
+    response.raise_for_status()
+    feed = feedparser.parse(response.content)
 
     logger.info(f"Feed status: {feed.get('status')}")
     logger.debug(f"Feed: {feed}")
