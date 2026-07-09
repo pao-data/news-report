@@ -1,5 +1,6 @@
 import hashlib
 import logging
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -44,11 +45,7 @@ class Article:
 
         title, source = cls.separate_title_and_source(title_source)
 
-        published = None
-        published_parsed = entry.get("published_parsed")
-
-        if published_parsed:
-            published = datetime(*published_parsed[:6], tzinfo=timezone.utc)
+        published = cls.parse_published_parsed(entry.get("published_parsed"))
         
         google_url = entry.link
 
@@ -60,6 +57,16 @@ class Article:
     def make_article_id(entry) -> str:
         base = entry.get("id") or entry.get("guid") or entry.get("link") or entry.get("title")
         return hashlib.md5(base.encode()).hexdigest()
+
+    @staticmethod
+    def parse_published_parsed(published_parsed) -> datetime | None:
+        if not isinstance(published_parsed, Sequence) or len(published_parsed) < 6:
+            return None
+        try:
+            parts = tuple(int(part) for part in published_parsed[:6])
+            return datetime(*parts, tzinfo=timezone.utc)
+        except (TypeError, ValueError):
+            return None
 
     @staticmethod
     def separate_title_and_source(title_source: str):

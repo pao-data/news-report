@@ -27,8 +27,8 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
     cutoff = datetime.now(timezone.utc) - timedelta(days=1)
     filtered_entries = []
     for entry in feed.entries:
-        published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
-        if published >= cutoff:
+        published = Article.parse_published_parsed(getattr(entry, "published_parsed", None))
+        if published and published >= cutoff:
             filtered_entries.append(entry)
     articles = [Article.from_rss_entry(entry) for entry in filtered_entries]
 
