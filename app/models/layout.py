@@ -26,7 +26,7 @@ class Layout:
         self.sections[section_id] = Section(name=section_name, articles=[], id=section_id)
         self.section_order.append(section_id)
 
-    def delete_section():
+    def delete_section(self):
         """
         Move all articles in section to unassigned, then
         remove section from the Layout
@@ -56,7 +56,7 @@ class Layout:
                 self.unassigned_articles.append(article.id)
                 self.articles[article.id] = article
 
-    def move_article(article_id, from_id, to_id):
+    def move_article(self, article_id, from_id, to_id):
         """Move article from one section to another."""
         ...
     
