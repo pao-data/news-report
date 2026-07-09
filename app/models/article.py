@@ -12,7 +12,7 @@ class Article:
     id: str
     title: str
     source: str | None
-    published: datetime
+    published: datetime | None
     url: str | None
     google_url: str
     full_text: str | None
@@ -24,6 +24,8 @@ class Article:
     # TODO make sure today on report is by hawaii time (maybe display on the UI)
     @property
     def time_published_string(self):
+        if not self.published:
+            return ""
         gmt_str = f"{self.format_published('%H:%M')} GMT"
         hst_datetime = self.published.astimezone(ZoneInfo("Pacific/Honolulu"))
         hst_str = f"{hst_datetime.strftime('%H:%M')} HST"
