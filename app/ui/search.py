@@ -39,8 +39,8 @@ def show_search_section():
             article = core.extraction.enrich_url(article)
             article = core.extraction.enrich_full_text(article)
             enriched_articles.append(article)
-            progess_value = (article_index+1)/len(articles)
-            progress_bar.progress(progess_value, text=progress_text)
+            progress_value = (article_index + 1) / len(articles)
+            progress_bar.progress(progress_value, text=progress_text)
         progress_bar.empty()
 
         st.session_state.layout.add_new_articles(enriched_articles)
@@ -174,5 +174,5 @@ def get_preview_text(text: str | None, missing_text_message: str, max_words=100)
         else:
             n = int(max_words/2)
             # Use double space before newline since it's needed for html rendering used by st.write()
-            shorted_preview = " ".join(words_list[:n]) + "  \n...  \n" + " ".join(words_list[-n:])
-            return shorted_preview
+            shortened_preview = " ".join(words_list[:n]) + "  \n...  \n" + " ".join(words_list[-n:])
+            return shortened_preview

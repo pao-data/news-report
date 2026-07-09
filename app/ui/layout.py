@@ -1,11 +1,10 @@
 import streamlit as st
 from streamlit_sortables import sort_items
 
-from models.article import Article
 from models.section import Section
 from models.layout import Layout
 
-def initalize_layout():
+def initialize_layout():
     section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
     st.session_state.layout = Layout(section_names=section_names)
     st.rerun()

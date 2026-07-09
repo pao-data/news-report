@@ -8,7 +8,7 @@ from utils.paths import BASE_DIR
 from utils.config import load_default_queries
 from ui.search import show_search_section
 from ui.report import show_report_section
-from ui.layout import show_layout_section, initalize_layout
+from ui.layout import show_layout_section, initialize_layout
 
 
 log_dir = BASE_DIR / "logs"
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     if "sections" not in st.session_state:
         st.session_state.sections = []
     if "layout" not in st.session_state:
-        initalize_layout()
+        initialize_layout()
     if "user_provided_template" not in st.session_state:
         st.session_state.user_provided_template = None
     if "show_search_results" not in st.session_state:

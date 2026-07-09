@@ -15,7 +15,7 @@ def create_search_url(user_query: str):
     logger.info(f"RSS url:\t{rss_url}")
     return rss_url
 
-def get_articles_from_rss(query: str, limit: int | None = None) -> Article:
+def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]:
     """Get articles from Google RSS for the given search query within the past 24 hours."""
     rss_url = create_search_url(query)
     feed = feedparser.parse(rss_url)
