@@ -73,13 +73,31 @@ class Layout:
     
     def assign_article(self, article_id: str, to_id: str) -> None:
         """Move an article from unassigned into a target section."""
+        if article_id not in self.articles:
+            raise ValueError(f"Unknown article ID: {article_id}")
+        if article_id not in self.unassigned_articles:
+            raise ValueError(f"Article is not currently unassigned: {article_id}")
+        if to_id not in self.sections:
+            raise ValueError(f"Unknown section ID: {to_id}")
         to_section = self.sections[to_id]
+        if article_id in to_section.articles:
+            raise ValueError(f"Article already assigned to section {to_id}: {article_id}")
         self.unassigned_articles.remove(article_id)
         to_section.add_article(article_id)
 
     def unassign_article(self, article_id: str, from_id: str) -> None:
         """Move an article from a section back to unassigned."""
+        if article_id not in self.articles:
+            raise ValueError(f"Unknown article ID: {article_id}")
+        if from_id not in self.sections:
+            raise ValueError(f"Unknown section ID: {from_id}")
         from_section = self.sections[from_id]
+        if article_id not in from_section.articles:
+            raise ValueError(
+                f"Article is not currently assigned to section {from_id}: {article_id}"
+            )
+        if article_id in self.unassigned_articles:
+            raise ValueError(f"Article is already unassigned: {article_id}")
         from_section.remove_article(article_id)
         self.unassigned_articles.append(article_id)
 

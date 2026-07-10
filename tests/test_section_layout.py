@@ -69,6 +69,50 @@ class TestLayout(unittest.TestCase):
         self.assertEqual(layout.unassigned_articles, [])
         self.assertNotIn("a1", layout.articles)
 
+    def test_assign_requires_known_unassigned_article(self):
+        layout = Layout(["One"])
+        section_id = layout.section_order[0]
+
+        with self.assertRaises(ValueError):
+            layout.assign_article("missing", section_id)
+
+        article = make_article("a1")
+        layout.add_new_articles([article])
+        layout.assign_article("a1", section_id)
+        with self.assertRaises(ValueError):
+            layout.assign_article("a1", section_id)
+
+    def test_unassign_requires_section_membership(self):
+        layout = Layout(["One"])
+        section_id = layout.section_order[0]
+        article = make_article("a1")
+        layout.add_new_articles([article])
+
+        with self.assertRaises(ValueError):
+            layout.unassign_article("a1", section_id)
+
+        layout.assign_article("a1", section_id)
+        layout.unassign_article("a1", section_id)
+        with self.assertRaises(ValueError):
+            layout.unassign_article("a1", section_id)
+
+    def test_article_membership_is_exactly_one_place(self):
+        layout = Layout(["One"])
+        section_id = layout.section_order[0]
+        article = make_article("a1")
+        layout.add_new_articles([article])
+
+        self.assertIn("a1", layout.unassigned_articles)
+        self.assertNotIn("a1", layout.sections[section_id].articles)
+
+        layout.assign_article("a1", section_id)
+        self.assertNotIn("a1", layout.unassigned_articles)
+        self.assertIn("a1", layout.sections[section_id].articles)
+
+        layout.unassign_article("a1", section_id)
+        self.assertIn("a1", layout.unassigned_articles)
+        self.assertNotIn("a1", layout.sections[section_id].articles)
+
     def test_delete_unassigned_article_non_unassigned_is_noop(self):
         layout = Layout(["One"])
         article = make_article("a1")
