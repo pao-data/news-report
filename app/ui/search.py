@@ -3,6 +3,7 @@ import logging
 
 import core.search
 import core.extraction
+import ui.state
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +18,14 @@ def show_search_section():
     if submitted:
         results = {}
 
-        for label in st.session_state.queries:
+        for label in ui.state.get_queries():
             results[label] = st.session_state[f"query_{label}"]
 
         # Keep latest values as the source of truth
-        st.session_state.queries = results
+        ui.state.set_queries(results)
 
         logger.info(f"User searched: {results}")
-        st.session_state.show_search_results = False
+        ui.state.set_show_search_results(False)
 
         progress_text = "Searching for news articles..."
         progress_bar = st.progress(0.0, text=progress_text)
@@ -43,25 +44,26 @@ def show_search_section():
             progress_bar.progress(progress_value, text=progress_text)
         progress_bar.empty()
 
-        st.session_state.layout.add_new_articles(enriched_articles)
-        st.session_state.show_search_results = True
+        ui.state.get_layout().add_new_articles(enriched_articles)
+        ui.state.set_show_search_results(True)
         st.rerun()
 
-    if st.session_state.show_search_results:
+    if ui.state.get_show_search_results():
         st.header("Results")
         st.write("_Scroll to see more results._")
         with st.container(height=500):
             display_search_results()
 
 def show_query_fields():
-    for label in list(st.session_state.queries.keys()):
+    queries = ui.state.get_queries()
+    for label in list(queries.keys()):
         col1, col2 = st.columns([20, 1])
 
         with col1:
             st.text_area(
                 label=label,
                 key=f"query_{label}",
-                value=st.session_state.queries[label],
+                value=queries[label],
                 height="content",
             )
 
@@ -75,7 +77,9 @@ def show_query_fields():
                 key=f"delete_{label}",
                 help=f"Delete {label}",
             ):
-                del st.session_state.queries[label]
+                queries = ui.state.get_queries()
+                del queries[label]
+                ui.state.set_queries(queries)
 
                 # Remove widget state too
                 widget_key = f"query_{label}"
@@ -102,16 +106,18 @@ def add_query():
     if not label:
         return
 
-    if label in st.session_state.queries:
+    queries = ui.state.get_queries()
+    if label in queries:
         return
 
-    st.session_state.queries[label] = ""
+    queries[label] = ""
+    ui.state.set_queries(queries)
 
     # clear input safely
     st.session_state["new_query_label"] = ""
 
 def display_search_results():
-    layout = st.session_state.layout
+    layout = ui.state.get_layout()
     articles = layout.get_unassigned_articles()
     if not articles:
         st.write("No articles found for your search query.")
@@ -159,7 +165,7 @@ def display_search_results():
             )
 
 def assign_article_on_selection(article_id, selectbox_key):
-    st.session_state.layout.assign_article(
+    ui.state.get_layout().assign_article(
         article_id=article_id,
         to_id=st.session_state[selectbox_key]
     )

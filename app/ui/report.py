@@ -5,13 +5,15 @@ from io import BytesIO
 import core.report
 from utils.config import load_config
 from utils.paths import BASE_DIR
+import ui.state
 
 def reset_template_doc():
-    st.session_state.user_provided_template = None
+    ui.state.set_user_provided_template(None)
 
 def get_template():
-    if st.session_state.user_provided_template:
-        return st.session_state.user_provided_template
+    user_template = ui.state.get_user_provided_template()
+    if user_template:
+        return user_template
     else:
         config = load_config()
         default_template_path = BASE_DIR / config["paths"]["default_template_file"]
@@ -19,7 +21,7 @@ def get_template():
     
 
 def generate_report_for_download():
-    layout = st.session_state.layout
+    layout = ui.state.get_layout()
     template = get_template()
     buffer = core.report.generate_document(layout, template)
 
@@ -43,7 +45,7 @@ def show_report_section():
         )
         if template_file_upload:
             user_provided_template = BytesIO(template_file_upload.read())
-            st.session_state.user_provided_template = user_provided_template
+            ui.state.set_user_provided_template(user_provided_template)
         else:
             # If user removes an uploaded template document, use the default template.
             reset_template_doc()

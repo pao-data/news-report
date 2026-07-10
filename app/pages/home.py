@@ -9,6 +9,7 @@ from utils.config import load_default_queries
 from ui.search import show_search_section
 from ui.report import show_report_section
 from ui.layout import show_layout_section, initialize_layout
+import ui.state
 
 
 log_dir = BASE_DIR / "logs"
@@ -23,14 +24,10 @@ logger = logging.getLogger(__name__)
 
 
 if __name__ == "__main__":
-    if "queries" not in st.session_state:
-        st.session_state.queries = load_default_queries()
-    if "layout" not in st.session_state:
-        initialize_layout()
-    if "user_provided_template" not in st.session_state:
-        st.session_state.user_provided_template = None
-    if "show_search_results" not in st.session_state:
-        st.session_state.show_search_results = False
+    ui.state.ensure_state_initialized(
+        default_queries=load_default_queries(),
+        initialize_layout_fn=initialize_layout,
+    )
 
     st.set_page_config(layout="wide")
     

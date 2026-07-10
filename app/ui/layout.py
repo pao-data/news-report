@@ -3,10 +3,11 @@ from streamlit_sortables import sort_items
 
 from models.section import Section
 from models.layout import Layout
+import ui.state
 
 def initialize_layout():
     section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
-    st.session_state.layout = Layout(section_names=section_names)
+    ui.state.set_layout(Layout(section_names=section_names))
     st.rerun()
     
 def show_layout_section():
@@ -17,7 +18,7 @@ def show_layout_section():
     show_section_tabs()
 
 def show_manage_sections():
-    layout = st.session_state.layout
+    layout = ui.state.get_layout()
     # Show each section in order. When a user moves a section, update the Layout and the UI.
     sections = get_numbered_list(
         [s.name for s in layout.get_ordered_sections()]
@@ -39,13 +40,13 @@ def show_manage_sections():
     )
 
 def add_section_from_text_input(widget_key):
-    layout = st.session_state.layout
+    layout = ui.state.get_layout()
     layout.add_section(
         section_name=st.session_state[widget_key]
     )
 
 def show_section_tabs():
-    layout = st.session_state.layout
+    layout = ui.state.get_layout()
     sections = layout.get_ordered_sections()
     with st.container(border=True):
         tabs = st.tabs([s.name for s in sections], on_change="rerun")
@@ -54,15 +55,12 @@ def show_section_tabs():
                 if section.has_articles():
                     show_articles(section)
 
-    # with tabs[0]:
-    #     if st.session_state["articles"]:
-    #         show_articles(st.session_state["sections"][0])
-
 
 def show_articles(section: Section):
+    layout = ui.state.get_layout()
     section_id = section.id
     for i, article_id in enumerate(section.articles):
-        article = st.session_state.layout.articles[article_id]
+        article = layout.articles[article_id]
         c1, c2, c3, c4 = st.columns([0.03, 0.03, 0.92, 0.03])
         if i > 0:
             c1.button(
@@ -84,7 +82,7 @@ def show_articles(section: Section):
             icon=":material/delete:",
             type="tertiary",
             help="Remove from report. (Article will return to the bottom of the search results list.)",
-            on_click=st.session_state.layout.unassign_article,
+            on_click=layout.unassign_article,
             kwargs={"article_id": article_id, "from_id": section_id},
         )
 
