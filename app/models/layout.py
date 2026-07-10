@@ -43,7 +43,7 @@ class Layout:
         Move all articles in section to unassigned, then
         remove section from the Layout
         """
-        ...
+        raise NotImplementedError("Layout.delete_section is intentionally not implemented yet.")
 
     def reorder_section(self, from_position: int, to_position: int) -> None:
         section_order = self.section_order
@@ -71,7 +71,7 @@ class Layout:
 
     def move_article(self, article_id: str, from_id: str, to_id: str) -> None:
         """Move article from one section to another."""
-        ...
+        raise NotImplementedError("Layout.move_article is intentionally not implemented yet.")
     
     def assign_article(self, article_id: str, to_id: str) -> None:
         """Move an article from unassigned into a target section."""

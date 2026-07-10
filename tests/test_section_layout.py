@@ -145,10 +145,12 @@ class TestLayout(unittest.TestCase):
         with self.assertRaises(ValueError):
             layout.reorder_section(0, 5)
 
-    def test_unfinished_methods_currently_return_none(self):
+    def test_unfinished_methods_raise_not_implemented(self):
         layout = Layout(["One"])
-        self.assertIsNone(layout.delete_section())
-        self.assertIsNone(layout.move_article("a1", "from", "to"))
+        with self.assertRaises(NotImplementedError):
+            layout.delete_section()
+        with self.assertRaises(NotImplementedError):
+            layout.move_article("a1", "from", "to")
 
 
 if __name__ == "__main__":
