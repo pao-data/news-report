@@ -112,6 +112,16 @@ class TestLayout(unittest.TestCase):
         layout.unassign_article("a1", section_id)
         self.assertIn("a1", layout.unassigned_articles)
         self.assertNotIn("a1", layout.sections[section_id].articles)
+        layout._assert_membership_invariants()
+
+    def test_invariants_reject_orphaned_article_membership(self):
+        layout = Layout(["One"])
+        article = make_article("a1")
+        layout.add_new_articles([article])
+        layout.unassigned_articles.remove("a1")
+
+        with self.assertRaises(ValueError):
+            layout._assert_membership_invariants()
 
     def test_delete_unassigned_article_non_unassigned_is_noop(self):
         layout = Layout(["One"])

@@ -31,6 +31,7 @@ class Layout:
         # Layouts should have no articles upon initialization
         self.articles = {}
         self.unassigned_articles = []
+        self._assert_membership_invariants()
 
     def add_section(self, section_name: str) -> None:
         section_id = str(uuid.uuid4())
@@ -66,6 +67,7 @@ class Layout:
             if article.id not in self.articles:
                 self.unassigned_articles.append(article.id)
                 self.articles[article.id] = article
+        self._assert_membership_invariants()
 
     def move_article(self, article_id: str, from_id: str, to_id: str) -> None:
         """Move article from one section to another."""
@@ -84,6 +86,7 @@ class Layout:
             raise ValueError(f"Article already assigned to section {to_id}: {article_id}")
         self.unassigned_articles.remove(article_id)
         to_section.add_article(article_id)
+        self._assert_membership_invariants()
 
     def unassign_article(self, article_id: str, from_id: str) -> None:
         """Move an article from a section back to unassigned."""
@@ -100,6 +103,7 @@ class Layout:
             raise ValueError(f"Article is already unassigned: {article_id}")
         from_section.remove_article(article_id)
         self.unassigned_articles.append(article_id)
+        self._assert_membership_invariants()
 
     def delete_unassigned_article(self, article_id: str) -> None:
         """Fully delete an unassigned article."""
@@ -110,6 +114,30 @@ class Layout:
             return
         self.unassigned_articles.remove(article_id)
         del self.articles[article_id]
+        self._assert_membership_invariants()
+
+    def _assert_membership_invariants(self) -> None:
+        """Validate that article membership is complete and non-overlapping."""
+        membership_counts: dict[str, int] = {article_id: 0 for article_id in self.articles}
+
+        for section in self.sections.values():
+            for article_id in section.articles:
+                if article_id not in self.articles:
+                    raise ValueError(f"Section references unknown article ID: {article_id}")
+                membership_counts[article_id] += 1
+
+        for article_id in self.unassigned_articles:
+            if article_id not in self.articles:
+                raise ValueError(f"Unassigned list references unknown article ID: {article_id}")
+            membership_counts[article_id] += 1
+
+        orphaned = [article_id for article_id, count in membership_counts.items() if count == 0]
+        if orphaned:
+            raise ValueError(f"Article IDs without membership: {orphaned}")
+
+        duplicated = [article_id for article_id, count in membership_counts.items() if count > 1]
+        if duplicated:
+            raise ValueError(f"Article IDs with multiple memberships: {duplicated}")
 
 
     
