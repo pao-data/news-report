@@ -25,8 +25,6 @@ logger = logging.getLogger(__name__)
 if __name__ == "__main__":
     if "queries" not in st.session_state:
         st.session_state.queries = load_default_queries()
-    if "sections" not in st.session_state:
-        st.session_state.sections = []
     if "layout" not in st.session_state:
         initialize_layout()
     if "user_provided_template" not in st.session_state:
