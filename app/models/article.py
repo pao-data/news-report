@@ -3,6 +3,7 @@ import logging
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from typing import Any, Self
 from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Article:
+    """Canonical article model used throughout search/layout/report flows."""
     id: str
     title: str
     source: str | None
@@ -19,12 +21,12 @@ class Article:
     full_text: str | None
 
     @property
-    def date_published_string(self):
+    def date_published_string(self) -> str:
         return self.format_published("%B %d, %Y")
     
     # TODO make sure today on report is by hawaii time (maybe display on the UI)
     @property
-    def time_published_string(self):
+    def time_published_string(self) -> str:
         if not self.published:
             return ""
         gmt_str = f"{self.format_published('%H:%M')} GMT"
@@ -33,13 +35,13 @@ class Article:
         full_str = f"{gmt_str} ({hst_str})"
         return full_str
 
-    def format_published(self, format):
+    def format_published(self, format: str) -> str:
         if not self.published:
             return ""
         return self.published.strftime(format)
 
     @classmethod
-    def from_rss_entry(cls, entry):
+    def from_rss_entry(cls, entry: Any) -> Self:
         id = cls.make_article_id(entry)
         title_source = entry.get("title", "")
 
@@ -49,17 +51,17 @@ class Article:
         
         google_url = entry.link
 
-        return Article(
+        return cls(
             id=id, title=title, source=source, published=published, url=None, google_url=google_url, full_text=None
         )
 
     @staticmethod
-    def make_article_id(entry) -> str:
+    def make_article_id(entry: Any) -> str:
         base = entry.get("id") or entry.get("guid") or entry.get("link") or entry.get("title")
         return hashlib.md5(base.encode()).hexdigest()
 
     @staticmethod
-    def parse_published_parsed(published_parsed) -> datetime | None:
+    def parse_published_parsed(published_parsed: Any) -> datetime | None:
         if not isinstance(published_parsed, Sequence) or len(published_parsed) < 6:
             return None
         try:
@@ -69,7 +71,7 @@ class Article:
             return None
 
     @staticmethod
-    def separate_title_and_source(title_source: str):
+    def separate_title_and_source(title_source: str) -> tuple[str, str]:
         parts = title_source.split(" - ")
 
         if len(parts) != 2:
