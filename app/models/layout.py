@@ -48,9 +48,9 @@ class Layout:
     def reorder_section(self, from_position: int, to_position: int) -> None:
         section_order = self.section_order
         if not(0 <= from_position < len(section_order)):
-            ValueError("Invalid index for from_position.")
+            raise ValueError("Invalid index for from_position.")
         if not(0 <= to_position < len(section_order)):
-            ValueError("Invalid index for to_position.")
+            raise ValueError("Invalid index for to_position.")
         section_to_move = section_order.pop(from_position)
         section_order.insert(to_position, section_to_move)
         self.section_order = section_order
@@ -108,10 +108,9 @@ class Layout:
     def delete_unassigned_article(self, article_id: str) -> None:
         """Fully delete an unassigned article."""
         if not article_id in self.unassigned_articles:
-            ValueError(
+            raise ValueError(
                 f"Attempt to delete article that is not in unassigned articles.\n\tArticle id: {article_id}"
             )
-            return
         self.unassigned_articles.remove(article_id)
         del self.articles[article_id]
         self._assert_membership_invariants()

@@ -123,11 +123,12 @@ class TestLayout(unittest.TestCase):
         with self.assertRaises(ValueError):
             layout._assert_membership_invariants()
 
-    def test_delete_unassigned_article_non_unassigned_is_noop(self):
+    def test_delete_unassigned_article_non_unassigned_raises(self):
         layout = Layout(["One"])
         article = make_article("a1")
         layout.add_new_articles([article])
-        layout.delete_unassigned_article("missing-id")
+        with self.assertRaises(ValueError):
+            layout.delete_unassigned_article("missing-id")
         self.assertEqual(layout.unassigned_articles, ["a1"])
         self.assertIn("a1", layout.articles)
 
@@ -136,6 +137,13 @@ class TestLayout(unittest.TestCase):
         layout.reorder_section(0, 2)
         names = [s.name for s in layout.get_ordered_sections()]
         self.assertEqual(names, ["Two", "Three", "One"])
+
+    def test_reorder_section_invalid_index_raises(self):
+        layout = Layout(["One", "Two"])
+        with self.assertRaises(ValueError):
+            layout.reorder_section(-1, 1)
+        with self.assertRaises(ValueError):
+            layout.reorder_section(0, 5)
 
     def test_unfinished_methods_currently_return_none(self):
         layout = Layout(["One"])
