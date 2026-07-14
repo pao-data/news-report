@@ -154,11 +154,63 @@ class TestLayout(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             layout.move_article("a1", "from", "to")
 
+    def test_init_rejects_duplicate_section_names(self):
+        with self.assertRaises(ValueError) as cm:
+            Layout(["Tech", "Sports", "Tech"])
+        self.assertIn("similar name", str(cm.exception))
+
+    def test_init_rejects_case_insensitive_duplicates(self):
+        with self.assertRaises(ValueError) as cm:
+            Layout(["Tech", "Sports", "tech"])
+        self.assertIn("similar name", str(cm.exception))
+
+    def test_init_rejects_whitespace_duplicates(self):
+        with self.assertRaises(ValueError) as cm:
+            Layout(["Tech", " Tech ", "Sports"])
+        self.assertIn("similar name", str(cm.exception))
+
+    def test_add_section_rejects_duplicate(self):
+        layout = Layout(["Tech"])
+        with self.assertRaises(ValueError) as cm:
+            layout.add_section("Tech")
+        self.assertIn("similar name", str(cm.exception))
+
+    def test_add_section_rejects_case_insensitive_duplicate(self):
+        layout = Layout(["Tech"])
+        with self.assertRaises(ValueError) as cm:
+            layout.add_section("tech")
+        self.assertIn("similar name", str(cm.exception))
+
+    def test_add_section_rejects_whitespace_duplicate(self):
+        layout = Layout(["Tech"])
+        with self.assertRaises(ValueError) as cm:
+            layout.add_section(" Tech ")
+        self.assertIn("similar name", str(cm.exception))
+
+    def test_add_section_preserves_case(self):
+        layout = Layout(["TeCh"])
+        sections = layout.get_ordered_sections()
+        self.assertEqual(sections[0].name, "TeCh")
+
+    def test_add_section_trims_whitespace(self):
+        layout = Layout([])
+        layout.add_section("  Tech  ")
+        sections = layout.get_ordered_sections()
+        self.assertEqual(sections[0].name, "Tech")
+
+    def test_add_section_rejects_empty_name(self):
+        layout = Layout([])
+        with self.assertRaises(ValueError) as cm:
+            layout.add_section("   ")
+        self.assertIn("empty", str(cm.exception))
+
 
 class TestConfig(unittest.TestCase):
     def test_load_default_section_names_from_config(self):
         expected_names = ["Alpha", "Bravo", "Charlie"]
-        with patch("utils.config.load_config", return_value={"defaults": {"section_names": expected_names}}):
+        with patch(
+            "utils.config.load_config", return_value={"defaults": {"section_names": expected_names}}
+        ):
             self.assertEqual(load_default_section_names(), expected_names)
 
     def test_load_default_section_names_falls_back_for_invalid_config(self):
@@ -173,6 +225,33 @@ class TestConfig(unittest.TestCase):
         for invalid_config in invalid_configs:
             with patch("utils.config.load_config", return_value=invalid_config):
                 self.assertEqual(load_default_section_names(), DEFAULT_SECTION_NAMES)
+
+    def test_load_default_section_names_rejects_exact_duplicates(self):
+        duplicate_config = {"defaults": {"section_names": ["Tech", "Sports", "Tech"]}}
+        with patch("utils.config.load_config", return_value=duplicate_config):
+            with self.assertRaises(ValueError) as cm:
+                load_default_section_names()
+            self.assertIn("Duplicate section name", str(cm.exception))
+
+    def test_load_default_section_names_rejects_case_insensitive_duplicates(self):
+        duplicate_config = {"defaults": {"section_names": ["Tech", "Sports", "tech"]}}
+        with patch("utils.config.load_config", return_value=duplicate_config):
+            with self.assertRaises(ValueError) as cm:
+                load_default_section_names()
+            self.assertIn("Duplicate section name", str(cm.exception))
+
+    def test_load_default_section_names_rejects_whitespace_duplicates(self):
+        duplicate_config = {"defaults": {"section_names": ["Tech", " Tech ", "Sports"]}}
+        with patch("utils.config.load_config", return_value=duplicate_config):
+            with self.assertRaises(ValueError) as cm:
+                load_default_section_names()
+            self.assertIn("Duplicate section name", str(cm.exception))
+
+    def test_load_default_section_names_preserves_case(self):
+        config = {"defaults": {"section_names": ["TeCh", "SpOrTs"]}}
+        with patch("utils.config.load_config", return_value=config):
+            names = load_default_section_names()
+            self.assertEqual(names, ["TeCh", "SpOrTs"])
 
 
 if __name__ == "__main__":
