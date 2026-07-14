@@ -46,7 +46,7 @@ def _add_bookmark(paragraph, bookmark_name: str, bookmark_id: int) -> None:
     paragraph._p.append(end)
 
 
-def _set_anchor_on_text(paragraph, target_text: str, anchor: str) -> bool:
+def _set_anchor_on_text(paragraph, target_text: str, anchor: str, tooltip: str | None = None) -> bool:
     """
     Update the anchor for target_text in a paragraph.
     If target_text is plain run text, wrap that run in an internal hyperlink.
@@ -59,11 +59,15 @@ def _set_anchor_on_text(paragraph, target_text: str, anchor: str) -> bool:
 
         if tag == "hyperlink":
             child.set(qn("w:anchor"), anchor)
+            if tooltip:
+                child.set(qn("w:tooltip"), tooltip)
             return True
 
         if tag == "r":
             hyperlink = OxmlElement("w:hyperlink")
             hyperlink.set(qn("w:anchor"), anchor)
+            if tooltip:
+                hyperlink.set(qn("w:tooltip"), tooltip)
             hyperlink.append(deepcopy(child))
             paragraph._p.replace(child, hyperlink)
             return True
@@ -149,11 +153,26 @@ def _add_internal_section_navigation(rendered_docx: BytesIO, section_names: list
         bookmark_id += 1
 
         for nav_paragraph in section_info["summary_nav_paragraphs"]:
-            _set_anchor_on_text(nav_paragraph, "Full Articles", full_anchor)
-            _set_anchor_on_text(nav_paragraph, "Back to Top", "_top")
+            _set_anchor_on_text(
+                nav_paragraph,
+                "Full Articles",
+                full_anchor,
+                tooltip=f"Go to Full Articles for {name}.",
+            )
+            _set_anchor_on_text(
+                nav_paragraph,
+                "Back to Top",
+                "_top",
+                tooltip="Go to top of document.",
+            )
 
         for nav_paragraph in section_info["full_nav_paragraphs"]:
-            _set_anchor_on_text(nav_paragraph, "Back to Summaries", summary_anchor)
+            _set_anchor_on_text(
+                nav_paragraph,
+                "Back to Summaries",
+                summary_anchor,
+                tooltip=f"Go to Summaries for {name}.",
+            )
 
     output = BytesIO()
     doc.save(output)
