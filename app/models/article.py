@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Article:
     """Canonical article model used throughout search/layout/report flows."""
+
     id: str
     title: str
     source: str | None
@@ -23,7 +24,7 @@ class Article:
     @property
     def date_published_string(self) -> str:
         return self.format_published("%B %d, %Y")
-    
+
     # TODO make sure today on report is by hawaii time (maybe display on the UI)
     @property
     def time_published_string(self) -> str:
@@ -48,11 +49,17 @@ class Article:
         title, source = cls.separate_title_and_source(title_source)
 
         published = cls.parse_published_parsed(entry.get("published_parsed"))
-        
+
         google_url = entry.link
 
         return cls(
-            id=id, title=title, source=source, published=published, url=None, google_url=google_url, full_text=None
+            id=id,
+            title=title,
+            source=source,
+            published=published,
+            url=None,
+            google_url=google_url,
+            full_text=None,
         )
 
     @staticmethod
