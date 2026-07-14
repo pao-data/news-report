@@ -1,8 +1,8 @@
-import streamlit as st
 import logging
 
-import core.search
 import core.extraction
+import core.search
+import streamlit as st
 import ui.state
 
 logger = logging.getLogger(__name__)
@@ -46,13 +46,13 @@ def show_search_section():
 
         ui.state.get_layout().add_new_articles(enriched_articles)
         ui.state.set_show_search_results(True)
-        st.rerun()
 
     if ui.state.get_show_search_results():
         st.header("Results")
         st.write("_Scroll to see more results._")
         with st.container(height=500):
             display_search_results()
+
 
 def show_query_fields():
     queries = ui.state.get_queries()
@@ -100,6 +100,7 @@ def show_query_fields():
         on_change=add_query,
     )
 
+
 def add_query():
     label = st.session_state.new_query_label.strip()
 
@@ -115,6 +116,7 @@ def add_query():
 
     # clear input safely
     st.session_state["new_query_label"] = ""
+
 
 def display_search_results():
     layout = ui.state.get_layout()
@@ -134,10 +136,7 @@ def display_search_results():
             missing_text_message = """Text for this article could not be found.
             It is possible access was refused because of bot-detection measures, but other reasons are also possible."""
         text = article.full_text
-        preview_text = get_preview_text(
-            text,
-            missing_text_message=missing_text_message
-        )
+        preview_text = get_preview_text(text, missing_text_message=missing_text_message)
         with st.expander(f"***{title}*** ({source})"):
             st.write(f"Published:\t{published}")
             st.write(f"Link:\t{url}")
@@ -151,24 +150,22 @@ def display_search_results():
                 format_func=lambda section_id: layout.sections[section_id].name,
                 key=selectbox_key,
                 on_change=assign_article_on_selection,
-                kwargs={
-                    "article_id": article.id,
-                    "selectbox_key": selectbox_key
-                },
+                kwargs={"article_id": article.id, "selectbox_key": selectbox_key},
             )
             st.button(
-                f"Delete article entirely (cannot be undone)",
+                "Delete article entirely (cannot be undone)",
                 icon=":material/delete:",
                 key=f"fully_delete_unassigned_article_{article.id}",
                 on_click=layout.delete_unassigned_article,
                 kwargs={"article_id": article.id},
             )
 
+
 def assign_article_on_selection(article_id, selectbox_key):
     ui.state.get_layout().assign_article(
-        article_id=article_id,
-        to_id=st.session_state[selectbox_key]
+        article_id=article_id, to_id=st.session_state[selectbox_key]
     )
+
 
 def get_preview_text(text: str | None, missing_text_message: str, max_words=100) -> str:
     if not text:
@@ -178,7 +175,7 @@ def get_preview_text(text: str | None, missing_text_message: str, max_words=100)
         if len(words_list) <= max_words:
             return " ".join(words_list)
         else:
-            n = int(max_words/2)
+            n = int(max_words / 2)
             # Use double space before newline since it's needed for html rendering used by st.write()
             shortened_preview = " ".join(words_list[:n]) + "  \n...  \n" + " ".join(words_list[-n:])
             return shortened_preview
