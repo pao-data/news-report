@@ -10,7 +10,11 @@ DEFAULT_SECTION_NAMES = [
     "Army Priorities",
     "China & North Asia",
     "Southeast Asia",
+    "Oceania & India",
+    "Hawaii & South Pacific",
+    "Across the Services",
     "Other News",
+    "Commentary",
 ]
 
 def load_config():
