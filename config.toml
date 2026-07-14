@@ -2,6 +2,8 @@
 default_template_file = "app/assets/default_template.docx"
 
 [defaults]
+# Section names must be unique after trimming whitespace (case-insensitive).
+# Duplicate names will cause an error at startup.
 section_names = [
     "Recommended Top Stories",
     "USARPAC Lethality",

@@ -1,10 +1,12 @@
 import logging
 import uuid
 
-from models.section import Section
 from models.article import Article
+from models.section import Section
+from utils.config import normalize_section_name, validate_section_name
 
 logger = logging.getLogger(__name__)
+
 
 class Layout:
     """Aggregate model for report composition.
@@ -13,19 +15,23 @@ class Layout:
     - `articles` stores each article ID at most once.
     - An article ID should exist either in exactly one section or in
       `unassigned_articles` (never both).
+    - Section names are unique (case-insensitive after trimming).
 
     Ownership:
     - Cross-container membership changes (assigned <-> unassigned) are
       managed by `Layout` methods, not `Section`.
     """
-    sections: dict[str, Section] # sections by id
-    section_order: list[str] # order of sections by id
-    articles: dict[str, Article] # articles by id
-    unassigned_articles: list[str] # list of unassigned articles, in display order, by id
+
+    sections: dict[str, Section]  # sections by id
+    section_order: list[str]  # order of sections by id
+    articles: dict[str, Article]  # articles by id
+    unassigned_articles: list[str]  # list of unassigned articles, in display order, by id
+    _section_names_normalized: dict[str, str]  # normalized name -> section id mapping
 
     def __init__(self, section_names: list[str]) -> None:
         self.sections = {}
         self.section_order = []
+        self._section_names_normalized = {}
         for section_name in section_names:
             self.add_section(section_name)
         # Layouts should have no articles upon initialization
@@ -34,9 +40,22 @@ class Layout:
         self._assert_membership_invariants()
 
     def add_section(self, section_name: str) -> None:
+        canonical_name = validate_section_name(section_name)
+        normalized_name = normalize_section_name(canonical_name)
+
+        if normalized_name in self._section_names_normalized:
+            existing_section_id = self._section_names_normalized[normalized_name]
+            existing_name = self.sections[existing_section_id].name
+            raise ValueError(
+                f"Cannot add section '{canonical_name}': a section with a similar name "
+                f"'{existing_name}' already exists (names are trimmed of leading/trailing "
+                "whitespace and case-insensitive)."
+            )
+
         section_id = str(uuid.uuid4())
-        self.sections[section_id] = Section(name=section_name, articles=[], id=section_id)
+        self.sections[section_id] = Section(name=canonical_name, articles=[], id=section_id)
         self.section_order.append(section_id)
+        self._section_names_normalized[normalized_name] = section_id
 
     def delete_section(self) -> None:
         """
@@ -47,9 +66,9 @@ class Layout:
 
     def reorder_section(self, from_position: int, to_position: int) -> None:
         section_order = self.section_order
-        if not(0 <= from_position < len(section_order)):
+        if not (0 <= from_position < len(section_order)):
             raise ValueError("Invalid index for from_position.")
-        if not(0 <= to_position < len(section_order)):
+        if not (0 <= to_position < len(section_order)):
             raise ValueError("Invalid index for to_position.")
         section_to_move = section_order.pop(from_position)
         section_order.insert(to_position, section_to_move)
@@ -72,7 +91,7 @@ class Layout:
     def move_article(self, article_id: str, from_id: str, to_id: str) -> None:
         """Move article from one section to another."""
         raise NotImplementedError("Layout.move_article is intentionally not implemented yet.")
-    
+
     def assign_article(self, article_id: str, to_id: str) -> None:
         """Move an article from unassigned into a target section."""
         if article_id not in self.articles:
@@ -107,7 +126,7 @@ class Layout:
 
     def delete_unassigned_article(self, article_id: str) -> None:
         """Fully delete an unassigned article."""
-        if not article_id in self.unassigned_articles:
+        if article_id not in self.unassigned_articles:
             raise ValueError(
                 f"Attempt to delete article that is not in unassigned articles.\n\tArticle id: {article_id}"
             )
@@ -138,8 +157,6 @@ class Layout:
         if duplicated:
             raise ValueError(f"Article IDs with multiple memberships: {duplicated}")
 
-
-    
 
 # for article in section:
 # - display container
