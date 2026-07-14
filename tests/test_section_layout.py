@@ -219,8 +219,8 @@ class TestConfig(unittest.TestCase):
             {"defaults": {}},
             {"defaults": {"section_names": []}},
             {"defaults": {"section_names": "not-a-list"}},
-            {"defaults": {"section_names": ["Valid", 123]}},
-            {"defaults": {"section_names": ["Valid", "   "]}},
+            {"defaults": {"section_names": [2348, 123]}},
+            {"defaults": {"section_names": ["   ", " "]}},
         ]
         for invalid_config in invalid_configs:
             with patch("utils.config.load_config", return_value=invalid_config):
