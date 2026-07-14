@@ -3,10 +3,11 @@ from streamlit_sortables import sort_items
 
 from models.section import Section
 from models.layout import Layout
+from utils.config import load_default_section_names
 import ui.state
 
 def initialize_layout():
-    section_names = ["Recommended Top Stories", "USARPAC Lethality", "Army Priorities", "China & North Asia", "Southeast Asia", "Other News"]
+    section_names = load_default_section_names()
     ui.state.set_layout(Layout(section_names=section_names))
     st.rerun()
     
