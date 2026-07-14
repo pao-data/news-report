@@ -1,13 +1,14 @@
-import feedparser
 import logging
 import re
-import requests
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
+import feedparser
+import requests
 from models.article import Article
 
 logger = logging.getLogger(__name__)
+
 
 def create_search_url(user_query: str):
     normalized = re.sub(r"\s+", " ", user_query).strip()
@@ -15,6 +16,7 @@ def create_search_url(user_query: str):
     rss_url = f"https://news.google.com/rss/search?q={quote(normalized)}+when:1d"
     logger.info(f"RSS url:\t{rss_url}")
     return rss_url
+
 
 def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]:
     """Get articles from Google RSS for the given search query within the past 24 hours."""
@@ -37,5 +39,5 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
 
     if limit:
         articles = articles[:limit]
-        
+
     return articles

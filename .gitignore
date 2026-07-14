@@ -170,3 +170,5 @@ cython_debug/
 .env*
 .certs/
 run-local.sh
+
+scripts/*

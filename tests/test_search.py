@@ -40,9 +40,15 @@ class TestSearch(unittest.TestCase):
     @patch("core.search.feedparser.parse")
     def test_get_articles_from_rss_filters_to_last_24_hours(self, parse_mock):
         now = datetime.now(timezone.utc)
-        recent_entry = make_entry("Recent - Source", "https://example.com/recent", now - timedelta(hours=2), "r1")
-        old_entry = make_entry("Old - Source", "https://example.com/old", now - timedelta(days=2), "o1")
-        parse_mock.return_value = SimpleNamespace(entries=[recent_entry, old_entry], get=lambda key: 200)
+        recent_entry = make_entry(
+            "Recent - Source", "https://example.com/recent", now - timedelta(hours=2), "r1"
+        )
+        old_entry = make_entry(
+            "Old - Source", "https://example.com/old", now - timedelta(days=2), "o1"
+        )
+        parse_mock.return_value = SimpleNamespace(
+            entries=[recent_entry, old_entry], get=lambda key: 200
+        )
 
         articles = cast(list, get_articles_from_rss("query"))
 

@@ -1,13 +1,12 @@
 import logging
-from datetime import date
 from copy import deepcopy
+from datetime import date
 from io import BytesIO
 
 from docx import Document
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docxtpl import DocxTemplate, RichText
-
 from models.article import Article
 
 logger = logging.getLogger(__name__)
@@ -15,9 +14,11 @@ logger = logging.getLogger(__name__)
 # The text that separates the summary and full articles sections in the template document.
 SUPERSECTION_DIVIDER = "FULL ARTICLES"
 
+
 def prettify_text(text):
     text = text.replace("\n", "\n\n")
     return text
+
 
 def summarize_article(text, min_characters=500):
     # TODO should probably replace this with a better summarization strategy at some point
@@ -46,7 +47,9 @@ def _add_bookmark(paragraph, bookmark_name: str, bookmark_id: int) -> None:
     paragraph._p.append(end)
 
 
-def _set_anchor_on_text(paragraph, target_text: str, anchor: str, tooltip: str | None = None) -> bool:
+def _set_anchor_on_text(
+    paragraph, target_text: str, anchor: str, tooltip: str | None = None
+) -> bool:
     """
     Update the anchor for target_text in a paragraph.
     If target_text is plain run text, wrap that run in an internal hyperlink.
@@ -179,6 +182,7 @@ def _add_internal_section_navigation(rendered_docx: BytesIO, section_names: list
     output.seek(0)
     return output
 
+
 def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     article_context = {}
 
@@ -188,20 +192,28 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
             article.title,
             url_id=doc.build_url_id(article.url),
             font="Arial",
-            size=2*10, # font size is represented in half-points, so this is font size 10
+            size=2 * 10,  # font size is represented in half-points, so this is font size 10
             bold=True,
             underline=True,
             color="#0000EE",
         )
     else:
-        title_with_link=article.title
-    
+        title_with_link = article.title
+
     source = article.source or "no source identified"
 
     date = article.date_published_string or "unknown publication date"
 
-    full_text = prettify_text(article.full_text) if article.full_text else "no text found (perhaps due to bot blocking by the website)"
-    summary = summarize_article(article.full_text) if article.full_text else "no text found to summarize (perhaps due to bot blocking by the website)"
+    full_text = (
+        prettify_text(article.full_text)
+        if article.full_text
+        else "no text found (perhaps due to bot blocking by the website)"
+    )
+    summary = (
+        summarize_article(article.full_text)
+        if article.full_text
+        else "no text found to summarize (perhaps due to bot blocking by the website)"
+    )
 
     article_context = {
         "title_with_link": title_with_link,
@@ -212,6 +224,7 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     }
 
     return article_context
+
 
 def generate_doc_context(layout, doc):
     today = date.today()
@@ -234,9 +247,10 @@ def generate_doc_context(layout, doc):
             "month": today.strftime("%B"),
             "year": today.year,
         },
-        "sections": sections_doccontext
+        "sections": sections_doccontext,
     }
     return context
+
 
 def generate_document(layout, template):
     """
@@ -253,6 +267,7 @@ def generate_document(layout, template):
     doc.save(rendered_buffer)
 
     return _add_internal_section_navigation(rendered_buffer, section_names)
+
 
 # if __name__ == "__main__":
 #     articles = []
