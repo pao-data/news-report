@@ -23,10 +23,12 @@ def show_layout_section():
 def show_manage_sections():
     layout = ui.state.get_layout()
     # Show each section in order. When a user moves a section, update the Layout and the UI.
-    sections = get_numbered_list([s.name for s in layout.get_ordered_sections()])
-    reordered_sections = sort_items(sections, direction="vertical")
-    if sections != reordered_sections:
-        old_position, new_position = find_move(sections, reordered_sections)
+    ordered_sections = layout.get_ordered_sections()
+    section_names = [s.name for s in ordered_sections]
+
+    reordered_names = sort_items(section_names, direction="vertical")
+    if section_names != reordered_names:
+        old_position, new_position = find_move(section_names, reordered_names)
         layout.reorder_section(old_position, new_position)
         st.rerun()
 
@@ -108,11 +110,6 @@ def show_article_expander(article):
         st.write(f"Published:\t{published}")
         st.write(f"Link:\t{url}")
         st.write(f"{preview_text}")
-
-
-def get_numbered_list(raw_list, start_with_one=True):
-    offset = 1 if start_with_one else 0
-    return [f"({idx + offset})\t{itm}" for idx, itm in enumerate(raw_list)]
 
 
 def find_move(original, modified):
