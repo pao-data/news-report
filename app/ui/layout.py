@@ -32,6 +32,10 @@ def show_manage_sections():
         layout.reorder_section(old_position, new_position)
         st.rerun()
 
+    if "section_add_error" in st.session_state:
+        st.error(st.session_state["section_add_error"])
+        del st.session_state["section_add_error"]
+
     col, _ = st.columns([4, 10])
     col.text_input(
         "",
@@ -45,7 +49,11 @@ def show_manage_sections():
 
 def add_section_from_text_input(widget_key):
     layout = ui.state.get_layout()
-    layout.add_section(section_name=st.session_state[widget_key])
+    section_name = st.session_state[widget_key]
+    try:
+        layout.add_section(section_name=section_name)
+    except ValueError as e:
+        st.session_state["section_add_error"] = str(e)
 
 
 def show_section_tabs():
