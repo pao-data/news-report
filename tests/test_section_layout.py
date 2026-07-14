@@ -150,8 +150,6 @@ class TestLayout(unittest.TestCase):
     def test_unfinished_methods_raise_not_implemented(self):
         layout = Layout(["One"])
         with self.assertRaises(NotImplementedError):
-            layout.delete_section()
-        with self.assertRaises(NotImplementedError):
             layout.move_article("a1", "from", "to")
 
     def test_init_rejects_duplicate_section_names(self):
@@ -203,6 +201,60 @@ class TestLayout(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             layout.add_section("   ")
         self.assertIn("empty", str(cm.exception))
+
+    def test_delete_section_empty_section(self):
+        layout = Layout(["One", "Two", "Three"])
+        section_id = layout.section_order[1]
+        layout.delete_section(section_id)
+        names = [s.name for s in layout.get_ordered_sections()]
+        self.assertEqual(names, ["One", "Three"])
+        self.assertEqual(len(layout.sections), 2)
+
+    def test_delete_section_with_articles_moves_to_unassigned(self):
+        layout = Layout(["One", "Two"])
+        section_id = layout.section_order[0]
+        a1 = make_article("a1")
+        a2 = make_article("a2")
+        layout.add_new_articles([a1, a2])
+        layout.assign_article("a1", section_id)
+        layout.assign_article("a2", section_id)
+
+        self.assertEqual(layout.sections[section_id].articles, ["a1", "a2"])
+        self.assertEqual(layout.unassigned_articles, [])
+
+        layout.delete_section(section_id)
+
+        self.assertEqual(len(layout.sections), 1)
+        self.assertNotIn(section_id, layout.sections)
+        self.assertEqual(layout.unassigned_articles, ["a1", "a2"])
+        layout._assert_membership_invariants()
+
+    def test_delete_section_removes_from_normalized_names(self):
+        layout = Layout(["Tech", "Sports"])
+        section_id = layout.section_order[0]
+        section_name = layout.sections[section_id].name
+
+        layout.delete_section(section_id)
+
+        layout.add_section("Tech")
+        self.assertEqual(len(layout.sections), 2)
+
+    def test_delete_section_unknown_id_raises(self):
+        layout = Layout(["One"])
+        with self.assertRaises(ValueError) as cm:
+            layout.delete_section("unknown-id")
+        self.assertIn("Unknown section ID", str(cm.exception))
+
+    def test_delete_section_maintains_invariants(self):
+        layout = Layout(["One", "Two", "Three"])
+        section_id = layout.section_order[1]
+        a1 = make_article("a1")
+        layout.add_new_articles([a1])
+        layout.assign_article("a1", section_id)
+
+        layout.delete_section(section_id)
+
+        layout._assert_membership_invariants()
 
 
 class TestConfig(unittest.TestCase):

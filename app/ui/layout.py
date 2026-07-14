@@ -55,6 +55,47 @@ def add_section_from_text_input(widget_key):
         st.session_state["section_add_error"] = str(e)
 
 
+def set_delete_section_pending(section_id: str):
+    st.session_state["delete_section_pending"] = section_id
+
+
+@st.dialog("Delete Section?")
+def show_delete_section_confirmation():
+    layout = ui.state.get_layout()
+    section_id = st.session_state["delete_section_pending"]
+
+    if section_id not in layout.sections:
+        st.error("Section not found.")
+        if st.button("Close"):
+            del st.session_state["delete_section_pending"]
+            st.rerun()
+        return
+
+    section = layout.sections[section_id]
+    article_count = len(section.articles)
+
+    st.write(f"Are you sure you want to delete the section **{section.name}**?")
+    if article_count > 0:
+        st.write(
+            f"This section contains **{article_count}** article(s) that will be moved to the unassigned list."
+        )
+    else:
+        st.write("This section is empty.")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Confirm Delete", type="primary", use_container_width=True):
+            layout.delete_section(section_id)
+            del st.session_state["delete_section_pending"]
+            st.rerun()
+
+    with col2:
+        if st.button("Cancel", use_container_width=True):
+            del st.session_state["delete_section_pending"]
+            st.rerun()
+
+
 def show_section_tabs():
     layout = ui.state.get_layout()
     sections = layout.get_ordered_sections()
@@ -62,8 +103,20 @@ def show_section_tabs():
         tabs = st.tabs([s.name for s in sections], on_change="rerun")
         for tab, section in zip(tabs, sections):
             with tab:
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.button(
+                        "**Delete Section** (This will move all articles in the section to the bottom of the query results list.)",
+                        key=f"delete_section_button_{section.id}",
+                        on_click=set_delete_section_pending,
+                        kwargs={"section_id": section.id},
+                        use_container_width=True,
+                    )
                 if section.has_articles():
                     show_articles(section)
+
+    if "delete_section_pending" in st.session_state:
+        show_delete_section_confirmation()
 
 
 def show_articles(section: Section):

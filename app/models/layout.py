@@ -57,12 +57,27 @@ class Layout:
         self.section_order.append(section_id)
         self._section_names_normalized[normalized_name] = section_id
 
-    def delete_section(self) -> None:
+    def delete_section(self, section_id: str) -> None:
         """
         Move all articles in section to unassigned, then
         remove section from the Layout
         """
-        raise NotImplementedError("Layout.delete_section is intentionally not implemented yet.")
+        if section_id not in self.sections:
+            raise ValueError(f"Unknown section ID: {section_id}")
+
+        section = self.sections[section_id]
+
+        for article_id in section.articles[:]:
+            self.unassigned_articles.append(article_id)
+
+        normalized_name = normalize_section_name(section.name)
+        if normalized_name in self._section_names_normalized:
+            del self._section_names_normalized[normalized_name]
+
+        del self.sections[section_id]
+        self.section_order.remove(section_id)
+
+        self._assert_membership_invariants()
 
     def reorder_section(self, from_position: int, to_position: int) -> None:
         section_order = self.section_order
