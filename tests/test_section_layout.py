@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime, timezone
+from unittest.mock import patch
 
 from path_setup import ensure_app_on_path
 
@@ -7,6 +8,7 @@ ensure_app_on_path()
 from models.article import Article
 from models.layout import Layout
 from models.section import Section
+from utils.config import DEFAULT_SECTION_NAMES, load_default_section_names
 
 
 def make_article(article_id: str) -> Article:
@@ -151,6 +153,26 @@ class TestLayout(unittest.TestCase):
             layout.delete_section()
         with self.assertRaises(NotImplementedError):
             layout.move_article("a1", "from", "to")
+
+
+class TestConfig(unittest.TestCase):
+    def test_load_default_section_names_from_config(self):
+        expected_names = ["Alpha", "Bravo", "Charlie"]
+        with patch("utils.config.load_config", return_value={"defaults": {"section_names": expected_names}}):
+            self.assertEqual(load_default_section_names(), expected_names)
+
+    def test_load_default_section_names_falls_back_for_invalid_config(self):
+        invalid_configs = [
+            {},
+            {"defaults": {}},
+            {"defaults": {"section_names": []}},
+            {"defaults": {"section_names": "not-a-list"}},
+            {"defaults": {"section_names": ["Valid", 123]}},
+            {"defaults": {"section_names": ["Valid", "   "]}},
+        ]
+        for invalid_config in invalid_configs:
+            with patch("utils.config.load_config", return_value=invalid_config):
+                self.assertEqual(load_default_section_names(), DEFAULT_SECTION_NAMES)
 
 
 if __name__ == "__main__":

@@ -1,2 +1,12 @@
 [paths]
 default_template_file = "app/assets/default_template.docx"
+
+[defaults]
+section_names = [
+  "Recommended Top Stories",
+  "USARPAC Lethality",
+  "Army Priorities",
+  "China & North Asia",
+  "Southeast Asia",
+  "Other News",
+]
