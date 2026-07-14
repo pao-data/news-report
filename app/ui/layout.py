@@ -9,7 +9,6 @@ from utils.config import load_default_section_names
 def initialize_layout():
     section_names = load_default_section_names()
     ui.state.set_layout(Layout(section_names=section_names))
-    st.rerun()
 
 
 def show_layout_section():
@@ -26,7 +25,7 @@ def show_manage_sections():
     section_names = [s.name for s in layout.get_ordered_sections()]
 
     reordered_names = sort_items(section_names, direction="vertical")
-    if section_names != reordered_names:
+    if (len(section_names) == len(reordered_names)) and (section_names != reordered_names):
         old_position, new_position = find_move(section_names, reordered_names)
         layout.reorder_section(old_position, new_position)
         st.rerun()
@@ -51,6 +50,7 @@ def add_section_from_text_input(widget_key):
     section_name = st.session_state[widget_key]
     try:
         layout.add_section(section_name=section_name)
+        st.session_state[widget_key] = ""  # Clear the input
     except ValueError as e:
         st.session_state["section_add_error"] = str(e)
 

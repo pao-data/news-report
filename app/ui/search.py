@@ -46,7 +46,6 @@ def show_search_section():
 
         ui.state.get_layout().add_new_articles(enriched_articles)
         ui.state.set_show_search_results(True)
-        st.rerun()
 
     if ui.state.get_show_search_results():
         st.header("Results")
