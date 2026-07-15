@@ -36,7 +36,7 @@ def enrich_full_text(article: Article) -> Article:
         logging.warning(f"Could not fetch any data from url: {url}")
         return Article(**{**article.__dict__, "full_text": None})
 
-    full_text = extract_main_text(raw_html, favor_recall=True)
+    full_text = extract_main_text(raw_html, favor_recall=False)
     if not full_text:
         logger.warning(
             f"Downloaded data could not be parsed by trafilatura for article at url {url}"
