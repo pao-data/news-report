@@ -22,17 +22,12 @@ def get_template():
         return default_template_path
 
 
-def generate_report_for_download():
+def generate_report_data():
+    """Generate report and return the bytes for download."""
     layout = ui.state.get_layout()
     template = get_template()
     buffer = core.report.generate_document(layout, template)
-
-    st.download_button(
-        label="Download DOCX",
-        data=buffer,
-        file_name="report.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    )
+    return buffer.getvalue()
 
 
 def show_report_section():
@@ -86,5 +81,10 @@ def show_report_section():
             # If user removes an uploaded template document, use the default template.
             reset_template_doc()
 
-    if st.button("Generate Report"):
-        generate_report_for_download()
+    st.download_button(
+        label="📥 Download Report",
+        data=generate_report_data(),
+        file_name="report.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        help="Generate and download the report",
+    )
