@@ -2,10 +2,6 @@
 
 This guide explains how to safely edit the Word document template used to generate news reports.
 
-## Location
-
-The default template is located at:
-- `app/assets/default_template.docx`
 
 ## What You Can Edit
 
@@ -82,14 +78,17 @@ The app automatically converts these into clickable links. If you change the wor
 
 ## How to Edit the Template
 
-### Step 1: Make a Backup
-Before editing, make a copy of the original template file and save it somewhere safe.
+### Step 1: Download the Template from the App
+1. Open the app and go to the "Report Generation" section
+2. Expand the "📝 Template Customization" section
+3. Click the **"⬇️ Download Original Template"** button
+4. Save the file to your computer (e.g., Desktop or Documents folder)
 
-### Step 2: Open in Microsoft Word
-Open the template file (`default_template.docx`) in Microsoft Word.
-
-### Step 3: Make Your Changes
-Apply your formatting changes to the parts of the document that are safe to edit (see "What You Can Edit" above).
+### Step 2: Edit in Microsoft Word
+1. Open the downloaded `default_template.docx` file in Microsoft Word
+2. Make your formatting changes (see "What You Can Edit" above)
+3. **Important:** Do NOT change any template variables (text in `{{ }}` or `{% %}`)
+4. Save your changes
 
 **Example:** To change the font for article titles:
 1. Find the line with `{{ article.title_with_link }}`
@@ -97,27 +96,38 @@ Apply your formatting changes to the parts of the document that are safe to edit
 3. Change the font, size, or color using Word's formatting tools
 4. DO NOT change the text `{{ article.title_with_link }}` itself
 5. **Make sure you edit the _entire line_ at once** – editing just part of the line can cause issues.
+6. Save the file
 
-### Step 4: Save the File
-Save the file with the same name (`default_template.docx`) in the same location.
+### Step 3: Upload Your Edited Template
+1. Go back to the app's "Report Generation" section
+2. In the "📝 Template Customization" section, find **"Step 3: Upload Your Edited Template"**
+3. Select your edited template from the file picker dialog
+4. The app will confirm with a success message
+5. Your custom template is now active for this session
 
-### Step 5: Test the Template
-1. Run the app
-2. Generate a report
+### Step 4: Test Your Template
+1. Click "Generate Report" to create a report with your custom template
+2. Download and open the report
 3. Check that all sections, articles, and navigation links work correctly
-4. If something breaks, restore your backup and try again
+4. If something looks wrong, remove the uploaded file and re-upload a corrected version
 
-## Using a Custom Template
+## Session-Based vs. Permanent Changes
 
-If you want to use a completely different template without replacing the default:
+### Session-Based (What You Can Do)
 
-1. Create your custom template based on the default one
-2. In the app, go to the "Report Generation" section
-3. Expand "Advanced: Upload custom template .docx file"
-4. Upload your custom template
-5. Generate the report
+Custom templates uploaded through the app are **session-based**:
+- ✅ Work for the current session
+- ✅ Can be changed anytime during the session
+- ⚠️ Resets if you refresh the page or close the browser
+- 💡 Tip: Save your edited template locally for easy re-upload
 
-The app will use your uploaded template instead of the default one.
+### Permanent Changes (Requires Developer)
+
+If you need a permanent template change that persists across app restarts:
+- Contact the developer/maintainer
+- They can replace the default template in the codebase
+- This requires git access and cannot be done through the app
+- See README.md in the GitHub repository for developer instructions
 
 ## Common Mistakes to Avoid
 
@@ -130,10 +140,11 @@ The app will use your uploaded template instead of the default one.
 ## Getting Help
 
 If your template isn't working:
-1. Restore the original template from your backup
+1. Download the original template again from the app
 2. Make smaller, incremental changes
 3. Test after each change to identify what caused the problem
 4. Check that all template variables and loop statements are intact
+5. Remove the uploaded template and try again with a fresh edit
 
 ## Template Structure Overview
 
