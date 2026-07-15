@@ -29,7 +29,7 @@ def generate_report_for_download():
 
     st.download_button(
         label="Download DOCX",
-        data=buffer,
+        data=buffer.getvalue(),
         file_name="report.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     )
