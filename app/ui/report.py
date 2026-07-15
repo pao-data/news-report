@@ -14,6 +14,7 @@ def reset_template_doc():
 def get_template():
     user_template = ui.state.get_user_provided_template()
     if user_template:
+        user_template.seek(0)
         return user_template
     else:
         config = load_config()
