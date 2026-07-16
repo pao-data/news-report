@@ -260,7 +260,7 @@ def generate_document(layout, template):
     doc = DocxTemplate(template)
     section_names = [section.name for section in layout.get_ordered_sections()]
     context = generate_doc_context(layout, doc)
-    doc.render(context)
+    doc.render(context, autoescape=True)
 
     # Save intermediate document to an in-memory buffer.
     rendered_buffer = BytesIO()
