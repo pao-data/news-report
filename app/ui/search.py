@@ -126,6 +126,7 @@ def display_search_results():
     for article in articles:
         title = article.title
         source = article.source
+     #   author = article.author
         published = f"{article.date_published_string} {article.time_published_string}"
         url = article.url if article.url else article.google_url
         if not article.url:
