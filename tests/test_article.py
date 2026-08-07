@@ -54,7 +54,7 @@ class TestArticle(unittest.TestCase):
             id="1",
             title="t",
             source="s",
-     #       author="a",
+            author="a",
             published=None,
             url=None,
             google_url="g",

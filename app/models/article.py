@@ -90,7 +90,7 @@ class Article:
             id=id,
             title=title,
             source=source,
-            #author=author,
+            #author=None,
             published=published,
             url=None,
             google_url=google_url,

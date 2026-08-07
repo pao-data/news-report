@@ -221,7 +221,7 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     article_context = {
         "title_with_link": title_with_link,
         "source": source,
-     #   "author": author,
+    #    "author": author,
         "full_text": full_text,
         "summary": summary,
         "date": date,

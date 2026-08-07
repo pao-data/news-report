@@ -23,6 +23,28 @@ def enrich_url(article: Article) -> Article:
 
     return Article(**{**article.__dict__, "url": url})
 
+@utils.logging.log_execution_time
+def enrich_author(article: Article) -> Article:
+    url = article.url
+    if not url:
+        logging.warning("Cannot fetch author because no url for article.")
+        return Article(**{**article.__dict__, "author": None})
+    
+    raw_html = fetch_raw_html(url, download_timeout=3)
+    if not raw_html:
+        logging.warning(f"Could not fetch any data from url: {url}")
+        return Article(**{**article.__dict__, "author": None})
+
+    metadata = trafilatura.extract_metadata(raw_html)
+    if metadata and metadata.author:
+        author = metadata.author
+    else:
+        author = None
+        logger.warning(
+            f"Downloaded data could not be parsed by trafilatura for article at url {url}"
+        )
+
+    return Article(**{**article.__dict__, "author": author})
 
 @utils.logging.log_execution_time
 def enrich_full_text(article: Article) -> Article:

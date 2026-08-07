@@ -38,6 +38,7 @@ def show_search_section():
         for article_index, article in enumerate(articles):
             logging.debug(article.google_url)
             article = core.extraction.enrich_url(article)
+            article = core.extraction.enrich_author(article)
             article = core.extraction.enrich_full_text(article)
             enriched_articles.append(article)
             progress_value = (article_index + 1) / len(articles)
@@ -126,7 +127,6 @@ def display_search_results():
     for article in articles:
         title = article.title
         source = article.source
-     #   author = article.author
         published = f"{article.date_published_string} {article.time_published_string}"
         url = article.url if article.url else article.google_url
         if not article.url:

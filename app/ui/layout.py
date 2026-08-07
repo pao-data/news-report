@@ -161,7 +161,7 @@ def show_articles(section: Section):
 def show_article_expander(article):
     title = article.title
     source = article.source
-#    author = article.author
+    #author = article.author
     published = f"{article.date_published_string} {article.time_published_string}"
     url = article.url
     text = article.full_text

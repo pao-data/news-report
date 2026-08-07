@@ -1,11 +1,12 @@
 import logging
 import re
 from datetime import datetime, timedelta, timezone
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 import time
 import feedparser
 import requests
-from models.article import Article # from models folder
+from models.article import Article 
+from core.extraction import decode_google_url
 
 logger = logging.getLogger(__name__)
 
@@ -13,36 +14,9 @@ logger = logging.getLogger(__name__)
 def create_search_url(user_query: str):
     normalized = re.sub(r"\s+", " ", user_query).strip()
     
-    '''Limit of 100 sites per rss query'''
-    top_media1 = "(site:reuters.com+OR+site:apnews.com+OR+site:aninews.in+OR+site:afp.com+OR+site:bloomberg.com+OR+site:xinhuanet.com+OR+site:cgtn.com+OR+site:globaltimes.cn+OR+site:tass.com+OR+site:sputniknews.com+OR+site:rt.com+OR+site:nytimes.com+OR+site:washingtonpost.com+OR+site:cnn.com)" 
-    #+OR+site:foxnews.com+OR+site:bbc.com+OR+site:staradvertiser.com+OR+site:hawaiinewsnow.com+OR+site:kitv.com+OR+site:hawaiitribune-herald.com+OR+site:thegardenisland.com+OR+site:mauinews.com+OR+site:westhawaiitoday.com+OR+site:civilbeat.org+OR+site:bizjournals.com+OR+site:military.com+OR+site:defensenews.com+OR+site:breakingdefense.com+OR+site:stripes.com+OR+site:twz.com+OR+site:taskandpurpose.com+OR+site:navytimes.com+OR+site:armytimes.com+OR+site:airforcetimes.com+OR+site:defenseone.com)"
-    #+OR+site:warontherocks.com+OR+site:janes.com+OR+site:foreignpolicy.com+OR+site:nationalinterest.org+OR+site:defensescoop.com+OR+site:c4isrnet.com+OR+site:wsj.com+OR+site:businessinsider.com+OR+site:cbsnews.com/60-minutes+OR+site:kuenselonline.com+OR+site:bbs.bt+OR+site:thebhutanese.bt+OR+site:bhutantimes.bt+OR+site:bhutanobserver.bt+OR+site:bhutantoday.bt+OR+site:businessbhutan.bt+OR+site:drukyoedzer.bt+OR+site:gnhc.gov.bt+OR+site:nauru.gov.nr+OR+site:naurugov.nr+OR+site:centralstarnews.com)"
-    #+OR+site:mwinenko.com+OR+site:nauruchronicle.com+OR+site:nmb.gov.nr+OR+site:radionauru.nr+OR+site:pireport.org+OR+site:rnz.co.nz+OR+site:olo.news+OR+site:talaomatagi.com+OR+site:tuvalunewsheet.tv+OR+site:tuvaluechoes.com+OR+site:fenui.news+OR+site:sikuleo.tv+OR+site:president.gov.tv+OR+site:tmc.tv+OR+site:tuvalu.tv+OR+site:tuvaluonline.tv+OR+site:marshallislandsjournal.com+OR+site:yokwe.net+OR+site:rmiembassyus.org+OR+site:v7ab.com+OR+site:mbc.fm+OR+site:myafn.net+OR+site:islandtimes.us+OR+site:kilikili.net+OR+site:pressport.com+OR+site:kiribatiupdates.com+OR+site:kiribatinews.com+OR+site:radio.gov.ki+OR+site:mic.gov.ki+OR+site:islandreporter.com+OR+site:president.gov.ki+OR+site:niuestar.co.nz+OR+site:gov.nu+OR+site:abc.net.au+OR+site:niue.nu+OR+site:tiabelau.com+OR+site:palaugov.pw+OR+site:islandscene.org+OR+site:pwnews.com+OR+site:palau.net+OR+site:cookislandsnews.com+OR+site:cookislands.gov.ck+OR+site:loopnews.com+OR+site:ryukyushimpo.jp)"
-    top_media2 = "(site:okinawatimes.co.jp+OR+site:nhk.or.jp+OR+site:rbc.co.jp+OR+site:otv.co.jp+OR+site:qab.co.jp+OR+site:fmokinawa.co.jp+OR+site:okinawa-report.com+OR+site:okinawastandard.com+OR+site:tntv.pf+OR+site:kpress.info+OR+site:fsmpublicinfo.gov.fm+OR+site:pohnpeitribune.com+OR+site:yapnetwork.com+OR+site:chuuktribune.com+OR+site:kosrae.gov.fm+OR+site:fm103.fm+OR+site:onlinekhabar.com+OR+site:ekantipur.com+OR+site:kathmandupost.com+OR+site:thehimalayantimes.com+OR+site:annapurnapost.com+OR+site:nepalitimes.com+OR+site:nagariknetwork.com+OR+site:setopati.com+OR+site:ratopati.com+OR+site:gorkhapatraonline.com+OR+site:risingnepaldaily.com+OR+site:dw.com+OR+site:sajha.com.np+OR+site:english.kantipur.com+OR+site:imagechannel.com.np+OR+site:madhespost.com+OR+site:ladepeche.pf+OR+site:tahiti-infos.com+OR+site:fenuanews.com+OR+site:tahititoday.pf+OR+site:la1ere.francetvinfo.fr+OR+site:tahiti-numerique.pf+OR+site:radio1.pf+OR+site:tahitipacifique.com+OR+site:presidence.pf+OR+site:lnc.nc+OR+site:demain.nc+OR+site:geckonews.nc+OR+site:lechienbleu.nc+OR+site:caledonia.news+OR+site:ncstop.com+OR+site:nctv.nc+OR+site:djiido.com+OR+site:kanaknews.com+OR+site:matangitonga.to+OR+site:tonga-broadcasting.net+OR+site:timesoftonga.com+OR+site:kalea.to+OR+site:taimiotonga.com+OR+site:tongachronicle.to+OR+site:radiotonga.to+OR+site:televisiontonga.to+OR+site:tongadailynews.to+OR+site:gov.to+OR+site:stuff.co.nz+OR+site:nzherald.co.nz+OR+site:tvnz.co.nz+OR+site:newshub.co.nz+OR+site:1news.co.nz+OR+site:scoop.co.nz+OR+site:thespinoff.co.nz+OR+site:odt.co.nz+OR+site:press.co.nz+OR+site:nbr.co.nz+OR+site:newsroom.co.nz+OR+site:newstalkzb.co.nz+OR+site:theconversation.com+OR+site:metromag.co.nz+OR+site:fijitimes.com+OR+site:fijisun.com.fj+OR+site:fbctv.com.fj+OR+site:fijivillage.com+OR+site:loopfiji.com+OR+site:fijilive.com+OR+site:pina.com.fj+OR+site:islandsbusiness.com+OR+site:radiofiji.com.fj+OR+site:mailife.com.fj+OR+site:thejetnewspaper.com+OR+site:fijione.tv+OR+site:nadroga.com+OR+site:solomonstarnews.com+OR+site:solomontimes.com+OR+site:islandsun.com.sb+OR+site:sibconline.com.sb+OR+site:wantok.com.sb+OR+site:postcourier.com.pg+OR+site:solomonislandsherald.com+OR+site:solomonvoice.com+OR+site:dailypost.vu+OR+site:vanuatuindependent.com+OR+site:loopvanuatu.com+OR+site:radiovanuatu.gov.vu+OR+site:vbtc.vu)"
-    top_media3 = "(site:vanuatuweekly.com+OR+site:vanuatudailynews.com+OR+site:lhebdo.vu+OR+site:vanuatu.travel+OR+site:tatoli.tl+OR+site:timorpost.com+OR+site:suaratimorlorosae.com+OR+site:independente.tl+OR+site:diliweekly.com+OR+site:dailynacional.tl+OR+site:rttljp.com+OR+site:tnews.tl+OR+site:miadhu.com+OR+site:verdadefeeling.com+OR+site:lusa.pt+OR+site:thenational.com.pg+OR+site:looppng.com+OR+site:emtv.com.pg+OR+site:pngtoday.com+OR+site:pacnews.com+OR+site:wantok.com.pg+OR+site:pngpost.com+OR+site:irrawaddy.com+OR+site:myanmar-now.org+OR+site:mizzima.com+OR+site:dvb.no+OR+site:mmtimes.com+OR+site:frontiermyanmar.net+OR+site:elevenmyanmar.com+OR+site:7day.news+OR+site:gnlm.com.mm+OR+site:khitthitmedia.com+OR+site:rfa.org+OR+site:voanews.com+OR+site:coconuts.co+OR+site:thevoicejournal.com+OR+site:moi.gov.mm+OR+site:bnionline.net+OR+site:myanmardigitalnews.com+OR+site:moemaka.com+OR+site:thediplomat.com+OR+site:udn.com+OR+site:ettoday.net+OR+site:ltn.com.tw+OR+site:chinatimes.com+OR+site:tvbs.com.tw+OR+site:nextapple.com+OR+site:taipeitimes.com+OR+site:cna.com.tw+OR+site:cts.com.tw+OR+site:setn.com+OR+site:ftvnews.com.tw+OR+site:taiwannews.com.tw+OR+site:storm.mg+OR+site:mirrormedia.mg+OR+site:twreporter.org+OR+site:cw.com.tw+OR+site:bnext.com.tw+OR+site:want-daily.com+OR+site:yahoo.com+OR+site:vientianetimes.org+OR+site:vientianemai.net+OR+site:pasaxon.org.la+OR+site:kpl.gov.la+OR+site:laotiantimes.com+OR+site:lntv.gov.la+OR+site:phattananews.com+OR+site:kohsantepheapdaily.com.kh+OR+site:freshnewsasia.com+OR+site:sabay.com.kh+OR+site:vodenglish.news+OR+site:phnompenhpost.com+OR+site:cambodiadaily.com+OR+site:khmertimeskh.com+OR+site:rasmeinews.com+OR+site:cambodianess.com+OR+site:tvk.gov.kh+OR+site:bayontv.com.kh+OR+site:camboja.com.kh+OR+site:voacambodia.com+OR+site:postkhmer.com+OR+site:mirmirror.com.kh+OR+site:khmerload.com+OR+site:thmeythmey.com+OR+site:cambodianews.org+OR+site:khpost.com.kh+OR+site:cnc.com.kh+OR+site:mnb.mn+OR+site:montsame.mn+OR+site:unuudur.mn+OR+site:unen.mn+OR+site:mongolnews.mn+OR+site:news.mn+OR+site:eagle.mn+OR+site:gogo.mn+OR+site:ikon.mn+OR+site:tv5.mn+OR+site:mongoltv.mn+OR+site:zms.mn+OR+site:medee.mn)"
-    top_media4 = "(site:olon.mn+OR+site:24tsag.mn+OR+site:factnews.mn+OR+site:news.com.au+OR+site:theguardian.com+OR+site:smh.com.au+OR+site:theage.com.au+OR+site:9news.com.au+OR+site:heraldsun.com.au+OR+site:dailytelegraph.com.au+OR+site:theaustralian.com.au+OR+site:sbs.com.au+OR+site:afr.com+OR+site:skynews.com.au+OR+site:perthnow.com.au+OR+site:couriermail.com.au+OR+site:adelaidenow.com.au+OR+site:thewest.com.au+OR+site:crikey.com.au+OR+site:newscorp.com.au+OR+site:buzzfeed.com+OR+site:independentaustralia.net+OR+site:7news.com.au+OR+site:10play.com.au+OR+site:bdnews24.com+OR+site:prothomalo.com+OR+site:thedailystar.net+OR+site:banglatribune.com+OR+site:kalerkantho.com+OR+site:jugantor.com+OR+site:samakal.com+OR+site:banglanews24.com+OR+site:dhakatribune.com+OR+site:newagebd.net+OR+site:daily-sun.com+OR+site:ittefaq.com.bd+OR+site:tbsnews.net+OR+site:thefinancialexpress.com.bd+OR+site:channelionline.com+OR+site:somoynews.tv+OR+site:ntvbd.com+OR+site:ekattor.tv+OR+site:rtvonline.com+OR+site:bangladeshpost.net+OR+site:observerbd.com+OR+site:bhorerkagoj.com+OR+site:dailyjanakantha.com+OR+site:protidin.com.bd+OR+site:bd-pratidin.com+OR+site:sun.mv+OR+site:raajje.mv+OR+site:avas.mv+OR+site:miadhu.mv+OR+site:vnews.mv+OR+site:psmnews.mv+OR+site:edition.mv+OR+site:aafathis.mv+OR+site:dhauru.com+OR+site:haveeru.com.mv+OR+site:adhadhu.com+OR+site:maldivesindependent.com+OR+site:vnexpress.net+OR+site:tuoitre.vn+OR+site:dantri.com.vn+OR+site:24h.com.vn+OR+site:vietnamnet.vn+OR+site:zingnews.vn+OR+site:thanhnien.vn+OR+site:baomoi.com+OR+site:bongda.com.vn+OR+site:thethaovanhoa.vn+OR+site:kenh14.vn+OR+site:vtc.vn+OR+site:nld.com.vn+OR+site:timesofindia.indiatimes.com+OR+site:hindustantimes.com+OR+site:thehindu.com+OR+site:indianexpress.com+OR+site:ndtv.com+OR+site:news18.com+OR+site:indiatoday.in+OR+site:scroll.in+OR+site:thequint.com+OR+site:republicworld.com+OR+site:zeenews.india.com+OR+site:abplive.com+OR+site:jagran.com+OR+site:bhaskar.com+OR+site:amarujala.com+OR+site:navbharattimes.indiatimes.com+OR+site:lokmat.com+OR+site:eenadu.net+OR+site:sakshi.com+OR+site:manoramaonline.com+OR+site:mathrubhumi.com+OR+site:economictimes.indiatimes.com+OR+site:business-standard.com+OR+site:livemint.com+OR+site:deccanchronicle.com+OR+site:telegraphindia.com)"
-    top_media5 = "(site:theprint.in+OR+site:livehindustan.com+OR+site:indiatvnews.com+OR+site:asianetnews.com+OR+site:borneobulletin.com.bn+OR+site:thescoop.co+OR+site:brudirect.com+OR+site:mediapermata.com.bn+OR+site:pelitabrunei.gov.bn+OR+site:rtb.gov.bn+OR+site:sultanate.com+OR+site:malaysiakini.com+OR+site:thestar.com.my+OR+site:nst.com.my+OR+site:hmetro.com.my+OR+site:bharian.com.my+OR+site:malaymail.com+OR+site:freemalaysiatoday.com+OR+site:theedgemarkets.com+OR+site:astroawani.com+OR+site:sinarharian.com.my+OR+site:chinapress.com.my+OR+site:sinchew.com.my+OR+site:kosmo.com.my+OR+site:themalaysianreserve.com+OR+site:themalaysianinsight.com+OR+site:bernama.com+OR+site:vocket.com+OR+site:therakyatpost.com+OR+site:worldofbuzz.com+OR+site:lowyat.net+OR+site:malaysiadateline.com+OR+site:guampdn.com+OR+site:postguam.com+OR+site:kuam.com+OR+site:mvariety.com+OR+site:pacificnewscenter.com+OR+site:pbsguam.org+OR+site:ktgm.com+OR+site:mbjguam.com+OR+site:pacificislandtimes.com+OR+site:inquirer.net+OR+site:philstar.com+OR+site:gmanetwork.com+OR+site:abs-cbn.com+OR+site:rappler.com+OR+site:mb.com.ph+OR+site:cnnphilippines.com+OR+site:sunstar.com.ph+OR+site:bworldonline.com+OR+site:manilatimes.net+OR+site:pna.gov.ph+OR+site:tribune.net.ph+OR+site:tempo.com.ph+OR+site:interaksyon.com+OR+site:cebudailynews.inquirer.net+OR+site:hetana.ph+OR+site:mindanaotimes.com.ph+OR+site:visayandailystar.com+OR+site:manilastandard.net+OR+site:dzrhnews.com.ph+OR+site:straitstimes.com+OR+site:channelnewsasia.com+OR+site:mothership.sg+OR+site:todayonline.com+OR+site:businesstimes.com.sg+OR+site:zaobao.com.sg+OR+site:asiaone.com+OR+site:tnp.sg+OR+site:theindependent.sg+OR+site:mustsharenews.com+OR+site:thesmartlocal.com+OR+site:hardwarezone.com.sg+OR+site:onlinecitizenasia.com+OR+site:beritaharian.sg+OR+site:tamilmurasu.com.sg+OR+site:berita.sg+OR+site:sgag.sg+OR+site:thehoneycombers.com+OR+site:eatbook.sg+OR+site:vulcanpost.com+OR+site:eco-business.com+OR+site:8world.com+OR+site:news.naver.com+OR+site:news.daum.net+OR+site:news.nate.com+OR+site:en.yna.co.kr+OR+site:chosun.com+OR+site:joongang.co.kr+OR+site:donga.com+OR+site:hani.co.kr+OR+site:koreaherald.com+OR+site:koreatimes.co.kr+OR+site:kbs.co.kr+OR+site:imbc.com+OR+site:sbs.co.kr+OR+site:jtbc.joins.com+OR+site:ytn.co.kr+OR+site:mk.co.kr+OR+site:khan.co.kr)"
-    top_media6 = "(site:hankookilbo.com+OR+site:thebell.co.kr+OR+site:ilgan.co.kr+OR+site:dispatch.co.kr+OR+site:moneys.mt.co.kr+OR+site:edaily.co.kr+OR+site:detik.com+OR+site:kompas.com+OR+site:tribunnews.com+OR+site:liputan6.com+OR+site:cnnindonesia.com+OR+site:yahoo.co.id+OR+site:okezone.com+OR+site:viva.co.id+OR+site:tempo.co+OR+site:republika.co.id+OR+site:merdeka.com+OR+site:antaranews.com+OR+site:suara.com+OR+site:sindonews.com+OR+site:bisnis.com+OR+site:beritasatu.com+OR+site:inews.id+OR+site:kumparan.com+OR+site:news.yahoo.co.jp+OR+site:line.me+OR+site:ameblo.jp+OR+site:auone.jp+OR+site:livedoor.com+OR+site:nikkei.com+OR+site:yomiuri.co.jp+OR+site:asahi.com+OR+site:japantimes.co.jp+OR+site:mainichi.jp+OR+site:tv-asahi.co.jp+OR+site:ntv.co.jp+OR+site:fujitv.co.jp+OR+site:sankei.com+OR+site:nikkansports.com+OR+site:oricon.co.jp+OR+site:excite.co.jp+OR+site:huffingtonpost.jp+OR+site:diamond.jp+OR+site:sanook.com+OR+site:thairath.co.th+OR+site:khaosod.co.th+OR+site:pantip.com+OR+site:bangkokpost.com+OR+site:matichon.co.th+OR+site:kapook.com+OR+site:mgronline.com+OR+site:komchadluek.net+OR+site:dailynews.co.th+OR+site:nationthailand.com+OR+site:workpointtoday.com+OR+site:thaipbs.or.th+OR+site:ch3thailand.com+OR+site:mthai.com+OR+site:springnews.co.th+OR+site:trueid.net+OR+site:bangkokbiznews.com+OR+site:posttoday.com+OR+site:prachachat.net)"
-
-    rss_url1 = f"https://news.google.com/rss/search?q={quote(normalized)}+AND+{top_media1}+when:1d"
-    '''
-    rss_url2 = f"https://news.google.com/rss/search?q={top_media2}+{quote(normalized)}+when:1d"
-    rss_url3 = f"https://news.google.com/rss/search?q={top_media3}+{quote(normalized)}+when:1d"
-    rss_url4 = f"https://news.google.com/rss/search?q={top_media4}+{quote(normalized)}+when:1d"
-    rss_url5 = f"https://news.google.com/rss/search?q={top_media5}+{quote(normalized)}+when:1d"
-    rss_url6 = f"https://news.google.com/rss/search?q={top_media6}+{quote(normalized)}+when:1d"
-    '''
-
-    logger.info(f"RSS url 1:\t{rss_url1}")
-    '''
-    logger.info(f"RSS url 2:\t{rss_url2}")
-    logger.info(f"RSS url 3:\t{rss_url3}")
-    logger.info(f"RSS url 4:\t{rss_url4}")
-    logger.info(f"RSS url 5:\t{rss_url5}")
-    logger.info(f"RSS url 6:\t{rss_url6}")
-    '''
-
-    return rss_url1 #, rss_url2, rss_url3, rss_url4, rss_url5, rss_url6
+    rss_url = f"https://news.google.com/rss/search?q={quote(normalized)}+when:1d"
+    logger.info(f"RSS url:\t{rss_url}")
+    return rss_url
 
 
 def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]:
@@ -53,7 +27,7 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
     rss_url = create_search_url(query)
     time.sleep(10)
     articles = []
-    #for rss_url in rss_urls:
+
     response = requests.get(rss_url, headers=headers, timeout=10)
     response.raise_for_status()
     feed = feedparser.parse(response.content)
@@ -63,11 +37,90 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
     logger.info(f"Found {len(feed.entries)} articles")
 
     cutoff = datetime.now(timezone.utc) - timedelta(days=1)
+    top_urls = ["reuters.com", "apnews.com", "aninews.in", "afp.com", "bloomberg.com", "xinhuanet.com", "cgtn.com", "globaltimes.cn", 
+                "tass.com", "sputniknews.com", "rt.com", "nytimes.com", "washingtonpost.com", "cnn.com", "foxnews.com", "bbc.com", "staradvertiser.com", 
+                "hawaiinewsnow.com", "kitv.com", "hawaiitribune-herald.com", "thegardenisland.com", "mauinews.com", "westhawaiitoday.com", "civilbeat.org", 
+                "bizjournals.com", "military.com", "defensenews.com", "breakingdefense.com", "stripes.com", "twz.com", "taskandpurpose.com", "navytimes.com", 
+                "armytimes.com", "airforcetimes.com", "defenseone.com", "warontherocks.com", "janes.com", "foreignpolicy.com", "nationalinterest.org", 
+                "defensescoop.com", "c4isrnet.com", "wsj.com", "businessinsider.com", "cbsnews.com/60-minutes", "kuenselonline.com", "bbs.bt", "thebhutanese.bt", 
+                "bhutantimes.bt", "bhutanobserver.bt", "bhutantoday.bt", "businessbhutan.bt", "drukyoedzer.bt", "gnhc.gov.bt", "nauru.gov.nr", "naurugov.nr", 
+                "centralstarnews.com", "mwinenko.com", "nauruchronicle.com", "nmb.gov.nr", "radionauru.nr", "pireport.org", "rnz.co.nz", "olo.news", 
+                "talaomatagi.com", "tuvalunewsheet.tv", "tuvaluechoes.com", "fenui.news", "sikuleo.tv", "president.gov.tv", "tmc.tv", "tuvalu.tv", 
+                "tuvaluonline.tv", "marshallislandsjournal.com", "yokwe.net", "rmiembassyus.org", "v7ab.com", "mbc.fm", "myafn.net", "islandtimes.us", 
+                "kilikili.net", "pressport.com", "kiribatiupdates.com", "kiribatinews.com", "radio.gov.ki", "mic.gov.ki", "islandreporter.com", 
+                "president.gov.ki", "niuestar.co.nz", "gov.nu", "abc.net.au", "niue.nu", "tiabelau.com", "palaugov.pw", "islandscene.org", "pwnews.com", 
+                "palau.net", "cookislandsnews.com", "cookislands.gov.ck", "loopnews.com", "ryukyushimpo.jp", "okinawatimes.co.jp", "nhk.or.jp", "rbc.co.jp", 
+                "otv.co.jp", "qab.co.jp", "fmokinawa.co.jp", "okinawa-report.com", "okinawastandard.com", "tntv.pf", "kpress.info", "fsmpublicinfo.gov.fm", 
+                "pohnpeitribune.com", "yapnetwork.com", "chuuktribune.com", "kosrae.gov.fm", "fm103.fm", "onlinekhabar.com", "ekantipur.com", "kathmandupost.com", 
+                "thehimalayantimes.com", "annapurnapost.com", "nepalitimes.com", "nagariknetwork.com", "setopati.com", "ratopati.com", "gorkhapatraonline.com", 
+                "risingnepaldaily.com", "dw.com", "sajha.com.np", "english.kantipur.com", "imagechannel.com.np", "madhespost.com", "ladepeche.pf", "tahiti-infos.com", 
+                "fenuanews.com", "tahititoday.pf", "la1ere.francetvinfo.fr", "tahiti-numerique.pf", "radio1.pf", "tahitipacifique.com", "presidence.pf", "lnc.nc", 
+                "demain.nc", "geckonews.nc", "lechienbleu.nc", "caledonia.news", "ncstop.com", "nctv.nc", "djiido.com", "kanaknews.com", "matangitonga.to", 
+                "tonga-broadcasting.net", "timesoftonga.com", "kalea.to", "taimiotonga.com", "tongachronicle.to", "radiotonga.to", "televisiontonga.to", 
+                "tongadailynews.to", "gov.to", "stuff.co.nz", "nzherald.co.nz", "tvnz.co.nz", "newshub.co.nz", "1news.co.nz", "scoop.co.nz", "thespinoff.co.nz", 
+                "odt.co.nz", "press.co.nz", "nbr.co.nz", "newsroom.co.nz", "newstalkzb.co.nz", "theconversation.com", "metromag.co.nz", "fijitimes.com", 
+                "fijisun.com.fj", "fbctv.com.fj", "fijivillage.com", "loopfiji.com", "fijilive.com", "pina.com.fj", "islandsbusiness.com", "radiofiji.com.fj", 
+                "mailife.com.fj", "thejetnewspaper.com", "fijione.tv", "nadroga.com", "solomonstarnews.com", "solomontimes.com", "islandsun.com.sb", 
+                "sibconline.com.sb", "wantok.com.sb", "postcourier.com.pg", "solomonislandsherald.com", "solomonvoice.com", "dailypost.vu", "vanuatuindependent.com", 
+                "loopvanuatu.com", "radiovanuatu.gov.vu", "vbtc.vu", "vanuatuweekly.com", "vanuatudailynews.com", "lhebdo.vu", "vanuatu.travel", "tatoli.tl", 
+                "timorpost.com", "suaratimorlorosae.com", "independente.tl", "diliweekly.com", "dailynacional.tl", "rttljp.com", "tnews.tl", "miadhu.com", 
+                "verdadefeeling.com", "lusa.pt", "thenational.com.pg", "looppng.com", "emtv.com.pg", "pngtoday.com", "pacnews.com", "wantok.com.pg", 
+                "pngpost.com", "irrawaddy.com", "myanmar-now.org", "mizzima.com", "dvb.no", "mmtimes.com", "frontiermyanmar.net", "elevenmyanmar.com", 
+                "7day.news", "gnlm.com.mm", "khitthitmedia.com", "rfa.org", "voanews.com", "coconuts.co", "thevoicejournal.com", "moi.gov.mm", 
+                "bnionline.net", "myanmardigitalnews.com", "moemaka.com", "thediplomat.com", "udn.com", "ettoday.net", "ltn.com.tw", "chinatimes.com", 
+                "tvbs.com.tw", "nextapple.com", "taipeitimes.com", "cna.com.tw", "cts.com.tw", "setn.com", "ftvnews.com.tw", "taiwannews.com.tw", "storm.mg", 
+                "mirrormedia.mg", "twreporter.org", "cw.com.tw", "bnext.com.tw", "want-daily.com", "yahoo.com", "vientianetimes.org", "vientianemai.net", 
+                "pasaxon.org.la", "kpl.gov.la", "laotiantimes.com", "lntv.gov.la", "phattananews.com", "kohsantepheapdaily.com.kh", "freshnewsasia.com", 
+                "sabay.com.kh", "vodenglish.news", "phnompenhpost.com", "cambodiadaily.com", "khmertimeskh.com", "rasmeinews.com", "cambodianess.com", 
+                "tvk.gov.kh", "bayontv.com.kh", "camboja.com.kh", "voacambodia.com", "postkhmer.com", "mirmirror.com.kh", "khmerload.com", "thmeythmey.com", 
+                "cambodianews.org", "khpost.com.kh", "cnc.com.kh", "mnb.mn", "montsame.mn", "unuudur.mn", "unen.mn", "mongolnews.mn", "news.mn", "eagle.mn", 
+                "gogo.mn", "ikon.mn", "tv5.mn", "mongoltv.mn", "zms.mn", "medee.mn", "olon.mn", "24tsag.mn", "factnews.mn", "news.com.au", "theguardian.com", 
+                "smh.com.au", "theage.com.au", "9news.com.au," "heraldsun.com.au", "dailytelegraph.com.au", "theaustralian.com.au", "sbs.com.au", "afr.com", 
+                "skynews.com.au", "perthnow.com.au", "couriermail.com.au", "adelaidenow.com.au", "thewest.com.au", "crikey.com.au", "newscorp.com.au", 
+                "buzzfeed.com", "independentaustralia.net", "7news.com.au", "10play.com.au", "bdnews24.com", "prothomalo.com", "thedailystar.net", 
+                "banglatribune.com", "kalerkantho.com", "jugantor.com", "samakal.com", "banglanews24.com", "dhakatribune.com", "newagebd.net", 
+                "daily-sun.com", "ittefaq.com.bd", "tbsnews.net", "thefinancialexpress.com.bd", "channelionline.com", "somoynews.tv", "ntvbd.com", 
+                "ekattor.tv", "rtvonline.com", "bangladeshpost.net", "observerbd.com", "bhorerkagoj.com", "dailyjanakantha.com", "protidin.com.bd", 
+                "bd-pratidin.com", "sun.mv", "raajje.mv", "avas.mv", "miadhu.mv", "vnews.mv", "psmnews.mv", "edition.mv", "aafathis.mv", "dhauru.com", 
+                "haveeru.com.mv", "adhadhu.com", "maldivesindependent.com", "vnexpress.net", "tuoitre.vn", "dantri.com.vn", "24h.com.vn", "vietnamnet.vn", 
+                "zingnews.vn", "thanhnien.vn", "baomoi.com", "bongda.com.vn", "thethaovanhoa.vn", "kenh14.vn", "vtc.vn", "nld.com.vn", "timesofindia.indiatimes.com", 
+                "hindustantimes.com", "thehindu.com", "indianexpress.com", "ndtv.com", "news18.com", "indiatoday.in", "scroll.in", "thequint.com", 
+                "republicworld.com", "zeenews.india.com", "abplive.com", "jagran.com", "bhaskar.com", "amarujala.com", "navbharattimes.indiatimes.com", 
+                "lokmat.com", "eenadu.net", "sakshi.com", "manoramaonline.com", "mathrubhumi.com", "economictimes.indiatimes.com", "business-standard.com", 
+                "livemint.com", "deccanchronicle.com", "telegraphindia.com", "theprint.in", "livehindustan.com", "indiatvnews.com", "asianetnews.com", 
+                "borneobulletin.com.bn", "thescoop.co", "brudirect.com", "mediapermata.com.bn", "pelitabrunei.gov.bn", "rtb.gov.bn", "sultanate.com", 
+                "malaysiakini.com", "thestar.com.my", "nst.com.my", "hmetro.com.my", "bharian.com.my", "malaymail.com", "freemalaysiatoday.com", 
+                "theedgemarkets.com", "astroawani.com", "sinarharian.com.my", "chinapress.com.my", "sinchew.com.my", "kosmo.com.my", "themalaysianreserve.com", 
+                "themalaysianinsight.com", "bernama.com", "vocket.com", "therakyatpost.com", "worldofbuzz.com", "lowyat.net", "malaysiadateline.com", 
+                "guampdn.com", "postguam.com", "kuam.com", "mvariety.com", "pacificnewscenter.com", "pbsguam.org", "ktgm.com", "mbjguam.com", 
+                "pacificislandtimes.com", "inquirer.net", "philstar.com", "gmanetwork.com", "abs-cbn.com", "rappler.com", "mb.com.ph", "cnnphilippines.com", 
+                "sunstar.com.ph", "bworldonline.com", "manilatimes.net", "pna.gov.ph", "tribune.net.ph", "tempo.com.ph", "interaksyon.com", 
+                "cebudailynews.inquirer.net", "hetana.ph", "mindanaotimes.com.ph", "visayandailystar.com", "manilastandard.net", "dzrhnews.com.ph", 
+                "straitstimes.com", "channelnewsasia.com", "mothership.sg", "todayonline.com", "businesstimes.com.sg", "zaobao.com.sg", "asiaone.com", 
+                "tnp.sg", "theindependent.sg", "mustsharenews.com", "thesmartlocal.com", "hardwarezone.com.sg", "onlinecitizenasia.com", "beritaharian.sg", 
+                "tamilmurasu.com.sg", "berita.sg", "sgag.sg", "thehoneycombers.com", "eatbook.sg", "vulcanpost.com", "eco-business.com", "8world.com", 
+                "news.naver.com", "news.daum.net", "news.nate.com", "en.yna.co.kr", "chosun.com", "joongang.co.kr", "donga.com", "hani.co.kr", 
+                "koreaherald.com", "koreatimes.co.kr", "kbs.co.kr", "imbc.com", "sbs.co.kr", "jtbc.joins.com", "ytn.co.kr", "mk.co.kr", "khan.co.kr", 
+                "hankookilbo.com", "thebell.co.kr", "ilgan.co.kr", "dispatch.co.kr", "moneys.mt.co.kr", "edaily.co.kr", "detik.com", "kompas.com", 
+                "tribunnews.com", "liputan6.com", "cnnindonesia.com", "yahoo.co.id", "okezone.com", "viva.co.id", "tempo.co", "republika.co.id", 
+                "merdeka.com", "antaranews.com", "suara.com", "sindonews.com", "bisnis.com", "beritasatu.com", "inews.id", "kumparan.com", 
+                "news.yahoo.co.jp", "line.me", "ameblo.jp", "auone.jp", "livedoor.com", "nikkei.com", "yomiuri.co.jp", "asahi.com", "japantimes.co.jp", 
+                "mainichi.jp", "tv-asahi.co.jp", "ntv.co.jp", "fujitv.co.jp", "sankei.com", "nikkansports.com", "oricon.co.jp", "excite.co.jp", 
+                "huffingtonpost.jp", "diamond.jp", "sanook.com", "thairath.co.th", "khaosod.co.th", "pantip.com", "bangkokpost.com", "matichon.co.th", 
+                "kapook.com", "mgronline.com", "komchadluek.net", "dailynews.co.th", "nationthailand.com", "workpointtoday.com", "thaipbs.or.th", 
+                "ch3thailand.com", "mthai.com", "springnews.co.th", "trueid.net", "bangkokbiznews.com", "posttoday.com", "prachachat.net"]
     filtered_entries = []
     for entry in feed.entries:
         published = Article.parse_published_parsed(getattr(entry, "published_parsed", None))
         if published and published >= cutoff:
+           filtered_entries.append(entry)
+
+        url = decode_google_url(entry.link)
+        base_url = str(urlparse(url).netloc)
+        base_url = base_url.removeprefix("www.")
+        if base_url in top_urls:
             filtered_entries.append(entry)
+
     articles += [Article.from_rss_entry(entry) for entry in filtered_entries]
 
     if limit:
