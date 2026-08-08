@@ -1,27 +1,27 @@
 "U.S. Army Pacific": |
-  "U.S. Army Pacific" OR "USARPAC" OR "United States Army Pacific"
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ("U.S. Army Pacific" OR "USARPAC" OR "United States Army Pacific"
   OR
   ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND ("Pacific" OR "Indo-Pacific" OR "Asia-Pacific" OR "East Asia" OR "South Asia" OR "Southeast Asia" OR "Western Pacific" OR "Pacific Command" OR "USARPAC" OR "United States Army Pacific")
   OR
-  "U.S. Army" AND ("Japan" OR "South Korea" OR "Guam" OR "Philippines" OR "Hawaii" OR "Okinawa" OR "Australia" OR "Singapore" OR "Thailand" OR "Vietnam")
+  "U.S. Army" AND ("Japan" OR "South Korea" OR "Guam" OR "Philippines" OR "Hawaii" OR "Okinawa" OR "Australia" OR "Singapore" OR "Thailand" OR "Vietnam"))
 "U.S. Army Alaska": |
-  "USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER"
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ("USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER"
   OR
   ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND "Alaska"
   OR
-  "U.S. Army" AND ("Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations")
+  "U.S. Army" AND ("Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations"))
 "U.S. Army Japan": |
-  "U.S. Army Japan" OR "USARJ" OR "USAR-J"
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ("U.S. Army Japan" OR "USARJ" OR "USAR-J"
   OR
   ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND ("Japan" OR "USARJ" OR "United States Army Japan" OR "Camp Zama" OR "Yokota Air Base" OR "Torii Station" OR "Kure" OR "Okinawa")
   OR
-  "U.S. Army" AND ("Japan" OR "Japanese" OR "Pacific Command" OR "Indo-Pacific" OR "East Asia")
+  "U.S. Army" AND ("Japan" OR "Japanese" OR "Pacific Command" OR "Indo-Pacific" OR "East Asia"))
 "U.S. Army Korea": |
-  "U.S. Army Korea" OR "USARK" OR "USAR-K"
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ()"U.S. Army Korea" OR "USARK" OR "USAR-K"
   OR
   ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND ("Korea" OR "USFK" OR "United States Forces Korea" OR "Eighth Army" OR "Camp Humphreys" OR "Yongsan Garrison" OR "Osan Air Base" OR "Dongducheon" OR "Seoul" OR "Pyeongtaek")
   OR
-  "U.S. Army" AND ("Korea" OR "South Korea" OR "Republic of Korea" OR "ROK" OR "Peninsula" OR "DMZ" OR "Korean operations")
+  "U.S. Army" AND ("Korea" OR "South Korea" OR "Republic of Korea" OR "ROK" OR "Peninsula" OR "DMZ" OR "Korean operations"))
 "Joint base Lewis McChord": |
   "Joint Base Lewis-McChord" OR "JBLM" OR "Lewis-McChord" OR "Fort Lewis" OR "McChord Field" OR "I Corps" OR "7th Infantry Division" OR "2nd Battalion" OR "Stryker Brigade" OR "Washington Army base"
   OR
