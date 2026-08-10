@@ -17,7 +17,7 @@
   OR
   "U.S. Army" AND ("Japan" OR "Japanese" OR "Pacific Command" OR "Indo-Pacific" OR "East Asia"))
 "U.S. Army Korea": |
-  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ()"U.S. Army Korea" OR "USARK" OR "USAR-K"
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ("U.S. Army Korea" OR "USARK" OR "USAR-K"
   OR
   ("U.S. Army" OR "United States Army" OR "US Army" OR "Army") AND ("Korea" OR "USFK" OR "United States Forces Korea" OR "Eighth Army" OR "Camp Humphreys" OR "Yongsan Garrison" OR "Osan Air Base" OR "Dongducheon" OR "Seoul" OR "Pyeongtaek")
   OR
@@ -115,17 +115,17 @@
    OR
    "United States Indo-Pacific Command" OR "USINDOPACOM" OR "USPACOM" OR "Indo-Pacific Command" OR "Pacific Command" OR "United States Army Pacific" OR "US Army Pacific" OR "Pacific Fleet" OR "Pacific Air Forces" OR "Marine Forces Pacific" OR "Camp Humphreys" OR "Andersen Air Force Base" OR "Joint Base Pearl Harbor-Hickam" OR "Guam Naval Base" OR "Yokota Air Base" OR "Okinawa"
 "Multi Domain Operations US Army": |
-  ("U.S. Army" OR "US Army" OR "United States Army" OR "Army" OR "Army Futures Command" OR "Army Training and Doctrine Command" OR "TRADOC" OR "FORSCOM") AND ("Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations")
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND (("U.S. Army" OR "US Army" OR "United States Army" OR "Army" OR "Army Futures Command" OR "Army Training and Doctrine Command" OR "TRADOC" OR "FORSCOM") AND ("Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations")
   OR
   "U.S. Army" AND ("Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" OR "convergence" OR "integration" OR "cyber" OR "space" OR "air" OR "land" OR "sea" OR "information warfare" OR "electronic warfare" OR "sensor fusion" OR "Futures Command" OR "TRADOC" OR "FORSCOM")
   OR
-  "Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" OR "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Project Convergence" OR "information warfare" OR "electronic warfare" OR "sensor fusion"
+  "Multi Domain Operations" OR "MDO" OR "multi-domain" OR "multi domain" OR "cross-domain" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" OR "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Project Convergence" OR "information warfare" OR "electronic warfare" OR "sensor fusion")
 "U.S. Army": |
-  "U.S. Army" OR "US Army" OR "United States Army" OR "Army Futures Command" OR "Army Training and Doctrine Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve"
+  -"Salvation" AND -"Sudan" AND -"Sudanese" AND -"Somali" AND ("U.S. Army" OR "US Army" OR "United States Army" OR "Army Futures Command" OR "Army Training and Doctrine Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve"
   OR
   "U.S. Army" AND ("operations" OR "training" OR "exercise" OR "deployment" OR "strategy" OR "base" OR "bases" OR "readiness" OR "modernization" OR "recruitment" OR "personnel" OR "leadership" OR "command" OR "technology" OR "innovation" OR "combat" OR "logistics" OR "support" OR "missions" OR "partnerships" OR "alliances" OR "expansion" OR "presence" OR "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve")
   OR
-  "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve" OR "Fort Bragg" OR "Fort Hood" OR "Fort Benning" OR "Fort Bliss" OR "Fort Campbell" OR "Fort Carson" OR "Fort Knox" OR "Fort Sill" OR "Fort Stewart" OR "Fort Drum" OR "Fort Polk" OR "Fort Riley" OR "Fort Lee" OR "Fort Leonard Wood"
+  "Army Futures Command" OR "TRADOC" OR "FORSCOM" OR "Army National Guard" OR "Army Reserve" OR "Fort Bragg" OR "Fort Hood" OR "Fort Benning" OR "Fort Bliss" OR "Fort Campbell" OR "Fort Carson" OR "Fort Knox" OR "Fort Sill" OR "Fort Stewart" OR "Fort Drum" OR "Fort Polk" OR "Fort Riley" OR "Fort Lee" OR "Fort Leonard Wood")
 "Red Hill": |
   ("Red Hill" OR "Red Hill fuel spill" OR "Red Hill Bulk Fuel Storage Facility" OR "Red Hill fuel leak" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster") AND ("U.S. Army" OR "US Army" OR "United States Army" OR "Army" OR "military" OR "Department of Defense" OR "DoD" OR "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "Pacific Command" OR "USINDOPACOM")
   OR
