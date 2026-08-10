@@ -23,6 +23,7 @@ def enrich_url(article: Article) -> Article:
 
     return Article(**{**article.__dict__, "url": url})
 
+'''
 @utils.logging.log_execution_time
 def enrich_author(article: Article) -> Article:
     url = article.url
@@ -45,6 +46,7 @@ def enrich_author(article: Article) -> Article:
         )
 
     return Article(**{**article.__dict__, "author": author})
+'''
 
 @utils.logging.log_execution_time
 def enrich_full_text(article: Article) -> Article:
