@@ -112,7 +112,7 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
         url = decode_google_url(entry.link)
         base_url = str(urlparse(url).netloc)
         base_url = base_url.removeprefix("www.")
-        if (base_url in top_urls) and published and published >= cutoff:
+        if (base_url in top_urls) and (published and published >= cutoff):
             filtered_entries.append(entry)
     articles = [Article.from_rss_entry(entry) for entry in filtered_entries]
 
