@@ -5,11 +5,7 @@ from urllib.parse import quote, urlparse
 
 import feedparser
 import requests
-<<<<<<< HEAD
 from models.article import Article
-=======
-from models.article import Article 
->>>>>>> media-author
 from core.extraction import decode_google_url
 
 logger = logging.getLogger(__name__)
