@@ -43,7 +43,7 @@ class TestArticle(unittest.TestCase):
 
         self.assertEqual(article.title, "Title")
         self.assertEqual(article.source, "Source")
-     #   self.assertEqual(article.author, "Author")
+        self.assertEqual(article.author, "Author")
         self.assertEqual(article.google_url, "https://news.google.com/example")
         self.assertEqual(article.url, None)
         self.assertEqual(article.full_text, None)

@@ -2,7 +2,7 @@ import logging
 import re
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote, urlparse
-import time
+
 import feedparser
 import requests
 from models.article import Article 
@@ -21,14 +21,8 @@ def create_search_url(user_query: str):
 
 def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]:
     """Get articles from Google RSS for the given search query within the past 24 hours."""
-    headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-    }
     rss_url = create_search_url(query)
-    time.sleep(10)
-    articles = []
-
-    response = requests.get(rss_url, headers=headers, timeout=10)
+    response = requests.get(rss_url, timeout=10)
     response.raise_for_status()
     feed = feedparser.parse(response.content)
 
@@ -112,16 +106,14 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
     filtered_entries = []
     for entry in feed.entries:
         published = Article.parse_published_parsed(getattr(entry, "published_parsed", None))
-        if published and published >= cutoff:
-           filtered_entries.append(entry)
-
         url = decode_google_url(entry.link)
         base_url = str(urlparse(url).netloc)
         base_url = base_url.removeprefix("www.")
-        if base_url in top_urls:
+
+        if (base_url in top_urls) and (published and published >= cutoff):
             filtered_entries.append(entry)
 
-    articles += [Article.from_rss_entry(entry) for entry in filtered_entries]
+    articles = [Article.from_rss_entry(entry) for entry in filtered_entries]
 
     if limit:
         articles = articles[:limit]

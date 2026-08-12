@@ -8,7 +8,6 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docxtpl import DocxTemplate, RichText
 from models.article import Article
-#from newspaper import Article
 
 logger = logging.getLogger(__name__)
 
@@ -203,7 +202,7 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
 
     source = article.source or "no source identified"
 
-    #author = article.author or "no author identified"
+    author = article.author or "no author identified"
 
     date = article.date_published_string or "unknown publication date"
 
@@ -221,11 +220,11 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     article_context = {
         "title_with_link": title_with_link,
         "source": source,
-    #    "author": author,
+        "author": author,
         "full_text": full_text,
         "date": date,
     }
-#        "summary": summary, <Removed from article_context due to formatting issues>
+#        "summary": summary, <Removed from article_context (above) due to summary formatting issues>
 
     return article_context
 

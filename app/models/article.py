@@ -1,17 +1,10 @@
 import hashlib
 import logging
-import requests
-import time
-import os
-import random
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Self
 from zoneinfo import ZoneInfo
-from bs4 import BeautifulSoup
-from newsplease import NewsPlease
-from googlenewsdecoder import new_decoderv1
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +16,7 @@ class Article:
     id: str
     title: str
     source: str | None
-    #author: str | None
+    author: str | None
     published: datetime | None
     url: str | None
     google_url: str
@@ -59,38 +52,12 @@ class Article:
         published = cls.parse_published_parsed(entry.get("published_parsed"))
 
         google_url = entry.link
-        #try:
-        #'''
-        #decoder=new_decoderv1
-        #decoded_url = ""
-        #result = decoder(google_url)
-        #if result.get("status") and result.get("decoded_url"):
-        #    decoded_url = result["decoded_url"]
-        #else:
-        #    RuntimeError(result["message"])
-        #'''
-        #decoded_url = decoder(google_url)
-        #except RuntimeError as e:
-        #    logger.warning(f"url decoding failed: {e}")
-        #    decoded_url = None
-        #url = decode_google_url(google_url)
-        #author = entry.get("author", "")
-        #url = "https://www.aerotime.aero/articles/australia-us-japan-formalize-new-trilateral-air-logistics-agreement"
-        #---
-        #time.sleep(10)
-        #response = requests.get(google_url)
-        #soup = BeautifulSoup(response.text, "html.parser")
-        #author_tag = soup.find("meta", attrs={"name": "author"})
-        #if author_tag:
-        #    author = str(author_tag.get("content"))
-        #else:
-        #    author = entry.get("author", "")
-        #---
+
         return cls(
             id=id,
             title=title,
             source=source,
-            #author=None,
+            author=None,
             published=published,
             url=None,
             google_url=google_url,
@@ -133,8 +100,3 @@ class Article:
             title = " - ".join(parts[:-1])
 
         return title, source
-
-#    def checkForAuthor():
-#        soup = BeautifulSoup(requests.get(url).content, 'html.parser')
-#        meta = soup.find('meta', {'name': 'byl'})
-#        return meta is not None
