@@ -5,7 +5,11 @@ from urllib.parse import quote, urlparse
 
 import feedparser
 import requests
+<<<<<<< HEAD
 from models.article import Article
+=======
+from models.article import Article 
+>>>>>>> media-author
 from core.extraction import decode_google_url
 
 logger = logging.getLogger(__name__)
@@ -13,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def create_search_url(user_query: str):
     normalized = re.sub(r"\s+", " ", user_query).strip()
-
+    
     rss_url = f"https://news.google.com/rss/search?q={quote(normalized)}+when:1d"
     logger.info(f"RSS url:\t{rss_url}")
     return rss_url
@@ -106,14 +110,13 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
     filtered_entries = []
     for entry in feed.entries:
         published = Article.parse_published_parsed(getattr(entry, "published_parsed", None))
-        #if published and published >= cutoff:
-        #    filtered_entries.append(entry)
-
         url = decode_google_url(entry.link)
         base_url = str(urlparse(url).netloc)
         base_url = base_url.removeprefix("www.")
+
         if (base_url in top_urls) and (published and published >= cutoff):
             filtered_entries.append(entry)
+
     articles = [Article.from_rss_entry(entry) for entry in filtered_entries]
 
     if limit:

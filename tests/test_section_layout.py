@@ -16,6 +16,7 @@ def make_article(article_id: str) -> Article:
         id=article_id,
         title=f"title-{article_id}",
         source="source",
+        author="author",
         published=datetime(2026, 7, 8, 0, 0, tzinfo=timezone.utc),
         url=None,
         google_url=f"https://example.com/{article_id}",

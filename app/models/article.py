@@ -16,6 +16,7 @@ class Article:
     id: str
     title: str
     source: str | None
+    author: str | None
     published: datetime | None
     url: str | None
     google_url: str
@@ -56,6 +57,7 @@ class Article:
             id=id,
             title=title,
             source=source,
+            author=None,
             published=published,
             url=None,
             google_url=google_url,

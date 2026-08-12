@@ -38,6 +38,7 @@ def show_search_section():
         for article_index, article in enumerate(articles):
             logging.debug(article.google_url)
             article = core.extraction.enrich_url(article)
+            article = core.extraction.enrich_author(article)
             article = core.extraction.enrich_full_text(article)
             enriched_articles.append(article)
             progress_value = (article_index + 1) / len(articles)

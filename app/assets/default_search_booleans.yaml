@@ -25,11 +25,11 @@
 "Joint base Lewis McChord": |
   "Joint Base Lewis-McChord" OR "JBLM" OR "Lewis-McChord" OR "Fort Lewis" OR "McChord Field" OR "I Corps" OR "7th Infantry Division" OR "2nd Battalion" OR "Stryker Brigade" OR "Washington Army base"
   OR
-  "U.S. Army" AND ("Lewis-McChord" OR "JBLM" OR "Washington" OR "Fort Lewis" OR "McChord Field")
+  "U.S. Army" AND ("Lewis-McChord" OR "JBLM" OR "Washington" OR "Fort Lewis" OR "McChord Field") 
 "Korea military news": |
   "South Korean military" OR "Republic of Korea Armed Forces" OR "ROK military" OR "ROK Army" OR "ROK Navy" OR "ROK Air Force" OR "Korean military" OR "Korean defense" OR "Korean armed forces" OR "Ministry of National Defense" OR "Korean war games" OR "Korean military exercises" OR "Korean defense industry"
   OR
-  "North Korean military" OR "Korean People's Army" OR "KPA" OR "North Korean armed forces" OR "North Korean defense" OR "Pyongyang military" OR "DPRK military" OR "DPRK Army" OR "DPRK Navy" OR "DPRK Air Force" OR "North Korean missile" OR "North Korean nuclear" OR "North Korean war games" OR "North Korean military exercises" 
+  "North Korean military" OR "Korean People's Army" OR "KPA" OR "North Korean armed forces" OR "North Korean defense" OR "Pyongyang military" OR "DPRK military" OR "DPRK Army" OR "DPRK Navy" OR "DPRK Air Force" OR "North Korean missile" OR "North Korean nuclear" OR "North Korean war games" OR "North Korean military exercises"
 "Japan military news": |
   "Japanese military" OR "Japan Self-Defense Forces" OR "JSDF" OR "Japan Ground Self-Defense Force" OR "JGSDF" OR "Japan Maritime Self-Defense Force" OR "JMSDF" OR "Japan Air Self-Defense Force" OR "JASDF" OR "Japanese armed forces" OR "Japanese defense" OR "Ministry of Defense Japan" OR "Japanese war games" OR "Japanese military exercises" OR "Japanese defense industry" OR "Japanese missile" OR "Japanese security policy"
 "Hawaii military news": |
@@ -41,7 +41,7 @@
   OR
   "U.S. Air Force" AND ("Hawaii" OR "Hickam")
   OR
-  "U.S. Marine Corps" AND ("Hawaii" OR "Marine Corps Base")
+  "U.S. Marine Corps"
 "Guam military news": |
   (Guam OR "Guam's") AND (military OR Army)
   OR
@@ -132,4 +132,3 @@
   "Red Hill" AND ("fuel spill" OR "fuel leak" OR "contamination" OR "water crisis" OR "environmental disaster" OR "cleanup" OR "remediation" OR "health impact" OR "military" OR "Army" OR "Department of Defense" OR "DoD" OR "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "USINDOPACOM")
   OR
   "Red Hill Bulk Fuel Storage Facility" OR "Red Hill fuel spill" OR "Red Hill fuel leak" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster" OR "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "Department of Defense" OR "DoD" OR "USINDOPACOM"
-  
