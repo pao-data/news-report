@@ -85,7 +85,7 @@ def _build_section_links(doc, section_names: list[str]) -> dict[str, dict]:
     """
     section_links = {
         name: {
-            #"summary_heading": None,
+            "summary_heading": None,
             "full_heading": None,
             "summary_nav_paragraphs": [],
             "full_nav_paragraphs": [],
@@ -93,10 +93,10 @@ def _build_section_links(doc, section_names: list[str]) -> dict[str, dict]:
         for name in section_names
     }
 
-    #region = "summary"
-    #summary_idx = 0
+    region = "summary"
+    summary_idx = 0
     full_idx = 0
-    #current_summary_section = None
+    current_summary_section = None
     current_full_section = None
 
     for paragraph in doc.paragraphs:
@@ -108,7 +108,7 @@ def _build_section_links(doc, section_names: list[str]) -> dict[str, dict]:
             region = "full"
             continue
 
-        '''
+        
         if region == "summary":
             if summary_idx < len(section_names) and text == section_names[summary_idx]:
                 section_links[text]["summary_heading"] = paragraph
@@ -120,15 +120,14 @@ def _build_section_links(doc, section_names: list[str]) -> dict[str, dict]:
                 section_links[current_summary_section]["summary_nav_paragraphs"].append(paragraph)
 
         else:
-        '''
-        if full_idx < len(section_names) and text == section_names[full_idx]:
-            section_links[text]["full_heading"] = paragraph
-            current_full_section = text
-            full_idx += 1
-            continue
+            if full_idx < len(section_names) and text == section_names[full_idx]:
+                section_links[text]["full_heading"] = paragraph
+                current_full_section = text
+                full_idx += 1
+                continue
 
-        #if current_full_section and "Back to Summaries" in text:
-        #    section_links[current_full_section]["full_nav_paragraphs"].append(paragraph)
+            if current_full_section and "Back to Summaries" in text:
+                section_links[current_full_section]["full_nav_paragraphs"].append(paragraph)
 
     return section_links
 
@@ -141,21 +140,21 @@ def _add_internal_section_navigation(rendered_docx: BytesIO, section_names: list
     bookmark_id = 1
     for idx, name in enumerate(section_names):
         section_info = section_links[name]
-        #summary_heading = section_info["summary_heading"]
+        summary_heading = section_info["summary_heading"]
         full_heading = section_info["full_heading"]
-        '''
+        
         if summary_heading is None or full_heading is None:
             logger.warning(
                 "Skipping section navigation for '%s': missing heading in summary or full section.",
                 name,
             )
             continue
-        '''
+        
 
-        #summary_anchor = f"summary_section_{idx}"
+        summary_anchor = f"summary_section_{idx}"
         full_anchor = f"full_section_{idx}"
-        #_add_bookmark(summary_heading, summary_anchor, bookmark_id)
-        #bookmark_id += 1
+        _add_bookmark(summary_heading, summary_anchor, bookmark_id)
+        bookmark_id += 1
         _add_bookmark(full_heading, full_anchor, bookmark_id)
         bookmark_id += 1
 
@@ -173,7 +172,7 @@ def _add_internal_section_navigation(rendered_docx: BytesIO, section_names: list
                 tooltip="Go to top of document.",
             )
 
-        '''
+        
         for nav_paragraph in section_info["full_nav_paragraphs"]:
             _set_anchor_on_text(
                 nav_paragraph,
@@ -181,7 +180,7 @@ def _add_internal_section_navigation(rendered_docx: BytesIO, section_names: list
                 summary_anchor,
                 tooltip=f"Go to Summaries for {name}.",
             )
-        '''
+       
 
     output = BytesIO()
     doc.save(output)
