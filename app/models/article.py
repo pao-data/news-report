@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import trafilatura
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -13,13 +14,13 @@ logger = logging.getLogger(__name__)
 class Article:
     """Canonical article model used throughout search/layout/report flows."""
 
-    id: str
-    title: str
+    id: str | None
+    title: str | None
     source: str | None
     author: str | None
     published: datetime | None
     url: str | None
-    google_url: str
+    google_url: str | None
     full_text: str | None
 
     @property
@@ -64,6 +65,37 @@ class Article:
             full_text=None,
         )
 
+    @classmethod
+    def from_url(cls, url) -> Self:
+        id = None
+        title=None
+        source=None
+        author=None
+        published=None
+        full_text=None
+
+        raw_html = trafilatura.fetch_url(url)
+        if not raw_html:
+            logging.warning(f"Could not fetch any data from url: {url}")
+        metadata = trafilatura.extract_metadata(raw_html)
+        if metadata:
+            title = metadata.title
+            source = metadata.source
+            author = metadata.author
+            published = metadata.date
+            full_text = metadata.text
+
+        return cls(
+            id = None,
+            title=title,
+            source=source,
+            author=author,
+            published=published,
+            url=url,
+            google_url = None,
+            full_text=full_text,
+        )
+        
     @staticmethod
     def make_article_id(entry: Any) -> str:
         base = entry.get("id") or entry.get("guid") or entry.get("link") or entry.get("title")
