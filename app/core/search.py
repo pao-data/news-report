@@ -115,6 +115,17 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
 
     articles = [Article.from_rss_entry(entry) for entry in filtered_entries]
 
+    # TODO - Collect manual url from user
+    # 1. Create textbox on UI for input
+    # 2. insert user inputted url to front of articles list. Add to front to avoid cut off by limit.
+    # 3. clear textbox to allow user to input any number of urls
+
+    # TODO - delete. Testing addition of manual url. Url is properly displayed on UI and report. 
+    # test_url = "https://www.cnn.com/2026/09/04/politics/mail-voting-popularity-trump-vis"
+    # test_manual_entry = Article.from_manual_entry(test_url)
+    # articles.insert(0, test_manual_entry)
+    # print("NEW ARTICLE LINK: ", test_manual_entry.url)
+
     if limit:
         articles = articles[:limit]
 

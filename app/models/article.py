@@ -1,4 +1,5 @@
 import hashlib
+import json
 import logging
 import trafilatura
 from collections.abc import Sequence
@@ -22,6 +23,7 @@ class Article:
     url: str | None
     google_url: str | None
     full_text: str | None
+    is_manual_entry: bool
 
     @property
     def date_published_string(self) -> str:
@@ -63,43 +65,55 @@ class Article:
             url=None,
             google_url=google_url,
             full_text=None,
+            is_manual_entry=False
         )
 
     @classmethod
-    def from_url(cls, url) -> Self:
-        id = None
-        title=None
-        source=None
-        author=None
-        published=None
-        full_text=None
+    def from_manual_entry(cls, entry: Any) -> Self:
+        id = cls.make_article_id(entry)
+        title = None
+        source = None
+        author = None
+        published = None
+        # url = entry
+        google_url = None
+        full_text = None
 
-        raw_html = trafilatura.fetch_url(url)
+        raw_html = trafilatura.fetch_url(entry)
         if not raw_html:
-            logging.warning(f"Could not fetch any data from url: {url}")
-        metadata = trafilatura.extract_metadata(raw_html)
+            logging.warning(f"Could not fetch any data from url: {entry}")
+
+        metadata = trafilatura.extract(raw_html, output_format="json", with_metadata=True)
+
         if metadata:
-            title = metadata.title
-            source = metadata.source
-            author = metadata.author
-            published = metadata.date
-            full_text = metadata.text
+            metadata_json = json.loads(metadata)
+            title = metadata_json['title']
+            source = metadata_json['source-hostname']
+            author = metadata_json['author']
+            published = datetime.strptime(metadata_json['date'],'%Y-%m-%d')
+            full_text = metadata_json['raw_text']
 
         return cls(
-            id = None,
-            title=title,
-            source=source,
-            author=author,
-            published=published,
-            url=url,
-            google_url = None,
-            full_text=full_text,
+            id = id,
+            title = title,
+            source = source,
+            author = author,
+            published = published,
+            url = entry,
+            google_url = google_url,
+            full_text = full_text,
+            is_manual_entry = True
         )
         
     @staticmethod
     def make_article_id(entry: Any) -> str:
-        base = entry.get("id") or entry.get("guid") or entry.get("link") or entry.get("title")
-        return hashlib.md5(base.encode()).hexdigest()
+        try:
+            base = entry.get("id") or entry.get("guid") or entry.get("link") or entry.get("title")
+            encoded_id = hashlib.md5(base.encode()).hexdigest()
+        except:
+            # if article is inputted manually, then url will be used to generate id
+            encoded_id = hashlib.md5(entry.encode()).hexdigest()
+        return encoded_id
 
     @staticmethod
     def parse_published_parsed(published_parsed: Any) -> datetime | None:

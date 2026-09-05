@@ -16,7 +16,10 @@ logger = logging.getLogger(__name__)
 @utils.logging.log_execution_time
 def enrich_url(article: Article) -> Article:
     try:
-        url = decode_google_url(article.google_url)
+        if article.is_manual_entry == False:
+            url = decode_google_url(article.google_url)
+        else:
+            url = article.url
     except RuntimeError as e:
         logger.warning(f"url decoding failed: {e}")
         url = None
