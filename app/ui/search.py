@@ -15,6 +15,9 @@ def show_search_section():
 
     submitted = st.button("Search All", type="primary")
 
+    # Container is created to reserve space for new elements in UI if "Search All" is selected
+    search_container = st.container()
+
     if submitted:
         results = {}
 
@@ -28,7 +31,9 @@ def show_search_section():
         ui.state.set_show_search_results(False)
 
         progress_text = "Searching for news articles..."
-        progress_bar = st.progress(0.0, text=progress_text)
+
+        # Adding progress bar to container to not overwrite "Additional URLs" UI section
+        progress_bar = search_container.progress(0.0, text=progress_text)
         articles = []
         for query in results.values():
             a = core.search.get_articles_from_rss(query)
@@ -94,7 +99,7 @@ def show_query_fields():
     # Add new query
     col, _ = st.columns([4, 10])
     col.text_input(
-        "",
+        " ",
         key="new_query_label",
         placeholder="➕ Add search field (Enter field name and press Enter)",
         label_visibility="collapsed",

@@ -4,6 +4,7 @@ from datetime import datetime
 import streamlit as st
 import ui.state
 from ui.layout import initialize_layout, show_layout_section
+from ui.manual_entry import show_manual_entry_section
 from ui.report import show_report_section
 from ui.search import show_search_section
 from utils.config import load_default_queries
@@ -32,5 +33,6 @@ if __name__ == "__main__":
     st.title("Morning Report")
 
     show_search_section()
+    show_manual_entry_section()
     show_layout_section()
     show_report_section()

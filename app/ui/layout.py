@@ -36,7 +36,7 @@ def show_manage_sections():
 
     col, _ = st.columns([4, 10])
     col.text_input(
-        "",
+        " ",
         key="new_section_text_input",
         placeholder="➕ Add new section (Enter section name and press Enter)",
         label_visibility="collapsed",

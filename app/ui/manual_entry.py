@@ -1,65 +1,64 @@
 import logging
-
-import models.article
 import core.extraction
 import core.search
 import streamlit as st
 import ui.state
 
+from models.article import Article
+
 logger = logging.getLogger(__name__)
+m_articles          = []
+m_enriched_articles = []
+unique_enriched_articles = []
 
-
+# TODO: clear textbox after clicking "Add URL". User is still able to delete current text and input another
+# def clear_text():
+#     st.session_state["new_url_label"] = ""
+    
 def show_manual_entry_section():
     st.header("Additional URLs")
-    st.write("_Add additional url links here to include in the report._")
+    st.write("_Add additional links here to include in the report._")
+
     url = st.text_input(
-        "",
+        " ",
         key="new_url_label",
-        placeholder="Enter article link here",
+        placeholder="Ex: https://www.example.com",
         label_visibility="collapsed"
     )
 
-    submitted = st.button("Add URL", type="primary")
+    m_submitted = st.button("Add URL", type="primary")
 
-    if submitted:
-        #results = {}
+    # This if statement will run each time the m_submitted button is selected
+    if m_submitted:
+        new_manual_entry = Article.from_manual_entry(url)
+        new_manual_entry = core.extraction.enrich_url(new_manual_entry)
+        new_manual_entry = core.extraction.enrich_author(new_manual_entry)
+        new_manual_entry = core.extraction.enrich_full_text(new_manual_entry)
+        m_enriched_articles.append(new_manual_entry)
 
-        #for label in ui.state.get_queries():
-        #    results[label] = st.session_state[f"query_{label}"]
-
-        # Keep latest values as the source of truth
-        #ui.state.set_queries(results)
-
-        #logger.info(f"User added: {results}")
-        #ui.state.set_show_search_results(False)
-
-        #progress_text = "Searching for news articles..."
-        #progress_bar = st.progress(0.0, text=progress_text)
-        articles = []
+        # TODO: Ensure only unique manually entered articles
+        # TODO: m_articles contains unique entires, however, after this loop m_enriched_articles duplicates entries. Maybe something to do with the core.extraction methods/state
+        # Current state does not allow two articles to be added
         
-        a = models.article.from_manual_entry(url) # Replace with new method url -> article
-        articles.extend(a)
+        # # unique list of article ids
+        # unique_article_ids = list(dict.fromkeys([a.id for a in m_enriched_articles]))
+        
+        # for id in unique_article_ids:
+        #     for article in m_enriched_articles:
+        #         if id == article.id:
+        #             unique_enriched_articles.append(article)
+        #             break # stop looking for articles, continue onto next unique id
 
-        enriched_articles = []
-        for article_index, article in enumerate(articles):
-            logging.debug(article.google_url)
-            article = core.extraction.enrich_url(article)
-            article = core.extraction.enrich_author(article)
-            article = core.extraction.enrich_full_text(article)
-            enriched_articles.append(article)
-            progress_value = (article_index + 1) / len(articles)
-            #progress_bar.progress(progress_value, text=progress_text)
-        #progress_bar.empty()
 
-        ui.state.get_layout().add_new_articles(enriched_articles)
+        ui.state.get_layout().add_new_articles(m_enriched_articles)
         ui.state.set_show_search_results(True)
 
+    # Show manually entered articles
     if ui.state.get_show_search_results():
         st.subheader("Processed Articles")
         st.write("_Scroll to see more articles._")
-        with st.container(height=500):
+        with st.container(height=250):
             display_search_results()
-
 
 def display_search_results():
     layout = ui.state.get_layout()
@@ -72,8 +71,8 @@ def display_search_results():
         published = f"{article.date_published_string}"
         url = article.url if article.url else article.google_url
         if not article.url:
-            missing_text_message = """Text for this article could not be obtained because we could not decode the Google RSS link.
-            Sometimes this can happen if we've recently tried to decode too many Google RSS links in a short period of time.
+            missing_text_message = """Text for this article could not be obtained because we could not decode the link provided.
+            Sometimes this can happen if we've recently tried to decode too many links in a short period of time.
             Please try following the link in your browser and pasting the page's source HTML into the HTML Conversion Tool."""
         else:
             missing_text_message = """Text for this article could not be found.
