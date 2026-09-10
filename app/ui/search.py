@@ -101,7 +101,7 @@ def show_query_fields():
     col.text_input(
         " ",
         key="new_query_label",
-        placeholder="➕ Add search field (Enter field name and press Enter)",
+        placeholder="➕ Add search field",
         label_visibility="collapsed",
         on_change=add_query,
     )

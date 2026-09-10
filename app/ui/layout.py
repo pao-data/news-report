@@ -38,7 +38,7 @@ def show_manage_sections():
     col.text_input(
         " ",
         key="new_section_text_input",
-        placeholder="➕ Add new section (Enter section name and press Enter)",
+        placeholder="➕ Add new section",
         label_visibility="collapsed",
         on_change=add_section_from_text_input,
         kwargs={"widget_key": "new_section_text_input"},
