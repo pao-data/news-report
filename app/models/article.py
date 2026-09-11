@@ -69,7 +69,8 @@ class Article:
         )
 
     @classmethod
-    def from_manual_entry(cls, entry: Any) -> Self:
+    # Create Article Object from a link manually entered by user
+    def from_link_entry(cls, entry: Any) -> Self:
         id = cls.make_article_id(entry)
         title = None
         source = None
@@ -104,7 +105,7 @@ class Article:
             full_text = full_text,
             is_manual_entry = True
         )
-        
+
     @staticmethod
     def make_article_id(entry: Any) -> str:
         try:

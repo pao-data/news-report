@@ -3,12 +3,13 @@ import logging
 import streamlit as st
 import ui.state
 
+from datetime import datetime
 from models.article import Article
 
 logger = logging.getLogger(__name__)
 
-m_articles          = []
-m_enriched_articles = []
+m_articles               = []
+m_enriched_articles      = []
 unique_enriched_articles = []
     
 def show_manual_entry_section():
@@ -28,18 +29,20 @@ def show_manual_entry_section():
     if ui.state.get_show_manual_results():
         st.subheader("Processed Articles")
         st.write("_Scroll to see more articles._")
-        with st.container(height=250):
+        with st.container(height=350):
             display_manual_results()
 
 def add_manual_entry_to_articles(widget_key):
     # assign user entered text to url variable before clearing input
     url = st.session_state[widget_key]
-    st.session_state[widget_key] = ""  # Clear the input
+    # Clear the input
+    st.session_state[widget_key] = ""  
 
-    new_manual_entry = Article.from_manual_entry(url)
+    new_manual_entry = Article.from_link_entry(url)
     new_manual_entry = core.extraction.enrich_url(new_manual_entry)
     new_manual_entry = core.extraction.enrich_author(new_manual_entry)
     new_manual_entry = core.extraction.enrich_full_text(new_manual_entry)
+
     m_enriched_articles.append(new_manual_entry)
 
     ui.state.get_layout().add_new_manual_articles(m_enriched_articles)
@@ -49,7 +52,7 @@ def display_manual_results():
     layout = ui.state.get_layout()
     articles = layout.get_unassigned_manual_articles()
     if not articles:
-        st.write("No articles were manually entered.")
+        st.write("No additional articles were entered.")
     for article in articles:
         title = article.title
         source = article.source
@@ -87,6 +90,68 @@ def display_manual_results():
                 kwargs={"article_id": article.id},
             )
 
+            show_update_article_manually(article)
+
+def show_update_article_manually(article: Article):
+    with st.popover("Manually Update Details", on_change = on_popover_change, key = f"manual_detail_popover_{article.id}"):
+        st.write("Please enter article information below. To save changes, press _Enter_ after each input.")
+        m_title = st.text_input(label = "Title",
+                                key = f"manually_added_title_{article.id}",
+                                placeholder = "",
+                                value = article.title)
+        
+        m_author = st.text_input(label = "Author(s)", 
+                                 key = f"manually_added_author_{article.id}",
+                                 placeholder = "",
+                                 value = article.author)
+        
+        m_source = st.text_input(label = "Source", 
+                                 key = f"manually_added_source_{article.id}",
+                                 placeholder="Ex: XYZ News Source",
+                                 value = article.source)
+
+        try:
+            published_strf = article.published.strftime("%Y-%m-%d")
+        except:
+            published_strf = None
+
+        m_published = st.text_input(label = "Publish Date", 
+                                    key = f"manually_added_date_{article.id}",
+                                    placeholder="Use Format: YYYY-MM-DD",
+                                    value = published_strf)
+
+        m_full_text = st.text_area(label = "Full Article Text (Ctr+Enter to apply changes)", 
+                                    key = f"manually_added_text_{article.id}",
+                                    placeholder="",
+                                    height = 150,
+                                    value = article.full_text)
+
+        article.title     = m_title
+        article.author    = m_author
+        article.source    = m_source
+        try:
+            article.full_text = m_full_text.replace("\n\n","\n")
+        except:
+            article.full_text = m_full_text
+        try:
+            article.published = datetime.strptime(m_published,'%Y-%m-%d')
+        except:
+            article.published = None
+        
+        st.button("Close", 
+                  key = f"close_popover_button_{article.id}",
+                  type = 'secondary', 
+                  on_click = toggle_popover,
+                  kwargs = {"article_id":article.id})
+
+# on_change argument is necessary to update state of popover
+def on_popover_change():
+    pass
+
+def toggle_popover(article_id: str):
+    # closes popover, when "Close" button is selected
+    st.session_state[f'manual_detail_popover_{article_id}'] = not st.session_state[f'manual_detail_popover_{article_id}']
+
 def assign_article_on_selection(article_id, selectbox_key):
     ui.state.get_layout().assign_article(
         article_id=article_id, to_id=st.session_state[selectbox_key]
@@ -103,4 +168,4 @@ def get_preview_text(text: str | None, missing_text_message: str, max_words=100)
             n = int(max_words / 2)
             # Use double space before newline since it's needed for html rendering used by st.write()
             shortened_preview = " ".join(words_list[:n]) + "  \n...  \n" + " ".join(words_list[-n:])
-            return shortened_preview
+            return shortened_preview 
