@@ -26,6 +26,7 @@ class Layout:
     section_order: list[str]  # order of sections by id
     articles: dict[str, Article]  # articles by id
     unassigned_articles: list[str]  # list of unassigned articles, in display order, by id
+    unassigned_manual_articles: list[str] # list of unassigned manually added articles, in display order, by id
     _section_names_normalized: dict[str, str]  # normalized name -> section id mapping
 
     def __init__(self, section_names: list[str]) -> None:
@@ -37,6 +38,7 @@ class Layout:
         # Layouts should have no articles upon initialization
         self.articles = {}
         self.unassigned_articles = []
+        self.unassigned_manual_articles = []
         self._assert_membership_invariants()
 
     def add_section(self, section_name: str) -> None:
@@ -95,11 +97,22 @@ class Layout:
     def get_unassigned_articles(self) -> list[Article]:
         return [self.articles[id] for id in self.unassigned_articles]
 
+    def get_unassigned_manual_articles(self) -> list[Article]:
+            return [self.articles[id] for id in self.unassigned_manual_articles]
+
     def add_new_articles(self, articles: list[Article]) -> None:
         """Add unseen articles into `articles` and `unassigned_articles`."""
         for article in articles:
             if article.id not in self.articles:
                 self.unassigned_articles.append(article.id)
+                self.articles[article.id] = article
+        self._assert_membership_invariants()
+
+    def add_new_manual_articles(self, articles: list[Article]) -> None:
+        """Add unseen articles into `articles` and `unassigned_manual_articles`."""
+        for article in articles:
+            if article.id not in self.articles:
+                self.unassigned_manual_articles.append(article.id)
                 self.articles[article.id] = article
         self._assert_membership_invariants()
 
@@ -111,14 +124,17 @@ class Layout:
         """Move an article from unassigned into a target section."""
         if article_id not in self.articles:
             raise ValueError(f"Unknown article ID: {article_id}")
-        if article_id not in self.unassigned_articles:
+        if article_id not in self.unassigned_articles and article_id not in self.unassigned_manual_articles:
             raise ValueError(f"Article is not currently unassigned: {article_id}")
         if to_id not in self.sections:
             raise ValueError(f"Unknown section ID: {to_id}")
         to_section = self.sections[to_id]
         if article_id in to_section.articles:
             raise ValueError(f"Article already assigned to section {to_id}: {article_id}")
-        self.unassigned_articles.remove(article_id)
+        try:
+            self.unassigned_articles.remove(article_id)
+        except:
+            self.unassigned_manual_articles.remove(article_id)
         to_section.add_article(article_id)
         self._assert_membership_invariants()
 
@@ -136,7 +152,10 @@ class Layout:
         if article_id in self.unassigned_articles:
             raise ValueError(f"Article is already unassigned: {article_id}")
         from_section.remove_article(article_id)
-        self.unassigned_articles.append(article_id)
+        if self.articles[article_id].is_manual_entry:
+            self.unassigned_manual_articles.append(article_id)
+        else:
+            self.unassigned_articles.append(article_id)
         self._assert_membership_invariants()
 
     def delete_unassigned_article(self, article_id: str) -> None:
@@ -146,6 +165,16 @@ class Layout:
                 f"Attempt to delete article that is not in unassigned articles.\n\tArticle id: {article_id}"
             )
         self.unassigned_articles.remove(article_id)
+        del self.articles[article_id]
+        self._assert_membership_invariants()
+
+    def delete_unassigned_manual_article(self, article_id: str) -> None:
+        """Fully delete an unassigned manual article."""
+        if article_id not in self.unassigned_manual_articles:
+            raise ValueError(
+                f"Attempt to delete article that is not in unassigned manual articles.\n\tArticle id: {article_id}"
+            )
+        self.unassigned_manual_articles.remove(article_id)
         del self.articles[article_id]
         self._assert_membership_invariants()
 
@@ -162,6 +191,11 @@ class Layout:
         for article_id in self.unassigned_articles:
             if article_id not in self.articles:
                 raise ValueError(f"Unassigned list references unknown article ID: {article_id}")
+            membership_counts[article_id] += 1
+
+        for article_id in self.unassigned_manual_articles:
+            if article_id not in self.articles:
+                raise ValueError(f"Unassigned manual list references unknown article ID: {article_id}")
             membership_counts[article_id] += 1
 
         orphaned = [article_id for article_id, count in membership_counts.items() if count == 0]

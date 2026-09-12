@@ -7,6 +7,7 @@ import streamlit as st
 QUERIES = "queries"
 LAYOUT = "layout"
 SHOW_SEARCH_RESULTS = "show_search_results"
+SHOW_MANUAL_RESULTS = "show_manual_results"
 USER_PROVIDED_TEMPLATE = "user_provided_template"
 SECTIONS_LEGACY = "sections"
 
@@ -27,6 +28,8 @@ def ensure_state_initialized(
         st.session_state[USER_PROVIDED_TEMPLATE] = None
     if SHOW_SEARCH_RESULTS not in st.session_state:
         st.session_state[SHOW_SEARCH_RESULTS] = False
+    if SHOW_MANUAL_RESULTS not in st.session_state:
+        st.session_state[SHOW_MANUAL_RESULTS] = False
 
 
 def get_layout() -> Any:
@@ -51,6 +54,12 @@ def get_show_search_results() -> bool:
 
 def set_show_search_results(value: bool) -> None:
     st.session_state[SHOW_SEARCH_RESULTS] = value
+
+def set_show_manual_results(value: bool) -> None:
+    st.session_state[SHOW_MANUAL_RESULTS] = value
+
+def get_show_manual_results() -> bool:
+    return st.session_state[SHOW_MANUAL_RESULTS]
 
 
 def get_user_provided_template() -> Any:
