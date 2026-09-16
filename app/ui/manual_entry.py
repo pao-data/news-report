@@ -7,10 +7,6 @@ from datetime import datetime
 from models.article import Article
 
 logger = logging.getLogger(__name__)
-
-m_articles               = []
-m_enriched_articles      = []
-unique_enriched_articles = []
     
 def show_manual_entry_section():
     st.header("Additional Articles")
@@ -33,6 +29,8 @@ def show_manual_entry_section():
             display_manual_results()
 
 def add_manual_entry_to_articles(widget_key):
+    m_enriched_articles = []
+
     # assign user entered text to url variable before clearing input
     url = st.session_state[widget_key]
     # Clear the input
