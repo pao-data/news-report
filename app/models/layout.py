@@ -1,89 +1,211 @@
 import logging
 import uuid
 
-from models.section import Section
 from models.article import Article
+from models.section import Section
+from utils.config import normalize_section_name, validate_section_name
 
 logger = logging.getLogger(__name__)
 
-class Layout:
-    sections: dict[str, Section] # sections by id
-    section_order: list[str] # order of sections by id
-    articles: dict[str, Article] # articles by id
-    unassigned_articles: list[str] # list of unassigned articles, in display order, by id
 
-    def __init__(self, section_names: list[str]):
+class Layout:
+    """Aggregate model for report composition.
+
+    Invariants:
+    - `articles` stores each article ID at most once.
+    - An article ID should exist either in exactly one section or in
+      `unassigned_articles` (never both).
+    - Section names are unique (case-insensitive after trimming).
+
+    Ownership:
+    - Cross-container membership changes (assigned <-> unassigned) are
+      managed by `Layout` methods, not `Section`.
+    """
+
+    sections: dict[str, Section]  # sections by id
+    section_order: list[str]  # order of sections by id
+    articles: dict[str, Article]  # articles by id
+    unassigned_articles: list[str]  # list of unassigned articles, in display order, by id
+    unassigned_manual_articles: list[str] # list of unassigned manually added articles, in display order, by id
+    _section_names_normalized: dict[str, str]  # normalized name -> section id mapping
+
+    def __init__(self, section_names: list[str]) -> None:
         self.sections = {}
         self.section_order = []
+        self._section_names_normalized = {}
         for section_name in section_names:
             self.add_section(section_name)
         # Layouts should have no articles upon initialization
         self.articles = {}
         self.unassigned_articles = []
+        self.unassigned_manual_articles = []
+        self._assert_membership_invariants()
 
-    def add_section(self, section_name: str):
+    def add_section(self, section_name: str) -> None:
+        canonical_name = validate_section_name(section_name)
+        normalized_name = normalize_section_name(canonical_name)
+
+        if normalized_name in self._section_names_normalized:
+            existing_section_id = self._section_names_normalized[normalized_name]
+            existing_name = self.sections[existing_section_id].name
+            raise ValueError(
+                f"Cannot add section '{canonical_name}': a section with a similar name "
+                f"'{existing_name}' already exists (names are trimmed of leading/trailing "
+                "whitespace and case-insensitive)."
+            )
+
         section_id = str(uuid.uuid4())
-        self.sections[section_id] = Section(name=section_name, articles=[], id=section_id)
+        self.sections[section_id] = Section(name=canonical_name, articles=[], id=section_id)
         self.section_order.append(section_id)
+        self._section_names_normalized[normalized_name] = section_id
 
-    def delete_section():
+    def delete_section(self, section_id: str) -> None:
         """
         Move all articles in section to unassigned, then
         remove section from the Layout
         """
-        ...
+        if section_id not in self.sections:
+            raise ValueError(f"Unknown section ID: {section_id}")
 
-    def reorder_section(self, from_position, to_position):
+        section = self.sections[section_id]
+
+        for article_id in section.articles[:]:
+            self.unassigned_articles.append(article_id)
+
+        normalized_name = normalize_section_name(section.name)
+        if normalized_name in self._section_names_normalized:
+            del self._section_names_normalized[normalized_name]
+
+        del self.sections[section_id]
+        self.section_order.remove(section_id)
+
+        self._assert_membership_invariants()
+
+    def reorder_section(self, from_position: int, to_position: int) -> None:
         section_order = self.section_order
-        if not(0 <= from_position < len(section_order)):
-            ValueError("Invalid index for from_position.")
-        if not(0 <= to_position < len(section_order)):
-            ValueError("Invalid index for to_position.")
+        if not (0 <= from_position < len(section_order)):
+            raise ValueError("Invalid index for from_position.")
+        if not (0 <= to_position < len(section_order)):
+            raise ValueError("Invalid index for to_position.")
         section_to_move = section_order.pop(from_position)
         section_order.insert(to_position, section_to_move)
         self.section_order = section_order
 
-    def get_ordered_sections(self):
+    def get_ordered_sections(self) -> list[Section]:
         return [self.sections[section_id] for section_id in self.section_order]
 
-    def get_unassigned_articles(self):
+    def get_unassigned_articles(self) -> list[Article]:
         return [self.articles[id] for id in self.unassigned_articles]
 
-    def add_new_articles(self, articles: list[Article]):
-        """Add new articles to the layout. All new articles start as unassigned to a section."""
+    def get_unassigned_manual_articles(self) -> list[Article]:
+            return [self.articles[id] for id in self.unassigned_manual_articles]
+
+    def add_new_articles(self, articles: list[Article]) -> None:
+        """Add unseen articles into `articles` and `unassigned_articles`."""
         for article in articles:
             if article.id not in self.articles:
                 self.unassigned_articles.append(article.id)
                 self.articles[article.id] = article
+        self._assert_membership_invariants()
 
-    def move_article(article_id, from_id, to_id):
+    def add_new_manual_articles(self, articles: list[Article]) -> None:
+        """Add unseen articles into `articles` and `unassigned_manual_articles`."""
+        for article in articles:
+            if article.id not in self.articles:
+                self.unassigned_manual_articles.append(article.id)
+                self.articles[article.id] = article
+        self._assert_membership_invariants()
+
+    def move_article(self, article_id: str, from_id: str, to_id: str) -> None:
         """Move article from one section to another."""
-        ...
-    
-    def assign_article(self, article_id, to_id):
-        """Move an unassigned article to a section."""
+        raise NotImplementedError("Layout.move_article is intentionally not implemented yet.")
+
+    def assign_article(self, article_id: str, to_id: str) -> None:
+        """Move an article from unassigned into a target section."""
+        if article_id not in self.articles:
+            raise ValueError(f"Unknown article ID: {article_id}")
+        if article_id not in self.unassigned_articles and article_id not in self.unassigned_manual_articles:
+            raise ValueError(f"Article is not currently unassigned: {article_id}")
+        if to_id not in self.sections:
+            raise ValueError(f"Unknown section ID: {to_id}")
         to_section = self.sections[to_id]
-        self.unassigned_articles.remove(article_id)
+        if article_id in to_section.articles:
+            raise ValueError(f"Article already assigned to section {to_id}: {article_id}")
+        try:
+            self.unassigned_articles.remove(article_id)
+        except:
+            self.unassigned_manual_articles.remove(article_id)
         to_section.add_article(article_id)
+        self._assert_membership_invariants()
 
-    def unassign_article(self, article_id, from_id):
-        """Move an article from its section to unassigned. """
+    def unassign_article(self, article_id: str, from_id: str) -> None:
+        """Move an article from a section back to unassigned."""
+        if article_id not in self.articles:
+            raise ValueError(f"Unknown article ID: {article_id}")
+        if from_id not in self.sections:
+            raise ValueError(f"Unknown section ID: {from_id}")
         from_section = self.sections[from_id]
+        if article_id not in from_section.articles:
+            raise ValueError(
+                f"Article is not currently assigned to section {from_id}: {article_id}"
+            )
+        if article_id in self.unassigned_articles:
+            raise ValueError(f"Article is already unassigned: {article_id}")
         from_section.remove_article(article_id)
-        self.unassigned_articles.append(article_id)
+        if self.articles[article_id].is_manual_entry:
+            self.unassigned_manual_articles.append(article_id)
+        else:
+            self.unassigned_articles.append(article_id)
+        self._assert_membership_invariants()
 
-    def delete_unassigned_article(self, article_id):
+    def delete_unassigned_article(self, article_id: str) -> None:
         """Fully delete an unassigned article."""
-        if not article_id in self.unassigned_articles:
-            ValueError(
+        if article_id not in self.unassigned_articles:
+            raise ValueError(
                 f"Attempt to delete article that is not in unassigned articles.\n\tArticle id: {article_id}"
             )
-            return
         self.unassigned_articles.remove(article_id)
         del self.articles[article_id]
+        self._assert_membership_invariants()
 
+    def delete_unassigned_manual_article(self, article_id: str) -> None:
+        """Fully delete an unassigned manual article."""
+        if article_id not in self.unassigned_manual_articles:
+            raise ValueError(
+                f"Attempt to delete article that is not in unassigned manual articles.\n\tArticle id: {article_id}"
+            )
+        self.unassigned_manual_articles.remove(article_id)
+        del self.articles[article_id]
+        self._assert_membership_invariants()
 
-    
+    def _assert_membership_invariants(self) -> None:
+        """Validate that article membership is complete and non-overlapping."""
+        membership_counts: dict[str, int] = {article_id: 0 for article_id in self.articles}
+
+        for section in self.sections.values():
+            for article_id in section.articles:
+                if article_id not in self.articles:
+                    raise ValueError(f"Section references unknown article ID: {article_id}")
+                membership_counts[article_id] += 1
+
+        for article_id in self.unassigned_articles:
+            if article_id not in self.articles:
+                raise ValueError(f"Unassigned list references unknown article ID: {article_id}")
+            membership_counts[article_id] += 1
+
+        for article_id in self.unassigned_manual_articles:
+            if article_id not in self.articles:
+                raise ValueError(f"Unassigned manual list references unknown article ID: {article_id}")
+            membership_counts[article_id] += 1
+
+        orphaned = [article_id for article_id, count in membership_counts.items() if count == 0]
+        if orphaned:
+            raise ValueError(f"Article IDs without membership: {orphaned}")
+
+        duplicated = [article_id for article_id, count in membership_counts.items() if count > 1]
+        if duplicated:
+            raise ValueError(f"Article IDs with multiple memberships: {duplicated}")
+
 
 # for article in section:
 # - display container

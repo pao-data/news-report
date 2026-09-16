@@ -1,52 +1,90 @@
-import streamlit as st
-
 from io import BytesIO
 
 import core.report
+import streamlit as st
+import ui.state
 from utils.config import load_config
 from utils.paths import BASE_DIR
 
+
 def reset_template_doc():
-    st.session_state.user_provided_template = None
+    ui.state.set_user_provided_template(None)
+
 
 def get_template():
-    if st.session_state.user_provided_template:
-        return st.session_state.user_provided_template
+    user_template = ui.state.get_user_provided_template()
+    if user_template:
+        user_template.seek(0)
+        return user_template
     else:
         config = load_config()
         default_template_path = BASE_DIR / config["paths"]["default_template_file"]
         return default_template_path
-    
 
-def generate_report_for_download():
-    layout = st.session_state.layout
+
+def generate_report_data():
+    """Generate report and return the bytes for download."""
+    layout = ui.state.get_layout()
     template = get_template()
     buffer = core.report.generate_document(layout, template)
+    return buffer.getvalue()
 
-    st.download_button(
-        label="Download DOCX",
-        data=buffer,
-        file_name="report.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
 
 def show_report_section():
     st.subheader("Report Generation")
-    with st.expander("Advanced: Upload custom template .docx file for report generation."):
+
+    with st.expander("📝 Template Customization"):
         st.write(
-            "Warning! Uploading a template report in the wrong format can cause the report to generate incorrectly. "
-            "Please don't use this option unless you know what you're doing."
+            "Customize the report template by downloading, editing in Microsoft Word, "
+            "and uploading it back. Your custom template will be used for this session."
         )
+
+        st.write("**Step 1: Download the Template**")
+        config = load_config()
+        default_template_path = BASE_DIR / config["paths"]["default_template_file"]
+        with open(default_template_path, "rb") as f:
+            st.download_button(
+                label="⬇️ Download Original Template",
+                data=f.read(),
+                file_name="default_template.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                help="Download the template to edit in Microsoft Word",
+            )
+
+        st.write("**Step 2: Edit in Microsoft Word**")
+        guide_path = BASE_DIR / "TEMPLATE_EDITING_GUIDE.pdf"
+        with open(guide_path, "rb") as f:
+            st.download_button(
+                label="📚 Download Editing Instructions (PDF)",
+                data=f.read(),
+                file_name="TEMPLATE_EDITING_GUIDE.pdf",
+                mime="application/pdf",
+                help="Download detailed instructions for editing the template",
+            )
+
+        st.write("**Step 3: Upload Your Edited Template**")
+        st.warning(
+            "⚠️ Custom templates are session-based and reset when the app restarts. "
+            "Contact a developer if you want to permanently change the default template."
+        )
+
         template_file_upload = st.file_uploader(
-            "Upload a DOCX template",
-            type=["docx"]
+            "Upload your edited template",
+            type=["docx"],
+            help="Upload a .docx file to use for this session",
         )
         if template_file_upload:
             user_provided_template = BytesIO(template_file_upload.read())
-            st.session_state.user_provided_template = user_provided_template
+            ui.state.set_user_provided_template(user_provided_template)
+            st.success("✅ Custom template uploaded! It will be used for this session.")
         else:
             # If user removes an uploaded template document, use the default template.
             reset_template_doc()
-        
-    if st.button("Generate Report"):
-        generate_report_for_download()
+
+    st.download_button(
+        label="📥 Download Report",
+        data=generate_report_data(),
+        file_name="report.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        help="Generate and download the report",
+    )
