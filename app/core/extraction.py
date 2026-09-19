@@ -92,7 +92,7 @@ def fetch_raw_html(url: str, download_timeout: int):
 
 @st.cache_data(show_spinner=False)
 def extract_main_text(raw_html, **kwargs):
-    return trafilatura.extract(raw_html, **kwargs, include_links=False)
+    return trafilatura.extract(raw_html, **kwargs, include_links=False) # UPDATING ARTICLE PARAMS HERE
 
 
 if __name__ == "__main__":

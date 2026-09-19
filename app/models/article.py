@@ -84,7 +84,7 @@ class Article:
         if not raw_html:
             logging.warning(f"Could not fetch any data from url: {entry}")
 
-        metadata = trafilatura.extract(raw_html, output_format="json", with_metadata=True, include_links=False)
+        metadata = trafilatura.extract(raw_html, output_format="json", with_metadata=True) # UPDATING ARTICLE PARAMS HERE
 
         if metadata:
             metadata_json = json.loads(metadata)
