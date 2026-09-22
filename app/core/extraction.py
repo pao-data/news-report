@@ -63,13 +63,13 @@ def enrich_full_text(article: Article) -> Article:
         logging.warning(f"Could not fetch any data from url: {url}")
         return Article(**{**article.__dict__, "full_text": None})
 
-    full_text = extract_main_text(raw_html, favor_recall=False)
+    full_text, full_text_precision = extract_main_text(raw_html, favor_recall=False)
     if not full_text:
         logger.warning(
             f"Downloaded data could not be parsed by trafilatura for article at url {url}"
         )
 
-    return Article(**{**article.__dict__, "full_text": full_text})
+    return Article(**{**article.__dict__, "full_text": full_text, "full_text_precision": full_text_precision})
 
 
 @st.cache_data(show_spinner=False)
@@ -92,7 +92,7 @@ def fetch_raw_html(url: str, download_timeout: int):
 
 @st.cache_data(show_spinner=False)
 def extract_main_text(raw_html, **kwargs):
-    return trafilatura.extract(raw_html, **kwargs, include_links=False) # UPDATING ARTICLE PARAMS HERE
+    return trafilatura.extract(raw_html, **kwargs, include_links=False), trafilatura.extract(raw_html, **kwargs, include_links=False, favor_precision=True)
 
 
 if __name__ == "__main__":

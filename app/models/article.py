@@ -23,6 +23,7 @@ class Article:
     url: str | None
     google_url: str | None
     full_text: str | None
+    full_text_precision: str | None
     is_manual_entry: bool
 
     @property
@@ -65,6 +66,7 @@ class Article:
             url=None,
             google_url=google_url,
             full_text=None,
+            full_text_precision=None,
             is_manual_entry=False
         )
 
@@ -79,20 +81,24 @@ class Article:
         # url = entry
         google_url = None
         full_text = None
+        full_text_precision = None
 
         raw_html = trafilatura.fetch_url(entry)
         if not raw_html:
             logging.warning(f"Could not fetch any data from url: {entry}")
 
-        metadata = trafilatura.extract(raw_html, output_format="json", with_metadata=True) # UPDATING ARTICLE PARAMS HERE
+        metadata           = trafilatura.extract(raw_html, output_format="json", with_metadata=True)
+        metadata_precision = trafilatura.extract(raw_html, output_format="json", with_metadata=True, favor_precision=True)
 
         if metadata:
             metadata_json = json.loads(metadata)
+            metadata_json_precision = json.loads(metadata_precision)
             title = metadata_json['title']
             source = metadata_json['source-hostname']
             author = metadata_json['author']
             published = datetime.strptime(metadata_json['date'],'%Y-%m-%d')
             full_text = metadata_json['raw_text']
+            full_text_precision = metadata_json_precision['raw_text']
 
         return cls(
             id = id,
@@ -103,6 +109,7 @@ class Article:
             url = entry,
             google_url = google_url,
             full_text = full_text,
+            full_text_precision = full_text_precision,
             is_manual_entry = True
         )
 
