@@ -128,9 +128,14 @@ def show_update_article_manually(article: Article):
         article.author    = m_author
         article.source    = m_source
         try:
-            article.full_text = m_full_text.replace("\n\n","\n")
+            m_full_text_clean = m_full_text.replace("\n\n","\n")
+            article.full_text = m_full_text_clean
+            # Since this article's text is manually inputted, trafilatura's extract function cannot be ran to get a tighter, precision-version. 
+            # Both versions are needed for highlighting artifacts
+            article.full_text_precision = m_full_text_clean
         except:
             article.full_text = m_full_text
+            article.full_text_precision = m_full_text
         try:
             article.published = datetime.strptime(m_published,'%Y-%m-%d')
         except:

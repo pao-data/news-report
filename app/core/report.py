@@ -34,16 +34,17 @@ def summarize_article(text, min_characters=500):
 
 def split_text_with_newline(text):
 
-    parts = re.split(r'(\n)', text)
     words = []
-
-    for p in parts:
-        if p == "":
-            continue
-        if p == "\n":
-            words.extend("\n\n") # prettify output
-        else:
-            words.extend(p.split())
+    if text:
+        parts = re.split(r'(\n)', text)
+        
+        for p in parts:
+            if p == "":
+                continue
+            if p == "\n":
+                words.extend("\n\n") # prettify output
+            else:
+                words.extend(p.split())
 
     return words
 
@@ -59,7 +60,7 @@ def add_to_richtext(rt_obj, text_to_add, highlight_color=None):
 
 def highlight_artifacts(text_original, text_precision):
 
-    filler_phrases = [["subscribe"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
+    filler_phrases = [["subscribe", "now"], ["subscribe", "here"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
                       ["share", "this", "article"], ["tell", "your", "friends"], ["email", "us", "at"], ["follow", "us", "on"], ["leave", "a", "comment"], ["all", "rights", "reserved"],
                       ["reproduction", "without", "permission", "is", "prohibited"], ["terms", "and", "conditions", "apply"], ["see", "our", "privacy", "policy"], 
                       ["click", "here", "to", "read", "the", "full", "article"], ["return", "to", "homepage"], ["recommended", "for", "you"], ["trending", "now"], 
@@ -75,6 +76,10 @@ def highlight_artifacts(text_original, text_precision):
 
         # text_diff is a list that outputs "- " as a prefix to words that are found in original but not in precision 
         text_diff = list(d.compare(list_of_words_original, list_of_words_precision))
+
+        # d.compare() adds 2 characters as prefix to each word, "- " if in og not in precision, "  " if found in both
+        text_diff = [word.replace("  ", "") for word in text_diff]
+        print(f"text_diff: {text_diff}")
 
         # TODO: test to see how hyphens react here replace "- " with "*" 
         # text_diff = [word.replace("- ", "*") for word in text_diff]
@@ -112,11 +117,14 @@ def highlight_artifacts(text_original, text_precision):
                     i += phrase_len
                     # do not need to look at other phrases, break loop
                     break
-            if "\n" in text_diff[i]:
+            if "\n" in text_diff[i][2:]:
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:])
+                i += 1
+            elif "\n" in text_diff[i]:
                 full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i])
                 i += 1
             elif "- " == text_diff[i][:2]:
-                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i], highlight_color = "#FFFF00")
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:], highlight_color = "#FFFF00")
                 # if the next word needs to be highlighted, add a highlighted space next
                 try:
                     if "- " == text_diff[i+1][:2]:
