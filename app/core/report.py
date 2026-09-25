@@ -1,4 +1,6 @@
+import difflib
 import logging
+import re
 from copy import deepcopy
 from datetime import date
 from io import BytesIO
@@ -29,6 +31,110 @@ def summarize_article(text, min_characters=500):
             break
         summary += "\n"
     return summary
+
+def split_text_with_newline(text):
+
+    words = []
+    if text:
+        parts = re.split(r'(\n)', text)
+        
+        for p in parts:
+            if p == "":
+                continue
+            if p == "\n":
+                words.extend("\n\n") # prettify output
+            else:
+                words.extend(p.split())
+
+    return words
+
+def add_to_richtext(rt_obj, text_to_add, highlight_color=None):
+    rt_obj.add(
+        text_to_add,
+        font = "Arial",
+        size = 2 * 10,
+        highlight = highlight_color,
+        color = "000000"
+    )
+    return rt_obj
+
+def highlight_artifacts(text_original, text_precision):
+
+    filler_phrases = [["caption:"],["read","more","of","our","stories"],["subscribe", "now"], ["subscribe", "here"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
+                      ["share", "this", "article"], ["tell", "your", "friends"], ["email", "us", "at"], ["follow", "us", "on"], ["leave", "a", "comment"], ["all", "rights", "reserved"],
+                      ["reproduction", "without", "permission", "is", "prohibited"], ["terms", "and", "conditions", "apply"], ["see", "our", "privacy", "policy"], 
+                      ["click", "here", "to", "read", "the", "full", "article"], ["return", "to", "homepage"], ["recommended", "for", "you"], ["trending", "now"], 
+                      ["get", "the", "most", "important", "news", "from"], ["share", "with", "us", "your", "feedback"]]
+
+    if text_original:
+        full_text_with_highlight = RichText()
+        
+        list_of_words_original = split_text_with_newline(text_original)
+        list_of_words_precision = split_text_with_newline(text_precision)
+
+        d = difflib.Differ()
+
+        # text_diff is a list that outputs "- " as a prefix to words that are found in original but not in precision 
+        text_diff = list(d.compare(list_of_words_original, list_of_words_precision))
+
+        # d.compare() adds 2 characters as prefix to each word, "- " if in og not in precision, "  " if found in both
+        text_diff = [word.replace("  ", "") for word in text_diff]
+
+        i = 0
+        while i < len(text_diff):
+            for phrase in filler_phrases:
+                phrase_len = len(phrase)
+
+                # To find a filler phrase, all words in the phrase must be present in the text
+                num_matching_words = 0
+
+                # Iterate through the words in the phrase
+                for j in range(phrase_len):
+                    # Compare the next word in the text to the next word in the phrase, add to counter
+                    try:
+                        if text_diff[i+j].lower() == phrase[j]:
+                            num_matching_words += 1
+                    except:
+                        break # end of text
+
+                # if the entire phrase is found in the text, highlight the phrase
+                if phrase_len == num_matching_words:
+                    for k in range(phrase_len):
+                        # if this word is the last in the phrase, do not add a trailing highlighted space
+                        if k == phrase_len-1: 
+                            full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i+k], highlight_color = "#FFFF00")
+                            full_text_with_highlight = add_to_richtext(full_text_with_highlight, " ") 
+                        else:
+                            full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i+k] + " ", highlight_color = "#FFFF00")
+
+                    # this phrase as been added to the report, skip in outer loop
+                    i += phrase_len
+                    # do not need to look at other phrases, break loop
+                    break
+            if "\n" in text_diff[i][2:]:
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:])
+                i += 1
+            elif "\n" in text_diff[i]:
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i])
+                i += 1
+            elif "- " == text_diff[i][:2]:
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:], highlight_color = "#FFFF00")
+                # if the next word needs to be highlighted, add a highlighted space next
+                try:
+                    if "- " == text_diff[i+1][:2]:
+                        full_text_with_highlight = add_to_richtext(full_text_with_highlight, " ", highlight_color = "#FFFF00")
+                except: 
+                    pass # if last word in the text, don't do anything
+                i += 1
+            else:
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i] + " ")    
+                i += 1    
+                
+        full_text = full_text_with_highlight
+    else:
+        full_text = "no text found (perhaps due to bot blocking by the website)"
+
+    return full_text
 
 
 def _xml_text(element) -> str:
@@ -211,11 +317,15 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
 
     date = article.date_published_string or "unknown publication date"
 
-    full_text = (
-        prettify_text(article.full_text)
-        if article.full_text
-        else "no text found (perhaps due to bot blocking by the website)"
-    )
+    full_text = highlight_artifacts(article.full_text, article.full_text_precision)
+
+    # TODO - remove, if do not need to revert to OG
+    # full_text = (
+    #     prettify_text(article.full_text)
+    #     if article.full_text
+    #     else "no text found (perhaps due to bot blocking by the website)"
+    # )
+
     #summary = (
     #    summarize_article(article.full_text)
     #    if article.full_text
