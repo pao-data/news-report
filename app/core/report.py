@@ -60,7 +60,7 @@ def add_to_richtext(rt_obj, text_to_add, highlight_color=None):
 
 def highlight_artifacts(text_original, text_precision):
 
-    filler_phrases = [["caption:"],["read","more","of","our","stories"],["subscribe", "now"], ["subscribe", "here"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
+    filler_phrases = [["for","more","information" "visit"],["caption:"],["read","more","of","our","stories"],["subscribe", "now"], ["subscribe", "here"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
                       ["share", "this", "article"], ["tell", "your", "friends"], ["email", "us", "at"], ["follow", "us", "on"], ["leave", "a", "comment"], ["all", "rights", "reserved"],
                       ["reproduction", "without", "permission", "is", "prohibited"], ["terms", "and", "conditions", "apply"], ["see", "our", "privacy", "policy"], 
                       ["click", "here", "to", "read", "the", "full", "article"], ["return", "to", "homepage"], ["recommended", "for", "you"], ["trending", "now"], 
@@ -92,7 +92,7 @@ def highlight_artifacts(text_original, text_precision):
                 for j in range(phrase_len):
                     # Compare the next word in the text to the next word in the phrase, add to counter
                     try:
-                        if text_diff[i+j].lower() == phrase[j]:
+                        if text_diff[i+j].lower().replace("!","").replace(".", "").replace(",", "") == phrase[j]:
                             num_matching_words += 1
                     except:
                         break # end of text
