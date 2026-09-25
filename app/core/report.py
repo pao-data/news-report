@@ -60,7 +60,7 @@ def add_to_richtext(rt_obj, text_to_add, highlight_color=None):
 
 def highlight_artifacts(text_original, text_precision):
 
-    filler_phrases = [["subscribe", "now"], ["subscribe", "here"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
+    filler_phrases = [["caption:"],["read","more","of","our","stories"],["subscribe", "now"], ["subscribe", "here"], ["sign", "up"], ["mailing", "list"], ["more", "stories", "like", "this"], ["upgrade", "to", "premium"], ["donate", "to", "support"], 
                       ["share", "this", "article"], ["tell", "your", "friends"], ["email", "us", "at"], ["follow", "us", "on"], ["leave", "a", "comment"], ["all", "rights", "reserved"],
                       ["reproduction", "without", "permission", "is", "prohibited"], ["terms", "and", "conditions", "apply"], ["see", "our", "privacy", "policy"], 
                       ["click", "here", "to", "read", "the", "full", "article"], ["return", "to", "homepage"], ["recommended", "for", "you"], ["trending", "now"], 
@@ -79,12 +79,6 @@ def highlight_artifacts(text_original, text_precision):
 
         # d.compare() adds 2 characters as prefix to each word, "- " if in og not in precision, "  " if found in both
         text_diff = [word.replace("  ", "") for word in text_diff]
-        print(f"text_diff: {text_diff}")
-
-        # TODO: test to see how hyphens react here replace "- " with "*" 
-        # text_diff = [word.replace("- ", "*") for word in text_diff]
-
-        # list_of_words = split_text_with_newline(text)
 
         i = 0
         while i < len(text_diff):
