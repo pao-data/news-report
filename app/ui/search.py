@@ -62,49 +62,45 @@ def show_search_section():
 
 def show_query_fields():
     queries = ui.state.get_queries()
-    for label in list(queries.keys()):
-        col1, col2 = st.columns([20, 1])
+    with st.expander("All Queries"):
+        for label in list(queries.keys()):
+            col1, col2 = st.columns([20, 1])
 
-        with col1:
-            st.text_area(
-                label=label,
-                key=f"query_{label}",
-                value=queries[label],
-                height="content",
-            )
+            with col1:
+                with st.expander(label):
+                    st.text_area(
+                        label=" ",
+                        key=f"query_{label}",
+                        value=queries[label],
+                        height="content",
+                    )
 
-        with col2:
-            # vertical spacing to make button look better
-            st.write("")
-            st.write("")
+            with col2:
+                if st.button(
+                    "❌",
+                    key=f"delete_{label}",
+                    help=f"Delete {label}",
+                ):
+                    queries = ui.state.get_queries()
+                    del queries[label]
+                    ui.state.set_queries(queries)
 
-            if st.button(
-                "❌",
-                key=f"delete_{label}",
-                help=f"Delete {label}",
-            ):
-                queries = ui.state.get_queries()
-                del queries[label]
-                ui.state.set_queries(queries)
+                    # Remove widget state too
+                    widget_key = f"query_{label}"
+                    if widget_key in st.session_state:
+                        del st.session_state[widget_key]
 
-                # Remove widget state too
-                widget_key = f"query_{label}"
-                if widget_key in st.session_state:
-                    del st.session_state[widget_key]
+                    st.rerun()
 
-                st.rerun()
-
-        # st.markdown("---")
-
-    # Add new query
-    col, _ = st.columns([4, 10])
-    col.text_input(
-        " ",
-        key="new_query_label",
-        placeholder="➕ Add search field",
-        label_visibility="collapsed",
-        on_change=add_query,
-    )
+        # Add new query
+        col, _ = st.columns([4, 10])
+        col.text_input(
+            " ",
+            key="new_query_label",
+            placeholder="➕ Add search field",
+            label_visibility="collapsed",
+            on_change=add_query,
+        )
 
 
 def add_query():

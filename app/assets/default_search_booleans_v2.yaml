@@ -1,0 +1,172 @@
+"U.S. Army Pacific - Query 1": |
+  "U.S. Army Pacific" OR "United States Army Pacific" OR "USARPAC" -"Salvation" -"Sudan" -"Sudanese" -"Somali"
+"U.S. Army Pacific - Query 2 ": |
+  "U.S. Army" OR "United States Army" "Pacific" OR "Indo-Pacific" OR "Asia-Pacific" OR "East Asia" OR "South Asia" OR "Southeast Asia" OR "Western Pacific" OR "Pacific Command" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S. Army Pacific - Query 3": |
+  "U.S. Army" OR "United States Army" "Japan" OR "South Korea" OR "Guam" OR "Philippines" OR "Hawaii" OR "Okinawa" OR "Australia" OR "Singapore" OR "Thailand" OR "Vietnam" -"Salvation" -"Sudan" -"Sudanese" -"Somali"
+"U.S. Army Alaska - Query 1": |
+  "USARAK" OR "United States Army Alaska" OR "Fort Wainwright" OR "Fort Greely" OR "Joint Base Elmendorf-Richardson" OR "JBER" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S Army Alaska - Query 2": |
+  "U.S. Army" OR "United States Army" OR "Army" "Arctic" OR "Alaska" OR "Northern Warfare" OR "Arctic Edge" OR "Arctic operations" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S. Army Japan - Query 1": |
+  "U.S. Army Japan" OR "USARJ" OR "USAR-J" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S. Army Japan - Query 2": |
+  "U.S. Army" OR "United States Army" OR "Army" "Japan" OR "USARJ" OR "United States Army Japan" OR "Camp Zama" OR "Yokota Air Base" OR "Torii Station" OR "Kure" OR "Okinawa" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S. Army Japan - Query 3": |
+  "U.S. Army" OR "United States Army" "Japan" OR "Japanese" OR "Pacific Command" OR "Indo-Pacific" OR "East Asia" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S. Army Korea - Query 1": |
+  "U.S. Army Korea" OR "USARK" OR "USAR-K" -"Salvation" -"Sudan" -"Sudanese" -"Somali"
+"U.S. Army Korea - Query 2": |
+  "U.S. Army" OR "United States Army" OR "Army" "Korea" OR "USFK" OR "United States Forces Korea" OR "Eighth Army" OR "Camp Humphreys" OR "Yongsan Garrison" OR "Osan Air Base" OR "Dongducheon" OR "Seoul" OR "Pyeongtaek" -"Salvation" -"Sudan" -"Sudanese" -"Somali"
+"U.S. Army Korea - Query 3": |
+  "U.S. Army" OR "United States Army" "South Korea" OR "Republic of Korea" OR "ROK" OR "Peninsula" OR "DMZ" OR "Korean operations" -"Salvation" -"Sudan" -"Sudanese" -"Somali"
+"Joint base Lewis McChord - Query 1": |
+  "Joint Base Lewis-McChord" OR "JBLM" OR "Lewis-McChord" OR "Fort Lewis" OR "McChord Field" 
+"Joint base Lewis McChord - Query 2": |
+  "I Corps" OR "7th Infantry Division" OR "2nd Battalion" OR "Stryker Brigade" OR "Washington Army base" 
+"Joint base Lewis McChord - Query 3": |
+  "U.S. Army" OR "United States Army" "Lewis-McChord" OR "JBLM" OR "Washington" OR "Fort Lewis" OR "McChord Field"
+"Korea Military News - Query 1": |
+  "South Korean military" OR "Republic of Korea Armed Forces" OR "ROK military" OR "ROK Army" OR "ROK Navy" OR "ROK Air Force" 
+"Korea Military News - Query 2": |
+  "Korean military" OR "Korean defense" OR "Korean armed forces" OR "Ministry of National Defense" OR "Korean war games" OR "Korean military exercises" OR "Korean defense industry" 
+"Korea Military News - Query 3": |
+  "North Korean military" OR "Korean People's Army" OR "KPA" OR "North Korean armed forces" OR "North Korean defense" OR "Pyongyang military" 
+"Korea Military News - Query 4": |
+  "DPRK military" OR "DPRK Army" OR "DPRK Navy" OR "DPRK Air Force" OR "North Korean missile" OR "North Korean nuclear" OR "North Korean war games" OR "North Korean military exercises"
+"Japan Military News - Query 1": |
+  "Japanese military" OR "Japan Self-Defense Forces" OR "JSDF" OR "Japan Ground Self-Defense Force" OR "JGSDF" 
+"Japan Military News - Query 2": |
+  "Japan Maritime Self-Defense Force" OR "JMSDF" OR "Japan Air Self-Defense Force" OR "JASDF" 
+"Japan Military News - Query 3": |
+  "Japanese armed forces" OR "Japanese defense" OR "Ministry of Defense Japan" OR "Japanese war games" OR "Japanese military exercises" OR "Japanese defense industry" OR "Japanese missile" OR "Japanese security policy" 
+"Hawaii Military News - Query 1": |
+  "Hawaii military" OR "military in Hawaii" OR "Hawaiian military" OR "Hawaii defense" OR "Hawaii armed forces" OR "U.S. Army Hawaii" OR "United States Army Hawaii" 
+"Hawaii Military News - Query 2": |
+  "Army" "Schofield Barracks" OR "Fort Shafter" OR "Tripler Army Medical Center" OR "Joint Base Pearl Harbor-Hickam" OR "Pearl Harbor" OR "Marine Corps Base Hawaii" OR "Naval Station Pearl Harbor" OR "Hickam Air Force Base" 
+"Hawaii Military News - Query 3": |
+  "Army" "Pacific Command" OR "Indo-Pacific" OR "USINDOPACOM" 
+"Hawaii Military News - Query 4": |
+  "U.S. Army" "United States Army" "Hawaii" OR "Schofield Barracks" OR "Fort Shafter" OR "Tripler" 
+"Guam Military News - Query 1": |
+  "Guam" "military" OR "army"
+"Guam Military News - Query 2": |
+  "Guam" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "Pentagon" OR "US Indo-Pacific Command" OR "USINDOPACOM" 
+"Guam Military News - Query 3": |
+  "Andersen Air Force Base" OR "US Air Force Guam" OR "Naval Base Guam" OR "US Navy Guam" OR "US Marines Guam" OR "US Army Guam"
+"Australia Military News - Query 1": |
+  "Australia" "military" OR "army"
+"Australia Military News - Query 2": |
+  "Australia" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" OR "Pentagon"
+"Australia Military News - Query 3": |
+  "Australian Defense Force" OR "ADF" OR "Royal Australian Navy" "RAAF" OR "Royal Australian Army" 
+"Australia Military News - Query 4": |
+  "Australia" "Indo-Pacific Command" OR "INDOPACOM" 
+"New Zealand Military News - Query 1": |
+  "New Zealand" "military" OR "army"
+"New Zealand Military News - Query 2": |
+  "New Zealand" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic"  
+"New Zealand Military News - Query 3": |
+  "New Zealand Defense Force" OR "NZDF" OR "Royal New Zealand Navy" OR "Royal New Zealand Air Force" OR "Royal New Zealand Army" 
+"New Zealand Military News - Query 4": |
+  "Devonport Naval Base" OR "RNZAF Base Auckland" OR "RNZAF Base Ohakea" OR "RNZAF Base Woodbourne" OR "Papakura Military Camp" OR "Waiouru Military Camp" OR "Linton Military Camp" OR "Burnham Military Camp"  
+"Bangladesh Military News - Query 1": |
+  "Bangladesh" "military" OR "army"
+"Bangladesh Military News - Query 2": |
+  "Bangladesh" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Bangladesh Military News - Query 3": |
+  "Bangladesh Armed Forces" OR "Bangladesh Army" OR "Bangladesh Navy" OR "Bangladesh Air Force" OR "BD Army" OR "BD Navy" OR "BD Air Force" 
+"Bangladesh Military News - Query 4": |
+  "Bangladesh Military Academy" OR "Chittagong Cantonment" OR "Dhaka Cantonment" OR "Bangladesh Institute of Peace Support Operation Training" 
+"Thailand Military News - Query 1": |
+  "Thailand" "military" "army"
+"Thailand Military News - Query 2": |
+   "Thailand" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Thailand Military News - Query 3": |
+  "Thai Armed Forces" OR "Thai military" OR "Thai Army" OR "Thai Navy" OR "Thai Air Force"
+"Thailand Military News - Query 4": |
+  "Chulachomklao Royal Military Academy" OR "Naval Base Sattahip" OR "Wing 1 Air Force Base" OR "Fort Surasi" OR "Fort Chakkraphong" OR "Fort Phra Phutthayotfa Chulalok" 
+"Vietnam Military News - Query 1": |
+  "Vietnam" "military" OR "army"
+"Vietnam Military News - Query 2": |
+  "Vietnam" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Vietnam Military News - Query 3": |
+  "Vietnam People's Army" OR "Vietnam People's Navy" OR "Vietnam People's Air Force" OR "Vietnamese military" OR "Vietnamese Army" OR "Vietnamese Navy" OR "Vietnamese Air Force" 
+"Vietnam Military News - Query 4": |
+  "General Staff of the Vietnam People's Army" OR "Military Region" OR "Vietnam Military Academy" OR "Naval Base Cam Ranh" OR "Air Force Base Da Nang" 
+"Indonesia Military News - Query 1": |
+  "Indonesia" "military" OR "army"
+"Indonesia Military News - Query 2": |
+  "Indonesia" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Indonesia Military News - Query 3": |
+  "Tentara Nasional Indonesia" OR "TNI" OR "Indonesian Army" OR "Indonesian Navy" OR "Indonesian Air Force" OR "Kopassus" OR "Kostrad" OR "Indonesian military" OR "Indonesian Armed Forces" 
+"Indonesia Military News - Query 4": |
+  "Military Academy Magelang" OR "Naval Base Surabaya" OR "Air Force Base Halim Perdanakusuma" OR "Military Region Command" OR "Kodam" OR "Korem" OR "Battalion Raider" 
+"Malaysia Military News - Query 1": |
+  "Malaysia" "military" OR "army"
+"Malaysia Military News - Query 2": |
+  "Malaysia" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Malaysia Military News - Query 3": |
+  "Malaysian Armed Forces" OR "Malaysian Army" OR "Malaysian Navy" OR "Malaysian Air Force" OR "Tentera Darat Malaysia" OR "Tentera Laut Diraja Malaysia" OR "Tentera Udara Diraja Malaysia" OR "Malaysian military" OR "Malaysian Defence Force" 
+"Malaysia Military News - Query 4": |
+  "Pangkalan Tentera Laut Lumut" OR "Pangkalan Udara Butterworth" OR "Kem Sungai Besi" OR "Kem Perdana" 
+"Cambodia Military News - Query 1": |
+  "Cambodia" "military" "army"
+"Cambodia Military News - Query 2": |
+  "Cambodia" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Cambodia Military News - Query 3": |
+  "Royal Cambodian Armed Forces" OR "RCAF" OR "Cambodian Army" OR "Cambodian Navy" OR "Cambodian Air Force" OR "Cambodian military" OR "Cambodian Defence Force" 
+"Cambodia Military News - Query 4": |
+  "Cambodia" "Military Region Command" OR "Military Police Cambodia" OR "Cambodian Military Academy" OR "Ream Naval Base" OR "Phnom Penh Military Base" OR "Battambang Military Base" 
+"Philippine Military News - Query 1": |
+  "Philippine" "military" OR "army"
+"Philippine Military News - Query 2": |
+  "Philippines" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Philippine Military News - Query 3": |
+  "Armed Forces of the Philippines" OR "AFP" OR "Philippine Army" OR "Philippine Navy" OR "Philippine Air Force" OR "Philippine Marine Corps" OR "Philippine military" OR "Philippine Defence Force" 
+"Philippine Military News - Query 4": |
+  "Camp Aguinaldo" OR "Fort Bonifacio" OR "Naval Base Cavite" OR "Villamor Air Base" OR "Camp Crame" OR "Camp Bautista" OR "Camp Evangelista" 
+"Arctic Military News - Query 1": |
+  "arctic" OR "north pole" OR "polar region" OR "high north" OR "circumpolar" "military" OR "army" OR "navy" OR "air force" OR "defense" OR "security" 
+"Arctic Military News - Query 2": |
+  "arctic" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic" 
+"Arctic Military News - Query 3": |
+  "arctic" "northern fleet" OR "US Army Alaska" OR "arctic command" OR "arctic brigade" 
+"Arctic Military News - Query 4": |
+  "Arctic" "Thule Air Base" OR "Alert Base" OR "Barents Sea" OR "Murmansk" OR "Longyearbyen" 
+"US Indo Pacific Cmd - Query 1": |
+  "Indo-Pacific Command" OR "INDOPACOM" 
+"US Indo Pacific Cmd - Query 2": |
+  "Pacific Command" OR "USPACOM" 
+"US Indo Pacific Cmd - Query 3": |
+  "Pacific region" OR "Indo-Pacific" OR "Asia-Pacific" "military" OR "army" OR "navy" OR "air force" OR "defense" OR "security" 
+"US Indo Pacific Cmd - Query 4": |
+  "USINDOPACOM" OR "Indo-Pacific Command" "military" OR "defense" OR "security" OR "base" OR "operations" OR "deployment" OR "exercise" OR "training" OR "expansion" OR "strategy" OR "strategic"
+"US Indo Pacific Cmd - Query 5": |
+  "United States Army Pacific" OR "US Army Pacific"
+"US Indo Pacific Cmd - Query 6": |
+  "Pacific Fleet" OR "Pacific Air Forces" OR "Marine Forces Pacific" OR "Camp Humphreys" OR "Andersen Air Force Base" OR "Joint Base Pearl Harbor-Hickam" OR "Guam Naval Base" OR "Yokota Air Base" 
+"Multi Domain Operations US Army - Query 1": |
+  "U.S. Army" OR "United States Army" "Multi Domain Operations" OR "MDO" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"Multi Domain Operations US Army - Query 2": |
+  "Army Futures Command" OR "FORSCOM" "Multi Domain Operations" OR "MDO" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"Multi Domain Operations US Army - Query 3": |
+  "Army Training and Doctrine Command" OR "TRADOC" "Multi Domain Operations" OR "MDO" OR "cross domain" OR "joint operations" OR "joint force" OR "integrated operations" -"Salvation" -"Sudan" -"Sudanese" -"Somali" 
+"U.S. Army - Query 1": |
+  "U.S. Army" OR "United States Army" "operations" OR "training" OR "exercise" OR "deployment" OR "readiness" OR "modernization" OR "technology" OR "mission" OR "expansion" -"Salvation" -"Sudan" -"Sudanese"-"Somali" 
+"U.S. Army - Query 2": |
+  "Army Futures Command" OR "FORSCOM" OR "Army Training and Doctrine Command" OR "TRADOC" "operations" OR "training" OR "exercise" OR "deployment" OR "readiness" OR "modernization" OR "technology" OR "mission" OR "expansion" -"Salvation" -"Sudan" -"Sudanese"-"Somali" 
+"U.S. Army - Query 3": |
+  "Army National Guard" OR "Army Reserve" "operations" OR "training" OR "exercise" OR "deployment" OR "readiness" OR "modernization" OR "technology" OR "mission" OR "expansion" -"Salvation" -"Sudan" -"Sudanese"-"Somali" 
+"U.S. Army - Query 4": |
+  "Fort Bragg" OR "Fort Hood" OR "Fort Benning" OR "Fort Bliss" OR "Fort Campbell" OR "Fort Carson" OR "Fort Knox" OR "Fort Sill" OR "Fort Stewart" OR "Fort Drum" OR "Fort Polk" OR "Fort Riley" OR "Fort Lee" OR "Fort Leonard Wood" -"Salvation" -"Sudan" -"Sudanese"-"Somali" 
+"Red Hill - Query 1": |
+  "U.S. Army" OR "United States Army" OR "military" "Red Hill" OR "Red Hill fuel" OR "Red Hill Bulk Fuel Storage Facility" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster" 
+"Red Hill - Query 2": |
+  "Department of Defense" OR "DoD" "Red Hill" OR "Red Hill fuel" OR "Red Hill Bulk Fuel Storage Facility" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster" 
+"Red Hill - Query 3": |
+  "Joint Base Pearl Harbor-Hickam" OR "Hawaii" OR "Pacific Command" OR "USINDOPACOM" "Red Hill" OR "Red Hill fuel" OR "Red Hill Bulk Fuel Storage Facility" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster" 
+"Red Hill - Query 4": |
+  "Red Hill" "fuel" OR "contamination" OR "water crisis" OR "environmental disaster" OR "cleanup" OR "remediation" OR "health impact" 
+"Red Hill - Query 5": |
+  "Red Hill Bulk Fuel Storage Facility" OR "Red Hill fuel" OR "Red Hill contamination" OR "Red Hill water crisis" OR "Red Hill environmental disaster" 
