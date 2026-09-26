@@ -60,7 +60,7 @@ def load_config():
 
 
 def load_default_queries():
-    yaml_path = BASE_DIR / "app/assets/default_search_booleans.yaml"
+    yaml_path = BASE_DIR / "app/assets/default_search_booleans_v2.yaml"
     with open(yaml_path, "r") as f:
         return yaml.safe_load(f)
 
