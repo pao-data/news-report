@@ -5,6 +5,8 @@ import core.search
 import streamlit as st
 import ui.state
 
+from ui.manual_entry import show_update_article_manually, on_popover_change, toggle_popover
+
 logger = logging.getLogger(__name__)
 
 
@@ -161,6 +163,8 @@ def display_search_results():
                 on_click=layout.delete_unassigned_article,
                 kwargs={"article_id": article.id},
             )
+
+            show_update_article_manually(article)
 
 
 def assign_article_on_selection(article_id, selectbox_key):
