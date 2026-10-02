@@ -5,6 +5,8 @@ import core.search
 import streamlit as st
 import ui.state
 
+from ui.manual_entry import show_update_article_manually, on_popover_change, toggle_popover
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,20 +36,27 @@ def show_search_section():
 
         # Adding progress bar to container to not overwrite "Additional URLs" UI section
         progress_bar = search_container.progress(0.0, text=progress_text)
+        completed_queries = 0 
         articles = []
         for query in results.values():
-            a = core.search.get_articles_from_rss(query)
+            progress_value = completed_queries / len(results)
+            progress_bar.progress(progress_value, text = f"Searching for news articles. Completed ({completed_queries}/{len(results)}) queries.")
+            a = core.search.get_articles_from_rss(query) 
             articles.extend(a)
-
+            completed_queries += 1
+           
         enriched_articles = []
+        progress_value = completed_queries / len(results)
+        progress_bar.progress(progress_value, text = f"Search completed. Filtering results...")
         for article_index, article in enumerate(articles):
             logging.debug(article.google_url)
             article = core.extraction.enrich_url(article)
             article = core.extraction.enrich_author(article)
             article = core.extraction.enrich_full_text(article)
             enriched_articles.append(article)
-            progress_value = (article_index + 1) / len(articles)
-            progress_bar.progress(progress_value, text=progress_text)
+            # progress_value = (article_index + 1) / len(articles)
+            # progress_bar.progress(progress_value, text=progress_text)
+
         progress_bar.empty()
 
         ui.state.get_layout().add_new_articles(enriched_articles)
@@ -161,6 +170,8 @@ def display_search_results():
                 on_click=layout.delete_unassigned_article,
                 kwargs={"article_id": article.id},
             )
+
+            show_update_article_manually(article)
 
 
 def assign_article_on_selection(article_id, selectbox_key):

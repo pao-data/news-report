@@ -31,7 +31,7 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
     logger.info(f"Found {len(feed.entries)} articles")
 
     cutoff = datetime.now(timezone.utc) - timedelta(days=1)
-    top_urls = ["reuters.com", "apnews.com", "aninews.in", "afp.com", "bloomberg.com", "xinhuanet.com", "cgtn.com", "globaltimes.cn", 
+    top_urls = ["bigislandnow.com","mauinow.com","khon2.com","reuters.com", "apnews.com", "aninews.in", "bloomberg.com", "xinhuanet.com", "cgtn.com", "globaltimes.cn", 
                 "tass.com", "sputniknews.com", "rt.com", "nytimes.com", "washingtonpost.com", "cnn.com", "foxnews.com", "bbc.com", "staradvertiser.com", 
                 "hawaiinewsnow.com", "kitv.com", "hawaiitribune-herald.com", "thegardenisland.com", "mauinews.com", "westhawaiitoday.com", "civilbeat.org", 
                 "bizjournals.com", "military.com", "defensenews.com", "breakingdefense.com", "stripes.com", "twz.com", "taskandpurpose.com", "navytimes.com", 
@@ -43,7 +43,7 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
                 "tuvaluonline.tv", "marshallislandsjournal.com", "yokwe.net", "rmiembassyus.org", "v7ab.com", "mbc.fm", "myafn.net", "islandtimes.us", 
                 "kilikili.net", "pressport.com", "kiribatiupdates.com", "kiribatinews.com", "radio.gov.ki", "mic.gov.ki", "islandreporter.com", 
                 "president.gov.ki", "niuestar.co.nz", "gov.nu", "abc.net.au", "niue.nu", "tiabelau.com", "palaugov.pw", "islandscene.org", "pwnews.com", 
-                "palau.net", "cookislandsnews.com", "cookislands.gov.ck", "loopnews.com", "ryukyushimpo.jp", "okinawatimes.co.jp", "nhk.or.jp", "rbc.co.jp", 
+                "palau.net", "cookislandsnews.com", "cookislands.gov.ck", "loopnews.com", "ryukyushimpo.jp", "okinawatimes.co.jp", "news.web.nhk", "rbc.co.jp", 
                 "otv.co.jp", "qab.co.jp", "fmokinawa.co.jp", "okinawa-report.com", "okinawastandard.com", "tntv.pf", "kpress.info", "fsmpublicinfo.gov.fm", 
                 "pohnpeitribune.com", "yapnetwork.com", "chuuktribune.com", "kosrae.gov.fm", "fm103.fm", "onlinekhabar.com", "ekantipur.com", "kathmandupost.com", 
                 "thehimalayantimes.com", "annapurnapost.com", "nepalitimes.com", "nagariknetwork.com", "setopati.com", "ratopati.com", "gorkhapatraonline.com", 
@@ -99,10 +99,12 @@ def get_articles_from_rss(query: str, limit: int | None = None) -> list[Article]
                 "tribunnews.com", "liputan6.com", "cnnindonesia.com", "yahoo.co.id", "okezone.com", "viva.co.id", "tempo.co", "republika.co.id", 
                 "merdeka.com", "antaranews.com", "suara.com", "sindonews.com", "bisnis.com", "beritasatu.com", "inews.id", "kumparan.com", 
                 "news.yahoo.co.jp", "line.me", "ameblo.jp", "auone.jp", "livedoor.com", "nikkei.com", "yomiuri.co.jp", "asahi.com", "japantimes.co.jp", 
-                "mainichi.jp", "tv-asahi.co.jp", "ntv.co.jp", "fujitv.co.jp", "sankei.com", "nikkansports.com", "oricon.co.jp", "excite.co.jp", 
+                "mainichi.jp", "news.tv-asahi.co.jp", "news.ntv.co.jp", "fujitv.co.jp", "sankei.com", "nikkansports.com", "oricon.co.jp", "excite.co.jp", 
                 "huffingtonpost.jp", "diamond.jp", "sanook.com", "thairath.co.th", "khaosod.co.th", "pantip.com", "bangkokpost.com", "matichon.co.th", 
                 "kapook.com", "mgronline.com", "komchadluek.net", "dailynews.co.th", "nationthailand.com", "workpointtoday.com", "thaipbs.or.th", 
-                "ch3thailand.com", "mthai.com", "springnews.co.th", "trueid.net", "bangkokbiznews.com", "posttoday.com", "prachachat.net"]
+                "ch3thailand.com", "mthai.com", "springnews.co.th", "trueid.net", "bangkokbiznews.com", "posttoday.com", "prachachat.net",
+                "kyodo.co.jp","jiji.com","newsdig.tbs.co.jp","fnn.jp","tv-tokyo.co.jp","japantoday.com","english.kyodonews.net","japannews.yomiuri.co.jp",
+                "asia.nikkei.com","nippon.com"]
     filtered_entries = []
     for entry in feed.entries:
         published = Article.parse_published_parsed(getattr(entry, "published_parsed", None))
