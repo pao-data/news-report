@@ -54,8 +54,6 @@ def show_search_section():
             article = core.extraction.enrich_author(article)
             article = core.extraction.enrich_full_text(article)
             enriched_articles.append(article)
-            # progress_value = (article_index + 1) / len(articles)
-            # progress_bar.progress(progress_value, text=progress_text)
 
         progress_bar.empty()
 

@@ -157,8 +157,14 @@ def show_articles(section: Section):
             kwargs={"article_id": article_id, "from_id": section_id},
         )
 
+def move_article_on_selection(article_id, selectbox_key):
+    ui.state.get_layout().move_article(
+        article_id=article_id,to_id=st.session_state[selectbox_key]
+    )
 
 def show_article_expander(article):
+    layout = ui.state.get_layout()
+
     title = article.title
     source = article.source
     #author = article.author
@@ -171,6 +177,17 @@ def show_article_expander(article):
         st.write(f"Published:\t{published}")
         st.write(f"Link:\t{url}")
         st.write(f"{preview_text}")
+        selectbox_key = f"selectbox_move_assigned_article_to_section_{article.id}"
+        r = st.selectbox(
+            "Move article to a different section:",
+            index=None,
+            placeholder="Choose a section to move the article to.",
+            options=layout.section_order,
+            format_func=lambda section_id: layout.sections[section_id].name,
+            key=selectbox_key,
+            on_change=move_article_on_selection,
+            kwargs={"article_id": article.id, "selectbox_key": selectbox_key},
+        )
 
 
 def find_move(original, modified):
