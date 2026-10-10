@@ -115,24 +115,28 @@ def highlight_artifacts(text_original, text_precision):
                     i += phrase_len
                     # do not need to look at other phrases, break loop
                     break
-            if "\n" in text_diff[i][2:]:
-                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:])
-                i += 1
-            elif "\n" in text_diff[i]:
-                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i])
-                i += 1
-            elif "- " == text_diff[i][:2]:
-                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:], highlight_color = "#FFFF00")
-                # if the next word needs to be highlighted, add a highlighted space next
-                try:
-                    if "- " == text_diff[i+1][:2]:
-                        full_text_with_highlight = add_to_richtext(full_text_with_highlight, " ", highlight_color = "#FFFF00")
-                except: 
-                    pass # if last word in the text, don't do anything
-                i += 1
-            else:
-                full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i] + " ")    
-                i += 1    
+            
+            try:
+                if "\n" in text_diff[i][2:]:
+                        full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:])
+                        i += 1
+                elif "\n" in text_diff[i]:
+                    full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i])
+                    i += 1
+                elif "- " == text_diff[i][:2]:
+                    full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i][2:], highlight_color = "#FFFF00")
+                    # if the next word needs to be highlighted, add a highlighted space next
+                    try:
+                        if "- " == text_diff[i+1][:2]:
+                            full_text_with_highlight = add_to_richtext(full_text_with_highlight, " ", highlight_color = "#FFFF00")
+                    except: 
+                        pass # if last word in the text, don't do anything
+                    i += 1
+                else:
+                    full_text_with_highlight = add_to_richtext(full_text_with_highlight, text_diff[i] + " ")    
+                    i += 1    
+            except:
+                full_text_with_highlight = add_to_richtext(full_text_with_highlight, "no text found (perhaps due to bot blocking by the website)") 
                 
         full_text = full_text_with_highlight
     else:
@@ -322,19 +326,6 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
     date = article.date_published_string or "unknown publication date"
 
     full_text = highlight_artifacts(article.full_text, article.full_text_precision)
-
-    # TODO - remove, if do not need to revert to OG
-    # full_text = (
-    #     prettify_text(article.full_text)
-    #     if article.full_text
-    #     else "no text found (perhaps due to bot blocking by the website)"
-    # )
-
-    #summary = (
-    #    summarize_article(article.full_text)
-    #    if article.full_text
-    #    else "no text found to summarize (perhaps due to bot blocking by the website)"
-    #)
 
     article_context = {
         "title_with_link": title_with_link,

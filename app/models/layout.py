@@ -1,4 +1,5 @@
 import logging
+import ui.state
 import uuid
 
 from models.article import Article
@@ -6,7 +7,6 @@ from models.section import Section
 from utils.config import normalize_section_name, validate_section_name
 
 logger = logging.getLogger(__name__)
-
 
 class Layout:
     """Aggregate model for report composition.
@@ -116,9 +116,31 @@ class Layout:
                 self.articles[article.id] = article
         self._assert_membership_invariants()
 
-    def move_article(self, article_id: str, from_id: str, to_id: str) -> None:
+    def move_article(self, article_id: str, to_id: str) -> None:
         """Move article from one section to another."""
-        raise NotImplementedError("Layout.move_article is intentionally not implemented yet.")
+        if article_id not in self.articles:
+            raise ValueError(f"Unknown article ID: {article_id}")
+        
+        # Find what section article is currently in
+        layout = ui.state.get_layout()
+        sections = layout.get_ordered_sections()
+        from_id = None
+        for section in sections:
+            if article_id in section.articles:
+                from_id = section.id
+                break 
+        if from_id is None:
+            raise ValueError(f"Cannot move article. Unknown current section ID.")
+        if to_id is None:
+            to_id = from_id
+        
+        from_section = self.sections[from_id]
+        from_section.remove_article(article_id)
+        
+        to_section = self.sections[to_id]
+        to_section.add_article(article_id)
+
+        self._assert_membership_invariants()
 
     def assign_article(self, article_id: str, to_id: str) -> None:
         """Move an article from unassigned into a target section."""
