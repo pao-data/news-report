@@ -327,19 +327,6 @@ def get_article_context(article: Article, doc: DocxTemplate) -> dict:
 
     full_text = highlight_artifacts(article.full_text, article.full_text_precision)
 
-    # TODO - remove, if do not need to revert to OG
-    # full_text = (
-    #     prettify_text(article.full_text)
-    #     if article.full_text
-    #     else "no text found (perhaps due to bot blocking by the website)"
-    # )
-
-    #summary = (
-    #    summarize_article(article.full_text)
-    #    if article.full_text
-    #    else "no text found to summarize (perhaps due to bot blocking by the website)"
-    #)
-
     article_context = {
         "title_with_link": title_with_link,
         "source": source,
